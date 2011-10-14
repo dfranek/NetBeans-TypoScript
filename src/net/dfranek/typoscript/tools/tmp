@@ -1,0 +1,54 @@
+int zzInput;
+    int zzAction;
+
+    // cached fields:
+    //int zzCurrentPosL;
+    //int zzMarkedPosL;
+    //int zzEndReadL = zzEndRead;
+    // char [] zzBufferL = zzBuffer;
+    char [] zzCMapL = ZZ_CMAP;
+
+    int [] zzTransL = ZZ_TRANS;
+    int [] zzRowMapL = ZZ_ROWMAP;
+    int [] zzAttrL = ZZ_ATTRIBUTE;
+
+    while (true) {
+      //zzMarkedPosL = zzMarkedPos;
+
+      // yychar+= zzMarkedPosL-zzStartRead;
+
+      zzAction = -1;
+
+      // zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
+	  int tokenLength = 0;
+  
+      zzState = ZZ_LEXSTATE[zzLexicalState];
+
+
+      zzForAction: {
+        while (true) {
+			zzInput = input.read();
+			if(zzInput == LexerInput.EOF) {
+				//end of input reached
+				zzInput = YYEOF;
+				break zzForAction;
+			}
+    
+          int zzNext = zzTransL[ zzRowMapL[zzState] + zzCMapL[zzInput] ];
+          if (zzNext == -1) break zzForAction;
+          zzState = zzNext;
+
+          int zzAttributes = zzAttrL[zzState];
+          if ( (zzAttributes & 1) == 1 ) {
+            zzAction = zzState;
+            tokenLength = input.readLength();
+            if ( (zzAttributes & 8) == 8 ) break zzForAction;
+          }
+
+        }
+      }
+
+      // store back cached position
+      if(zzInput != YYEOF) {
+		   input.backup(input.readLength() - tokenLength);
+	  }
