@@ -15,8 +15,7 @@ public enum TSTokenId implements TokenId {
 	TS_EQUALS (null, "operator"),
 	TS_LT(null, "operator"),
 	TS_GT(null, "operator"),
-	TS_CURLY_START(null, "brace"),
-	TS_CURLY_END(null, "brace"),
+	TS_CURLY(null, "brace"),
 	TS_PARANTHESE_START(null, "brace"),
 	TS_PARANTHESE_END(null, "brace"),
 	TS_DOT(null,"operator"),
@@ -38,6 +37,11 @@ public enum TSTokenId implements TokenId {
 	TS_INCLUDE_START(null, "include"),
 	TS_INCLUDE_END(null, "include"),
 	TS_PIPE(null, "operator"),
+        TS_STRING(null,"string"),
+        TS_NUMBER(null,"number"),
+        TS_REGEXP(null,"string"),
+        TS_OPERATOR(null,"operator"),
+        TS_NL(null,"whitespace"),
 	WHITESPACE(null, "whitespace"),
 	UNKNOWN_TOKEN(null, "error");
 
