@@ -28,7 +28,7 @@ public enum TSTokenId implements TokenId {
 	TS_CONDITION_START(null, "condition"),
 	TS_CONDITION_END(null, "condition"),
 	TS_PROPERTY(null, "ts"),
-	TS_CONDITION(null, "ts"),
+	TS_CONDITION(null, "condition"),
 	TS_END(null, "keyword"),
 	TS_GLOBAL(null,"keyword"),
 	TS_ELSE(null,"keyword"),

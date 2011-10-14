@@ -14,43 +14,47 @@ import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.netbeans.spi.lexer.TokenFactory;
 
-
-
 /**
  *
  * @author Daniel
  */
 public class TSLexer implements Lexer<TSTokenId> {
-	
-	private LexerRestartInfo<TSTokenId> info;
-	private TokenFactory<TSTokenId> tokenFactory;
-	private final TSScanner scanner;
-	
-	TSLexer (LexerRestartInfo<TSTokenId> info) {
-         scanner = new TSScanner(info);
-		 tokenFactory = info.tokenFactory();
+
+    private LexerRestartInfo<TSTokenId> info;
+    private TokenFactory<TSTokenId> tokenFactory;
+    private final TSScanner scanner;
+
+    TSLexer(LexerRestartInfo<TSTokenId> info) {
+        this.info = info;
+        scanner = new TSScanner(info);
+        tokenFactory = info.tokenFactory();
     }
 
-	@Override
-	public Token<TSTokenId> nextToken() {
-		 try {
-            TSTokenId tokenId = scanner.nextToken(); 
+    @Override
+    public Token<TSTokenId> nextToken() {
+        
+        try {
+            TSTokenId tokenId = scanner.nextToken();
+            int readLen = scanner.getReadLength();
+            if (readLen < 1) return null;
             Token<TSTokenId> token = null;
+            
             if (tokenId != null) {
                 token = tokenFactory.createToken(tokenId);
             }
             return token;
-        } catch (IOException ex) {
-            Logger.getLogger(TSLexer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+           Logger.getLogger(TSLexer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-	}
+    }
 
-	@Override
-	public Object state() {
-		return null;
-	}
+    @Override
+    public Object state() {
+        return null;
+    }
 
-	@Override
-	public void release() {}
+    @Override
+    public void release() {
+    }
 }

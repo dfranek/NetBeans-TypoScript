@@ -57,6 +57,8 @@ public class TSScanner {
     private boolean inValue = false;
     private boolean inComment = false;
     private boolean regexp = false;
+    
+    private int readLength = 0;
 
     public TSScanner(LexerRestartInfo info) {
         this.input = info.input();
@@ -71,6 +73,8 @@ public class TSScanner {
      */
     public TSTokenId nextToken() throws java.io.IOException {
         TSTokenId token = null;
+        
+        //input.backup(1);
         char ch = (char) input.read();
 
         if (ch == '\n') {
@@ -129,8 +133,14 @@ public class TSScanner {
             token = TSTokenId.TS_OPERATOR;
         } else {
             nextWhileWordChar();
-            token = TSTokenId.TS_VALUE;
+            if (inValue) {
+                token = TSTokenId.TS_VALUE;
+            } else {
+                token = TSTokenId.TS_PROPERTY;
+            }
         }
+        
+        this.readLength = input.readLength();
         return token;
     }
 
@@ -141,15 +151,21 @@ public class TSScanner {
     }
 
     protected void nextWhileWordChar(){
+        StringBuilder s = new StringBuilder();
         char next;
         while (((next = (char) input.read()) != LexerInput.EOF) && isWordChar(new Character(next).toString())) {
+            s.append(next);
         }
+        input.backup(1);
     }
     
     protected void nextWhileMatchesRegExp(String pattern) {
+        StringBuilder s = new StringBuilder();
         char next;
         while (((next = (char) input.read()) != LexerInput.EOF) && Pattern.matches(pattern, new Character(next).toString())) {
+            s.append(next);
         }
+        input.backup(1);
     }
 
     protected TSTokenId readNumber() {
@@ -166,34 +182,44 @@ public class TSScanner {
     }
 
     private void nextWhileOperatorChar() {
+        StringBuilder s = new StringBuilder();
         char next;
         while (((next = (char) input.read()) != LexerInput.EOF) && isOperatorChar(new Character(next).toString())) {
+            s.append(next);
         }
+        input.backup(1);
     }
 
-    private void nextWhileDigit() {
+    private void  nextWhileDigit() {
+        StringBuilder s = new StringBuilder();
         char next;
         while (((next = (char) input.read()) != LexerInput.EOF) && isDigit(new Character(next).toString())) {
+            s.append(next);
         }
+        input.backup(1);
     }
 
     protected void nextWhileHexDigit() {
+        StringBuilder s = new StringBuilder();
         char next;
         while (((next = (char) input.read()) != LexerInput.EOF) && isHexDigit(new Character(next).toString())) {
+             s.append(next);
         }
     }
 
     protected void nextWhileWhiteSpace() {
+        StringBuilder s = new StringBuilder();
         char next;
         while (((next = (char) input.read()) != LexerInput.EOF) && isWhiteSpace(next)) {
+             s.append(next);
         }
+        input.backup(1);
     }
 
     protected void nextUntilUnescaped(char end) {
         boolean escaped = false;
         char next = (char) input.read();
         while (((next = (char) input.read()) != LexerInput.EOF) && next != '\n') {
-            input.read();
             if (next == end && !escaped) {
                 break;
             }
@@ -233,10 +259,17 @@ public class TSScanner {
     }
 
     protected boolean isWordChar(String input) {
-        return Pattern.matches("[\\w\\$_]", input);
+        return Pattern.matches("[\\w\\$_{}]", input);
     }
 
     protected boolean isWhiteSpace(char ch) {
         return ch != '\n' && (ch == ' ' || Pattern.matches("\\s", new Character(ch).toString()));
+    }
+
+    /**
+     * @return the readLength
+     */
+    public int getReadLength() {
+        return readLength;
     }
 }
