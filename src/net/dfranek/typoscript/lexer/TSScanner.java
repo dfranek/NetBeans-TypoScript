@@ -72,7 +72,7 @@ public class TSScanner {
      * @exception   java.io.IOException  if any I/O-Error occurs
      */
     public TSTokenId nextToken() throws java.io.IOException {
-        TSTokenId token = null;
+        TSTokenId token = TSTokenId.UNKNOWN_TOKEN;
         
         //input.backup(1);
         char ch = (char) input.read();
@@ -84,17 +84,15 @@ public class TSScanner {
             token = readMultilineComment(ch);
         } else if (isWhiteSpace(ch)) {
             nextWhileWhiteSpace();
-            return TSTokenId.WHITESPACE;
+            token = TSTokenId.WHITESPACE;
         } else if (!this.inValue && (ch == '"' || ch == '\'')) {
             nextUntilUnescaped(ch);
             token = TSTokenId.TS_STRING;
-        } else if ((ch == '<'
-                || ch == '>'
-                || (ch == '='
-                && (char) input.read() != '<'))
-                && (char) input.read() != '\n') { // there must be some value behind the operator!
+        } else if ((ch == '<' || ch == '>' || (ch == '=' && (char) input.read() != '<')) && (char) input.read() != '\n' && !this.inValue) { // there must be some value behind the operator!
             this.inValue = true;
             token = TSTokenId.TS_OPERATOR;
+            input.backup(1);
+            if(ch == '=') input.backup(1);
         } else if (!this.inValue && ch == '[') {
             nextUntilUnescaped(']');
             token = TSTokenId.TS_CONDITION;
