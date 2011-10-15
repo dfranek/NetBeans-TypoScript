@@ -9,7 +9,7 @@
     <fontcolor name="condition" default="char"/>
     <fontcolor name="ts" default="identifier"/>
     <fontcolor name="keyword" default="keyword"/>
-    <fontcolor name="include" default="char"/>
+	<fontcolor name="reserved" default="keyword"/>
     <fontcolor name="whitespace" default="char"/>
     <fontcolor name="error" default="error"/>
 </fontscolors>
