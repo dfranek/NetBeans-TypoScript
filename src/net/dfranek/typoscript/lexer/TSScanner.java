@@ -77,7 +77,7 @@ public class TSScanner {
         //input.backup(1);
         char ch = (char) input.read();
 
-        if (ch == '\n') {
+		if (ch == '\n') {
             token = TSTokenId.TS_NL;
             inValue = false;
         } else if (!this.inValue && this.inComment) {
@@ -151,7 +151,7 @@ public class TSScanner {
     protected void nextWhileWordChar(){
         StringBuilder s = new StringBuilder();
         char next;
-        while (((next = (char) input.read()) != LexerInput.EOF) && isWordChar(new Character(next).toString())) {
+        while (((next = (char) input.read()) != LexerInput.EOF) && isWordChar(new Character(next).toString()) && next != '\n') {
             s.append(next);
         }
         input.backup(1);
