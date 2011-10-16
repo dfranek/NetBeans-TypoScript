@@ -1,12 +1,46 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 2011 Daniel Franek.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ * 
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ * 
  */
 package net.dfranek.typoscript.lexer;
 
 /**
  *
- * @author daniel
+ * @author Daniel Franek
  */
 public final class TSScannerKeyWords {
 	public static String keywords3 = "ACT|ACTIFSUB|ACTIFSUBRO|ACTRO|all|arrowACT|arrowNO|ascii|atLeast|atMost|BE|be_groups|be_users|BOX|browse|bullets|CUR|CURIFSUB|CURIFSUBRO|CURRO|default|description|directory|directReturn|div|else|email|end|equals|external|false|FE|fe_groups|fe_users|feadmin|header|html|id|if|ifEmpty|IFSUB|IFSUBRO|image|inBranch|isFalse|isGreaterThan|isInList|isLessThan|isPositive|isTrue|language|leveltitle|list|login|mailform|media|menu|mod|multimedia|negate|NEW|NO|none|pages|pages_language_overlay|parseFunc_RTE|pid|required|RO|rootline|script|search|shortcut|sitemap|SPC|splash|sys_dmail|sys_domain|sys_filemounts|sys_note|sys_template|tabel|text|textpic|this|top|true|twice|uid|uniqueGlobal|uniqueLocal|unsetEmpty|updated|uploads|us|user_task|USERDEF1|USERDEF1RO|USERDEF2|USERDEF2RO|usergroup|USR|USRRO|web_func|web_info|web_layout|web_list|web_ts|xhtml_strict|xhtml_trans|XY|ypMenu";
