@@ -52,6 +52,7 @@ public class TSScanner {
 	private boolean inValue = false;
 	private boolean inComment = false;
 	private boolean regexp = false;
+	private boolean inParanthese = false;
 	private int readLength = 0;
 
 	public TSScanner(LexerRestartInfo info) {
@@ -71,7 +72,9 @@ public class TSScanner {
 		//input.backup(1);
 		char ch = (char) input.read();
 
-		if (ch == '\n') {
+		if(this.inParanthese && ch != ')') {
+			token = readWhileInParanthese();
+		}else if (ch == '\n') {
 			token = TSTokenId.TS_NL;
 			inValue = false;
 		} else if (!this.inValue && this.inComment) {
@@ -93,6 +96,18 @@ public class TSScanner {
 			nextUntilUnescaped(']');
 			token = TSTokenId.TS_CONDITION;
 			// with punctuation, the type of the token is the symbol itself
+		} else if(!this.inValue && ch == ')') {
+			char next = (char) input.read();
+			if(next == '\n') {
+				token = TSTokenId.TS_PARANTHESE;
+				this.inParanthese = false;
+			} else {
+				token = TSTokenId.TS_VALUE;
+			}
+			input.backup(1);
+		} else if(!this.inValue && ch == '(') {
+			token = TSTokenId.TS_PARANTHESE;
+			this.inParanthese = true;
 		} else if (!this.inValue && Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=]", new Character(ch).toString())) {
 			token = TSTokenId.TS_OPERATOR;
 		} else if (!this.inValue && (ch == '{' || ch == '}')) {
@@ -228,6 +243,15 @@ public class TSScanner {
 			escaped = next == '\\';
 		}
 	}
+	
+	protected TSTokenId readWhileInParanthese() {
+		char next;
+		while (((next = (char) input.read()) != LexerInput.EOF) && next != ')') {
+		}
+		input.backup(1);
+		
+		return TSTokenId.TS_VALUE;
+	}
 
 	protected TSTokenId readMultilineComment(char start) {
 		this.inComment = true;
@@ -274,4 +298,6 @@ public class TSScanner {
 	public int getReadLength() {
 		return readLength;
 	}
+
+	
 }

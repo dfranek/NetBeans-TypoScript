@@ -1,6 +1,11 @@
 #######################################################################
 # Comment
 #######################################################################
+
+/*
+ *
+ * asdasd
+ */
 page = PAGE
 page.config.SUBTEMPLATE = {$SUBTEMPLATE}
 
@@ -11,3 +16,12 @@ headerimg.file {
 [globalVar=TSFE:type = 0]
 	page.typeNum = 0
 [global]
+
+page.10.value ( 
+	asdasdasd
+	asdasd
+	as
+	das
+	d
+	sa
+)
