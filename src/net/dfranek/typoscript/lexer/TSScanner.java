@@ -176,13 +176,12 @@ public class TSScanner {
 		return input.readText().toString();
 	}
 
-	protected void nextWhileMatchesRegExp(String pattern) {
-		StringBuilder s = new StringBuilder();
+	protected String nextWhileMatchesRegExp(String pattern) {
 		char next;
 		while (((next = (char) input.read()) != LexerInput.EOF) && Pattern.matches(pattern, new Character(next).toString())) {
-			s.append(next);
 		}
 		input.backup(1);
+		return input.readText().toString();
 	}
 
 	protected TSTokenId readNumber() {
@@ -198,42 +197,38 @@ public class TSScanner {
 		return TSTokenId.TS_NUMBER;
 	}
 
-	private void nextWhileOperatorChar() {
-		StringBuilder s = new StringBuilder();
+	protected String nextWhileOperatorChar() {
 		char next;
 		while (((next = (char) input.read()) != LexerInput.EOF) && isOperatorChar(new Character(next).toString())) {
-			s.append(next);
 		}
 		input.backup(1);
+		return input.readText().toString();
 	}
 
-	private void nextWhileDigit() {
-		StringBuilder s = new StringBuilder();
+	protected String nextWhileDigit() {
 		char next;
 		while (((next = (char) input.read()) != LexerInput.EOF) && isDigit(new Character(next).toString())) {
-			s.append(next);
 		}
 		input.backup(1);
+		return input.readText().toString();
 	}
 
-	protected void nextWhileHexDigit() {
-		StringBuilder s = new StringBuilder();
+	protected String nextWhileHexDigit() {
 		char next;
 		while (((next = (char) input.read()) != LexerInput.EOF) && isHexDigit(new Character(next).toString())) {
-			s.append(next);
 		}
+		return input.readText().toString();
 	}
 
-	protected void nextWhileWhiteSpace() {
-		StringBuilder s = new StringBuilder();
+	protected String nextWhileWhiteSpace() {
 		char next;
 		while (((next = (char) input.read()) != LexerInput.EOF) && isWhiteSpace(next)) {
-			s.append(next);
 		}
 		input.backup(1);
+		return input.readText().toString();
 	}
 
-	protected void nextUntilUnescaped(char end) {
+	protected String nextUntilUnescaped(char end) {
 		boolean escaped = false;
 		char next = (char) input.read();
 		while (((next = (char) input.read()) != LexerInput.EOF) && next != '\n') {
@@ -242,6 +237,7 @@ public class TSScanner {
 			}
 			escaped = next == '\\';
 		}
+		return input.readText().toString();
 	}
 	
 	protected TSTokenId readWhileInParanthese() {
