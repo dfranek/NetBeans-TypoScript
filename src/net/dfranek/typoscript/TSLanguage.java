@@ -36,62 +36,57 @@
  * made subject to such option by the copyright holder.
  * 
  */
-package net.dfranek.typoscript.lexer;
-import java.util.*;
-import net.dfranek.typoscript.TSLanguage;
-import org.netbeans.api.lexer.InputAttributes;
-import org.netbeans.api.lexer.LanguagePath;
-import org.netbeans.api.lexer.Token;
-import org.netbeans.spi.lexer.*;
+package net.dfranek.typoscript;
+
+import net.dfranek.typoscript.lexer.TSTokenId;
+import org.netbeans.api.lexer.Language;
+import org.netbeans.modules.csl.spi.CommentHandler;
+import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
+import org.netbeans.modules.csl.spi.LanguageRegistration;
 
 /**
  *
  * @author Daniel Franek
  */
-public class TSLanguageHierarchy extends LanguageHierarchy<TSTokenId> {
 
-	private static EnumSet<TSTokenId>  tokens;
-    private static Map<Integer,TSTokenId> idToToken;
-	
-	private static void init () {
-        tokens = EnumSet.allOf(TSTokenId.class);
-        idToToken = new HashMap<Integer, TSTokenId> ();
-        for (TSTokenId token : tokens)
-            idToToken.put (token.ordinal (), token);
-    }
-	
-	static synchronized TSTokenId getToken (int id) {
-        if (idToToken == null)
-            init ();
-        return idToToken.get (id);
-    }
+@LanguageRegistration(mimeType="text/x-typoscript")
+public class TSLanguage extends DefaultLanguageConfig {
+
+	private static final String LINE_COMMENT_PREFIX = "#";//NOI18N
+	public static final String TS_MIME_TYPE = "text/x-typoscript";//NOI18N
 	
 	@Override
-	protected synchronized  Collection<TSTokenId> createTokenIds() {
-		if (tokens == null)
-            init ();
-        return tokens;
+	public Language getLexerLanguage() {
+		return TSTokenId.getLanguage();
 	}
 
 	@Override
-	protected synchronized Lexer<TSTokenId> createLexer(LexerRestartInfo<TSTokenId> lri) {
-		 return new TSLexer (lri);
+	public String getDisplayName() {
+		return "TypoScript";
 	}
 
 	@Override
-	protected String mimeType() {
-		return TSLanguage.TS_MIME_TYPE;
+	public String getLineCommentPrefix() {
+		return LINE_COMMENT_PREFIX;
 	}
 
 	@Override
-	protected LanguageEmbedding<?> embedding(Token<TSTokenId> token, LanguagePath languagePath, InputAttributes inputAttributes) {
-		TSTokenId id = token.id();
-		if(id == TSTokenId.TS_COMMENT) {
-			
-		}
-		
-		return null;
+	public String getPreferredExtension() {
+		return "ts";
 	}
+	
+	
+//
+//	@Override
+//	public boolean isIdentifierChar(char c) {
+//		return super.isIdentifierChar(c);
+//	}
+
+	@Override
+	public CommentHandler getCommentHandler() {
+		return new TSCommentHandler();
+	}
+	
 	
 	
 }
