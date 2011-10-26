@@ -82,7 +82,7 @@ public class TSLexer implements Lexer<TSTokenId> {
 
     @Override
     public Object state() {
-        return null;
+        return scanner.getState();
     }
 
     @Override

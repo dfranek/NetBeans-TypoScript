@@ -49,14 +49,16 @@ public class TSScanner {
 
 	/* user code: */
 	private LexerInput input;
-	private boolean inValue = false;
-	private boolean inComment = false;
-	private boolean regexp = false;
-	private boolean inParanthese = false;
 	private int readLength = 0;
+	private LexerState state;
 
 	public TSScanner(LexerRestartInfo info) {
 		this.input = info.input();
+		if (info.state() != null) {
+			this.state = (LexerState)info.state();
+		} else {
+			this.state = LexerState.DEFAULT;
+		}
 	}
 
 	/**
@@ -72,51 +74,51 @@ public class TSScanner {
 		//input.backup(1);
 		char ch = (char) input.read();
 
-		if(this.inParanthese && ch != ')') {
+		if (state == LexerState.IN_PARANTHESE && ch != ')') {
 			token = readWhileInParanthese();
-		}else if (ch == '\n') {
+		} else if (ch == '\n') {
 			token = TSTokenId.TS_NL;
-			inValue = false;
-		} else if (!this.inValue && this.inComment) {
+			state = LexerState.DEFAULT;
+		} else if ( state != LexerState.IN_VALUE && state == LexerState.IN_COMMENT) {
 			token = readMultilineComment(ch);
 		} else if (isWhiteSpace(ch)) {
 			nextWhileWhiteSpace();
 			token = TSTokenId.WHITESPACE;
-		} else if (!this.inValue && (ch == '"' || ch == '\'')) {
+		} else if (state != LexerState.IN_VALUE && (ch == '"' || ch == '\'')) {
 			nextUntilUnescaped(ch);
 			token = TSTokenId.TS_STRING;
-		} else if ((ch == '<' || ch == '>' || (ch == '=' && (char) input.read() != '<')) && (char) input.read() != '\n' && !this.inValue) { // there must be some value behind the operator!
-			this.inValue = true;
+		} else if ((ch == '<' || ch == '>' || (ch == '=' && (char) input.read() != '<')) && (char) input.read() != '\n' && state != LexerState.IN_VALUE) { // there must be some value behind the operator!
+			state = LexerState.IN_VALUE;
 			token = TSTokenId.TS_OPERATOR;
 			input.backup(1);
 			if (ch == '=') {
 				input.backup(1);
 			}
-		} else if (!this.inValue && ch == '[') {
+		} else if (state != LexerState.IN_VALUE && ch == '[') {
 			nextUntilUnescaped(']');
 			token = TSTokenId.TS_CONDITION;
 			// with punctuation, the type of the token is the symbol itself
-		} else if(!this.inValue && ch == ')') {
+		} else if (state != LexerState.IN_VALUE && ch == ')') {
 			char next = (char) input.read();
-			if(next == '\n') {
+			if (next == '\n') {
 				token = TSTokenId.TS_PARANTHESE;
-				this.inParanthese = false;
+				state = LexerState.DEFAULT;
 			} else {
 				token = TSTokenId.TS_VALUE;
 			}
 			input.backup(1);
-		} else if(!this.inValue && ch == '(') {
+		} else if (state != LexerState.IN_VALUE && ch == '(') {
 			token = TSTokenId.TS_PARANTHESE;
-			this.inParanthese = true;
-		} else if (!this.inValue && Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=]", new Character(ch).toString())) {
+			state = LexerState.IN_PARANTHESE;
+		} else if (state != LexerState.IN_VALUE && Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=]", new Character(ch).toString())) {
 			token = TSTokenId.TS_OPERATOR;
-		} else if (!this.inValue && (ch == '{' || ch == '}')) {
+		} else if (state != LexerState.IN_VALUE && (ch == '{' || ch == '}')) {
 			token = TSTokenId.TS_CURLY;
-		} else if (!this.inValue && ch == '0' && (input.read() == 'x' || input.read() == 'X')) {
+		} else if (state != LexerState.IN_VALUE && ch == '0' && (input.read() == 'x' || input.read() == 'X')) {
 			token = readHexNumber();
-		} else if (!this.inValue && isDigit(new Character(ch).toString())) {
+		} else if (state != LexerState.IN_VALUE && isDigit(new Character(ch).toString())) {
 			token = readNumber();
-		} else if (!this.inValue && ch == '/') {
+		} else if (state != LexerState.IN_VALUE && ch == '/') {
 			char next = (char) input.read();
 
 			if (next == '*') {
@@ -126,7 +128,7 @@ public class TSScanner {
 				nextUntilUnescaped('\n');
 				token = TSTokenId.TS_COMMENT;
 
-			} else if (this.regexp) {
+			} else if (state == LexerState.IN_REGEXP) {
 				token = readRegexp();
 
 			} else {
@@ -134,23 +136,23 @@ public class TSScanner {
 				token = TSTokenId.TS_OPERATOR;
 			}
 
-		} else if (!this.inValue && ch == '#') {
+		} else if (state != LexerState.IN_VALUE && ch == '#') {
 			nextUntilUnescaped('\n');
 			token = TSTokenId.TS_COMMENT;
-		} else if (!this.inValue && isOperatorChar(new Character(ch).toString())) {
+		} else if (state != LexerState.IN_VALUE && isOperatorChar(new Character(ch).toString())) {
 			nextWhileOperatorChar();
 			token = TSTokenId.TS_OPERATOR;
 		} else {
 			String word = nextWhileWordChar();
 			if (Pattern.matches(TSScannerKeyWords.keywords, word)) {
 				token = TSTokenId.TS_KEYWORD;
-			} else if(Pattern.matches(TSScannerKeyWords.keywords2, word)) {
+			} else if (Pattern.matches(TSScannerKeyWords.keywords2, word)) {
 				token = TSTokenId.TS_KEYWORD2;
-			} else if(Pattern.matches(TSScannerKeyWords.keywords3, word)) {
+			} else if (Pattern.matches(TSScannerKeyWords.keywords3, word)) {
 				token = TSTokenId.TS_KEYWORD3;
-			} else if(Pattern.matches(TSScannerKeyWords.reservedWord, word)) {
+			} else if (Pattern.matches(TSScannerKeyWords.reservedWord, word)) {
 				token = TSTokenId.TS_RESERVED;
-			} else if (inValue) {
+			} else if (state == LexerState.IN_VALUE) {
 				token = TSTokenId.TS_VALUE;
 			} else {
 				token = TSTokenId.TS_PROPERTY;
@@ -172,7 +174,7 @@ public class TSScanner {
 		while (((next = (char) input.read()) != LexerInput.EOF) && isWordChar(new Character(next).toString()) && next != '\n') {
 		}
 		input.backup(1);
-		
+
 		return input.readText().toString();
 	}
 
@@ -239,18 +241,18 @@ public class TSScanner {
 		}
 		return input.readText().toString();
 	}
-	
+
 	protected TSTokenId readWhileInParanthese() {
 		char next;
 		while (((next = (char) input.read()) != LexerInput.EOF) && next != ')') {
 		}
 		input.backup(1);
-		
+
 		return TSTokenId.TS_VALUE;
 	}
 
 	protected TSTokenId readMultilineComment(char start) {
-		this.inComment = true;
+		state = LexerState.IN_COMMENT;
 		boolean maybeEnd = (start == '*');
 		while (true) {
 			char next = (char) input.read();
@@ -259,7 +261,7 @@ public class TSScanner {
 			}
 
 			if (next == '/' && maybeEnd) {
-				this.inComment = false;
+				state = LexerState.DEFAULT;
 				break;
 			}
 			maybeEnd = (next == '*');
@@ -293,6 +295,10 @@ public class TSScanner {
 	 */
 	public int getReadLength() {
 		return readLength;
+	}
+	
+	public LexerState getState() {
+		return state;
 	}
 
 	
