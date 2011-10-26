@@ -39,7 +39,8 @@
 package net.dfranek.typoscript.lexer;
 
 /**
- *
+ * Enum with the possible states for TypoScript scanner.
+ * 
  * @author Daniel Franek
  */
 public enum TSLexerState {

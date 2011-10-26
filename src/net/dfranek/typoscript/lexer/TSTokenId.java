@@ -42,7 +42,8 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenId;
 
 /**
- *
+ * Enum with possible tokens for the TypoScript Language
+ * 
  * @author Daniel Franek
  */
 public enum TSTokenId implements TokenId {

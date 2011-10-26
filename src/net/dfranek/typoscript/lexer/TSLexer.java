@@ -61,6 +61,11 @@ public class TSLexer implements Lexer<TSTokenId> {
         tokenFactory = info.tokenFactory();
     }
 
+	/**
+	 * Returns the next Token. Calls TSScanner.nextToken to determine type of the token.
+	 * 
+	 * @return the next token
+	 */
     @Override
     public Token<TSTokenId> nextToken() {
         
@@ -80,12 +85,17 @@ public class TSLexer implements Lexer<TSTokenId> {
         return null;
     }
 
+	/**
+	 * Returns the current state of the scanner.
+	 * @see TSLexerState
+	 * 
+	 * @return the state of the scanner
+	 */
     @Override
     public Object state() {
         return scanner.getState();
     }
 
     @Override
-    public void release() {
-    }
+    public void release() {}
 }
