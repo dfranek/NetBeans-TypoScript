@@ -40,7 +40,6 @@ package net.dfranek.typoscript;
 
 import net.dfranek.typoscript.lexer.TSTokenId;
 import org.netbeans.api.lexer.Language;
-import org.netbeans.modules.csl.spi.CommentHandler;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 
