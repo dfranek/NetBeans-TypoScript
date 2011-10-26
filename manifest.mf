@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: net.dfranek.typoscript/1
-OpenIDE-Module-Implementation-Version: 3
+OpenIDE-Module-Implementation-Version: 0
 OpenIDE-Module-Layer: net/dfranek/typoscript/layer.xml
 OpenIDE-Module-Localizing-Bundle: net/dfranek/typoscript/Bundle.properties
 
