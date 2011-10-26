@@ -50,14 +50,14 @@ public class TSScanner {
 	/* user code: */
 	private LexerInput input;
 	private int readLength = 0;
-	private LexerState state;
+	private TSLexerState state;
 
 	public TSScanner(LexerRestartInfo info) {
 		this.input = info.input();
 		if (info.state() != null) {
-			this.state = (LexerState)info.state();
+			this.state = (TSLexerState)info.state();
 		} else {
-			this.state = LexerState.DEFAULT;
+			this.state = TSLexerState.DEFAULT;
 		}
 	}
 
@@ -74,51 +74,51 @@ public class TSScanner {
 		//input.backup(1);
 		char ch = (char) input.read();
 
-		if (state == LexerState.IN_PARANTHESE && ch != ')') {
+		if (state == TSLexerState.IN_PARANTHESE && ch != ')') {
 			token = readWhileInParanthese();
 		} else if (ch == '\n') {
 			token = TSTokenId.TS_NL;
-			state = LexerState.DEFAULT;
-		} else if ( state != LexerState.IN_VALUE && state == LexerState.IN_COMMENT) {
+			state = TSLexerState.DEFAULT;
+		} else if ( state != TSLexerState.IN_VALUE && state == TSLexerState.IN_COMMENT) {
 			token = readMultilineComment(ch);
 		} else if (isWhiteSpace(ch)) {
 			nextWhileWhiteSpace();
 			token = TSTokenId.WHITESPACE;
-		} else if (state != LexerState.IN_VALUE && (ch == '"' || ch == '\'')) {
+		} else if (state != TSLexerState.IN_VALUE && (ch == '"' || ch == '\'')) {
 			nextUntilUnescaped(ch);
 			token = TSTokenId.TS_STRING;
-		} else if ((ch == '<' || ch == '>' || (ch == '=' && (char) input.read() != '<')) && (char) input.read() != '\n' && state != LexerState.IN_VALUE) { // there must be some value behind the operator!
-			state = LexerState.IN_VALUE;
+		} else if ((ch == '<' || ch == '>' || (ch == '=' && (char) input.read() != '<')) && (char) input.read() != '\n' && state != TSLexerState.IN_VALUE) { // there must be some value behind the operator!
+			state = TSLexerState.IN_VALUE;
 			token = TSTokenId.TS_OPERATOR;
 			input.backup(1);
 			if (ch == '=') {
 				input.backup(1);
 			}
-		} else if (state != LexerState.IN_VALUE && ch == '[') {
+		} else if (state != TSLexerState.IN_VALUE && ch == '[') {
 			nextUntilUnescaped(']');
 			token = TSTokenId.TS_CONDITION;
 			// with punctuation, the type of the token is the symbol itself
-		} else if (state != LexerState.IN_VALUE && ch == ')') {
+		} else if (state != TSLexerState.IN_VALUE && ch == ')') {
 			char next = (char) input.read();
 			if (next == '\n') {
 				token = TSTokenId.TS_PARANTHESE;
-				state = LexerState.DEFAULT;
+				state = TSLexerState.DEFAULT;
 			} else {
 				token = TSTokenId.TS_VALUE;
 			}
 			input.backup(1);
-		} else if (state != LexerState.IN_VALUE && ch == '(') {
+		} else if (state != TSLexerState.IN_VALUE && ch == '(') {
 			token = TSTokenId.TS_PARANTHESE;
-			state = LexerState.IN_PARANTHESE;
-		} else if (state != LexerState.IN_VALUE && Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=]", new Character(ch).toString())) {
+			state = TSLexerState.IN_PARANTHESE;
+		} else if (state != TSLexerState.IN_VALUE && Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=]", new Character(ch).toString())) {
 			token = TSTokenId.TS_OPERATOR;
-		} else if (state != LexerState.IN_VALUE && (ch == '{' || ch == '}')) {
+		} else if (state != TSLexerState.IN_VALUE && (ch == '{' || ch == '}')) {
 			token = TSTokenId.TS_CURLY;
-		} else if (state != LexerState.IN_VALUE && ch == '0' && (input.read() == 'x' || input.read() == 'X')) {
+		} else if (state != TSLexerState.IN_VALUE && ch == '0' && (input.read() == 'x' || input.read() == 'X')) {
 			token = readHexNumber();
-		} else if (state != LexerState.IN_VALUE && isDigit(new Character(ch).toString())) {
+		} else if (state != TSLexerState.IN_VALUE && isDigit(new Character(ch).toString())) {
 			token = readNumber();
-		} else if (state != LexerState.IN_VALUE && ch == '/') {
+		} else if (state != TSLexerState.IN_VALUE && ch == '/') {
 			char next = (char) input.read();
 
 			if (next == '*') {
@@ -128,7 +128,7 @@ public class TSScanner {
 				nextUntilUnescaped('\n');
 				token = TSTokenId.TS_COMMENT;
 
-			} else if (state == LexerState.IN_REGEXP) {
+			} else if (state == TSLexerState.IN_REGEXP) {
 				token = readRegexp();
 
 			} else {
@@ -136,10 +136,10 @@ public class TSScanner {
 				token = TSTokenId.TS_OPERATOR;
 			}
 
-		} else if (state != LexerState.IN_VALUE && ch == '#') {
+		} else if (state != TSLexerState.IN_VALUE && ch == '#') {
 			nextUntilUnescaped('\n');
 			token = TSTokenId.TS_COMMENT;
-		} else if (state != LexerState.IN_VALUE && isOperatorChar(new Character(ch).toString())) {
+		} else if (state != TSLexerState.IN_VALUE && isOperatorChar(new Character(ch).toString())) {
 			nextWhileOperatorChar();
 			token = TSTokenId.TS_OPERATOR;
 		} else {
@@ -152,7 +152,7 @@ public class TSScanner {
 				token = TSTokenId.TS_KEYWORD3;
 			} else if (Pattern.matches(TSScannerKeyWords.reservedWord, word)) {
 				token = TSTokenId.TS_RESERVED;
-			} else if (state == LexerState.IN_VALUE) {
+			} else if (state == TSLexerState.IN_VALUE) {
 				token = TSTokenId.TS_VALUE;
 			} else {
 				token = TSTokenId.TS_PROPERTY;
@@ -252,7 +252,7 @@ public class TSScanner {
 	}
 
 	protected TSTokenId readMultilineComment(char start) {
-		state = LexerState.IN_COMMENT;
+		state = TSLexerState.IN_COMMENT;
 		boolean maybeEnd = (start == '*');
 		while (true) {
 			char next = (char) input.read();
@@ -261,7 +261,7 @@ public class TSScanner {
 			}
 
 			if (next == '/' && maybeEnd) {
-				state = LexerState.DEFAULT;
+				state = TSLexerState.DEFAULT;
 				break;
 			}
 			maybeEnd = (next == '*');
@@ -297,7 +297,7 @@ public class TSScanner {
 		return readLength;
 	}
 	
-	public LexerState getState() {
+	public TSLexerState getState() {
 		return state;
 	}
 
