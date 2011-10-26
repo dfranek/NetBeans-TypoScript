@@ -100,18 +100,17 @@
 	<folder name="Editors">
 		<folder name="text">
 			<folder name="x-typoscript">
-				<file name="org-netbeans-modules-editor-NbEditorKit.instance"/>
-				<file name="language.instance">
+				<attr name="displayName" bundlevalue="net.dfranek.typoscript.Bundle#Editors/text/x-typoscript"/>
+                <file name="language.instance">
 					<attr name="instanceCreate" methodvalue="net.dfranek.typoscript.lexer.TSTokenId.getLanguage"/>
 					<attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
 				</file>
-				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.Bundle"/>
 				<folder name="FontsColors">
 					<folder name="NetBeans">
 						<folder name="Defaults">
 							<file name="FontAndColors.xml" url="FontAndColors.xml">
 								<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.Bundle"/>
-							</file>
+                            </file>
 						</folder>
 					</folder>
 				</folder>

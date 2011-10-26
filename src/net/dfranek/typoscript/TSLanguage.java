@@ -76,17 +76,9 @@ public class TSLanguage extends DefaultLanguageConfig {
 	}
 	
 	
-//
-//	@Override
-//	public boolean isIdentifierChar(char c) {
-//		return super.isIdentifierChar(c);
-//	}
-
 	@Override
-	public CommentHandler getCommentHandler() {
-		return new TSCommentHandler();
+	public boolean isIdentifierChar(char c) {
+		return Character.isJavaIdentifierPart(c);
 	}
-	
-	
 	
 }
