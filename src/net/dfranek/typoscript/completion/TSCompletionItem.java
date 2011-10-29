@@ -20,8 +20,13 @@ import org.openide.util.ImageUtilities;
  */
 public class TSCompletionItem implements CompletionProposal {
 	private int anchor;
-	public TSCompletionItem(int anchor) {
+	private String name;
+	private ElementKind kind;
+	
+	public TSCompletionItem(int anchor, String name, ElementKind kind) {
 		this.anchor = anchor;
+		this.name = name;
+		this.kind = kind;
 	}
 	
 	@Override
@@ -31,17 +36,17 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public ElementHandle getElement() {
-		return null;
+		return new TSElement(getName());
 	}
 
 	@Override
 	public String getName() {
-		return "Test";
+		return this.name;
 	}
 
 	@Override
 	public String getInsertPrefix() {
-		return "testprefix";
+		return getName();
 	}
 
 	@Override
@@ -51,22 +56,22 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public String getLhsHtml(HtmlFormatter hf) {
-		return "some test text lhs";
+		return getName();
 	}
 
 	@Override
 	public String getRhsHtml(HtmlFormatter hf) {
-		return "some test text rhs";
+		return this.kind.toString();
 	}
 
 	@Override
 	public ElementKind getKind() {
-		return ElementKind.VARIABLE;
+		return this.kind;
 	}
 
 	@Override
 	public ImageIcon getIcon() {
-		return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/ts.png"));
+		return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/ts.png"));
 	}
 
 	@Override
@@ -76,7 +81,7 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public boolean isSmart() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -86,7 +91,7 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public String getCustomInsertTemplate() {
-		return "custom insert template";
+		return null;
 	}
 	
 }

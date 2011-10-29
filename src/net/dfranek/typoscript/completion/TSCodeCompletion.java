@@ -4,9 +4,9 @@
  */
 package net.dfranek.typoscript.completion;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,6 +14,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
+import net.dfranek.typoscript.lexer.TSScanner;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
@@ -27,6 +28,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.openide.util.Exceptions;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
+import org.netbeans.modules.csl.api.ElementKind;
 
 /**
  *
@@ -35,36 +37,67 @@ import org.netbeans.editor.Utilities;
 public class TSCodeCompletion implements CodeCompletionHandler {
 
 	private final static Collection<Character> AUTOPOPUP_STOP_CHARS = new TreeSet<Character>(
-			Arrays.asList('=', ';', '+', '-', '*', '/', '%', '(', ')', '[', ']', '{', '}', '?'));
-
+			Arrays.asList('=', ';', '+', '-', '*', '/', '%', '(', ')', '[', ']', '{', '}', '?','\n'));
+	
+	
 	@Override
 	public CodeCompletionResult complete(CodeCompletionContext context) {
-		String prefix = context.getPrefix();
-		BaseDocument doc = (BaseDocument) context.getParserResult().getSnapshot().getSource().getDocument(false);
-		if (doc == null) {
-			return CodeCompletionResult.NONE;
+		try {
+			BaseDocument doc = (BaseDocument) context.getParserResult().getSnapshot().getSource().getDocument(false);
+			if (doc == null) {
+				return CodeCompletionResult.NONE;
+			}
+			final TSCompletionResult completionResult = new TSCompletionResult(context);
+			int caretOffset = context.getCaretOffset();
+			int lineBegin = Utilities.getRowStart(doc, caretOffset);
+			if (lineBegin != -1) {
+				
+				int lineEnd = Utilities.getRowEnd(doc, caretOffset);
+				int lineOffset = caretOffset - lineBegin;
+				String line = doc.getText(lineBegin, lineEnd - lineBegin);
+				if(line.lastIndexOf("=", lineOffset) != -1) {
+					addKeywords(completionResult, context);
+				} else {
+					addReservedWords(completionResult, context);
+				}
+			}
+
+			return completionResult;
+		} catch (BadLocationException ex) {
+			Exceptions.printStackTrace(ex);
 		}
-
-		final TSCompletionResult completionResult = new TSCompletionResult(context);
-		ParserResult info = context.getParserResult();
-		int caretOffset = context.getCaretOffset();
-		final String pref = getPrefix(info, caretOffset, true);
-		
-		completionResult.add(new TSCompletionItem(caretOffset));
-
-
-		return completionResult;
+		return CodeCompletionResult.NONE;
+	}
+	
+	private void addKeywords(TSCompletionResult result, CodeCompletionContext context) {
+		for (Iterator<String> it = TSScanner.TSScannerKeyWords.keywords.iterator(); it.hasNext();) {
+			String word = it.next();
+			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
+				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.KEYWORD));
+			}
+		}
+	}
+	
+	private void addReservedWords(TSCompletionResult result, CodeCompletionContext context) {
+		for (Iterator<String> it = TSScanner.TSScannerKeyWords.reservedWord.iterator(); it.hasNext();) {
+			String word = it.next();
+			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
+				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY));
+			}
+		}
+		for (Iterator<String> it = TSScanner.TSScannerKeyWords.keywords2.iterator(); it.hasNext();) {
+			String word = it.next();
+			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
+				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY));
+			}
+		}
 	}
 
 	@Override
 	public String document(ParserResult pr, ElementHandle eh) {
-		try {
-			return eh.getFileObject().asText();
-		} catch (IOException ex) {
-			Exceptions.printStackTrace(ex);
-		}
 		return null;
 	}
+	
 
 	@Override
 	public ElementHandle resolveLink(String string, ElementHandle eh) {
@@ -84,11 +117,17 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 				int lineEnd = Utilities.getRowEnd(doc, caretOffset);
 				String line = doc.getText(lineBegin, lineEnd - lineBegin);
 				int lineOffset = caretOffset - lineBegin;
-				int start = lineOffset;
+				int start = 0;
+				if(line.lastIndexOf(".", lineOffset) != -1) {
+					start = line.lastIndexOf(".", lineOffset)+1;	
+				} else if(line.lastIndexOf("=", lineOffset) != -1) {
+					start = line.lastIndexOf("=", lineOffset)+1;
+				}
+				
 
 				String prefix;
 				if (upToOffset) {
-					prefix = line.substring(start, lineOffset);
+					prefix = line.substring(start, lineOffset).trim();
 				} else {
 					if (lineOffset == line.length()) {
 						prefix = line.substring(start);
@@ -124,7 +163,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		char lastChar = typedText.charAt(typedText.length() - 1);
 		if (AUTOPOPUP_STOP_CHARS.contains(Character.valueOf(lastChar))) {
 			return QueryType.STOP;
-		}
+	}
 
 		Document document = component.getDocument();
 		int offset = component.getCaretPosition();
@@ -137,8 +176,8 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		int diff = ts.move(offset);
 		if (diff > 0 && ts.moveNext() || ts.movePrevious()) {
 			t = ts.token();
-			if (t.id() == TSTokenId.TS_PROPERTY || t.id() == TSTokenId.TS_KEYWORD || t.id() == TSTokenId.TS_KEYWORD2 || t.id() == TSTokenId.TS_KEYWORD3 || t.id() == TSTokenId.TS_RESERVED) {
-				return QueryType.ALL_COMPLETION;
+			if (t.id() == TSTokenId.TS_OPERATOR || t.id() == TSTokenId.TS_PROPERTY || t.id() == TSTokenId.TS_KEYWORD || t.id() == TSTokenId.TS_KEYWORD2 || t.id() == TSTokenId.TS_KEYWORD3 || t.id() == TSTokenId.TS_RESERVED) {
+				return QueryType.COMPLETION;
 			}
 		}
 
@@ -158,6 +197,6 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	@Override
 	public ParameterInfo parameters(ParserResult pr, int i, CompletionProposal cp) {
-		return null;
+		return ParameterInfo.NONE;
 	}
 }

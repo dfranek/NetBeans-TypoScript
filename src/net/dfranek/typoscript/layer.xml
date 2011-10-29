@@ -64,7 +64,7 @@
 				</folder>
 				<folder name="Factories">
 					<file name="TSDataLoader.instance">
-						<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/dfranek/typoscript/ts.png"/>
+						<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/dfranek/typoscript/resources/ts.png"/>
 						<attr name="dataObjectClass" stringvalue="net.dfranek.typoscript.TSDataObject"/>
 						<attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
 						<attr name="mimeType" stringvalue="text/x-typoscript"/>

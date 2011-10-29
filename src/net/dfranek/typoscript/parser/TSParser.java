@@ -4,13 +4,13 @@
  */
 package net.dfranek.typoscript.parser;
 
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
+import net.dfranek.typoscript.lexer.TSTokenId;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -32,9 +32,9 @@ public class TSParser extends Parser {
 	@Override
 	public void parse(Snapshot snapshot, Task task, SourceModificationEvent sme) throws ParseException {
 		this.snapshot = snapshot;
-		String source = snapshot.getText().toString();
+		TokenSequence<TSTokenId> sequence = snapshot.getTokenHierarchy().tokenSequence(TSTokenId.getLanguage());
 		try {
-			result = parseSource(source);
+			result = parseSource(sequence);
 		} catch(Exception e) {
 			LOGGER.log (Level.FINE, "Exception during parsing: {0}", e);
 			result = new TSParserResult(snapshot);
@@ -47,15 +47,17 @@ public class TSParser extends Parser {
 	}
 
 	@Override
-	public void addChangeListener(ChangeListener cl) {
-	}
+	public void addChangeListener(ChangeListener cl) {}
 
 	@Override
-	public void removeChangeListener(ChangeListener cl) {
-	}
+	public void removeChangeListener(ChangeListener cl) {}
 
-	private ParserResult parseSource(String source) {
-		throw new UnsupportedOperationException("Not yet implemented");
+	private ParserResult parseSource(TokenSequence<TSTokenId> source) {
+		ParserResult pResult;
+		TSTokenParser p = new TSTokenParser(source, snapshot);
+		pResult = p.analyze();
+		
+		return pResult;
 	}
 
 	public static class TSParserResult extends ParserResult {
@@ -68,9 +70,18 @@ public class TSParser extends Parser {
 			this.errors = Collections.<Error>emptyList();
 		}
 
+		private TSParserResult(Snapshot snapshot, TokenSequence<TSTokenId> source) {
+			super(snapshot);
+			this.errors = Collections.<Error>emptyList();
+		}
+
 		@Override
 		public List<? extends Error> getDiagnostics() {
 			return errors;
+		}
+		
+		public void addError(Error e ) {
+			errors.add(e);
 		}
 
 		@Override

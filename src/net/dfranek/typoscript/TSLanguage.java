@@ -38,10 +38,14 @@
  */
 package net.dfranek.typoscript;
 
+import net.dfranek.typoscript.completion.TSCodeCompletion;
 import net.dfranek.typoscript.lexer.TSTokenId;
+import net.dfranek.typoscript.parser.TSParser;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
+import org.netbeans.modules.parsing.spi.Parser;
 
 /**
  *
@@ -79,5 +83,14 @@ public class TSLanguage extends DefaultLanguageConfig {
 	public boolean isIdentifierChar(char c) {
 		return Character.isJavaIdentifierPart(c);
 	}
-	
+
+	@Override
+	public CodeCompletionHandler getCompletionHandler() {
+		return new TSCodeCompletion();
+	}
+
+	@Override
+	public Parser getParser() {
+		return new TSParser();
+	}
 }
