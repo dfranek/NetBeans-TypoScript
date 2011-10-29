@@ -1,3 +1,5 @@
 This Project aims to provide support for the TypoScript Language used by TYPO3. 
 
-So far there is only a part of the lexer implementend, the TSScanner Class works on base of the t3editor tokenizetyposcript.js.
+So far there is the lexer implementend, the TSScanner Class was implmented on base of the t3editor tokenizetyposcript.js.
+
+Furthermore, a very simple code completion has been implemented.
