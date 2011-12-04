@@ -36,77 +36,86 @@
  * made subject to such option by the copyright holder.
  * 
  */
-package net.dfranek.typoscript.parser;
+package net.dfranek.typoscript.parser.ast;
 
-import org.netbeans.modules.csl.api.Severity;
-import org.openide.filesystems.FileObject;
+import java.util.Collection;
+import java.util.HashMap;
 
 /**
  *
- * @author daniel
+ * @author Daniel Franek
  */
-public class TSError implements org.netbeans.modules.csl.api.Error{
+public class TSASTNode {
+	private String name;
+	private String value;
+	private TSASTNodeType type;
+	private HashMap<String, TSASTNode> children = new HashMap<String, TSASTNode>();
+	private TSASTNode parent;
 
-	private final String displayName;
+	public TSASTNode(String name, String value, TSASTNodeType type) {
+		this.name = name;
+		this.value = value;
+		this.type = type;
+	}
 
-    private final FileObject file;
-    private final int startPosition;
-    private final int endPosition;
-    private final Severity severity;
-    private final Object[] parameters;
-
-	public TSError(String name, FileObject file, int start, int end, Severity severity, Object[] params) {
-		displayName = name;
-		this.file = file;
-		startPosition = start;
-		endPosition = end;
-		this.severity = severity;
-		this.parameters = params;
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 	
-	@Override
-	public String getDisplayName() {
-		return displayName;
+	public void addChild(TSASTNode node) {
+		node.setParent(this);
+		children.put(node.getName(), node);
+	}
+	
+	public void removeChild(TSASTNode node) {
+		children.remove(node.getName());
+	}
+	
+	public Collection<TSASTNode> getChildren() {
+		return children.values();
+	}
+	
+	public boolean hasChild(TSASTNode node) {
+		return children.containsKey(node.getName());
 	}
 
-	@Override
-	public String getDescription() {
-		return null;
+	/**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
 	}
 
-	@Override
-	public String getKey() {
-		return "[" + startPosition + "," + endPosition + "]-" + displayName ;
+	/**
+	 * @return the type
+	 */
+	public TSASTNodeType getType() {
+		return type;
 	}
 
-	@Override
-	public FileObject getFile() {
-		return this.file;
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
 	}
 
-	@Override
-	public int getStartPosition() {
-		return startPosition;
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(TSASTNodeType type) {
+		this.type = type;
 	}
-
-	@Override
-	public int getEndPosition() {
-		return endPosition;
+	
+	public void setParent(TSASTNode node) {
+		this.parent = node;
 	}
-
-	@Override
-	public boolean isLineError() {
-		return true;
-	}
-
-	@Override
-	public Severity getSeverity() {
-		return severity;
-	}
-
-	@Override
-	public Object[] getParameters() {
-		return parameters;
+	
+	public TSASTNode getParent() {
+		return this.parent;
 	}
 	
 }

@@ -36,77 +36,86 @@
  * made subject to such option by the copyright holder.
  * 
  */
-package net.dfranek.typoscript.parser;
-
-import org.netbeans.modules.csl.api.Severity;
-import org.openide.filesystems.FileObject;
+package net.dfranek.typoscript.parser.ast;
 
 /**
  *
- * @author daniel
+ * @author Daniel Franek
  */
-public class TSError implements org.netbeans.modules.csl.api.Error{
-
-	private final String displayName;
-
-    private final FileObject file;
-    private final int startPosition;
-    private final int endPosition;
-    private final Severity severity;
-    private final Object[] parameters;
-
-	public TSError(String name, FileObject file, int start, int end, Severity severity, Object[] params) {
-		displayName = name;
-		this.file = file;
-		startPosition = start;
-		endPosition = end;
-		this.severity = severity;
-		this.parameters = params;
-	}
+public enum TSASTNodeType {
+	// Top Level Objects
+	PLUGIN,
+	CONFIG,
+	CONSTANTS,
+	PAGE,
+	FE_DATA,
+	FE_TABLE,
+	FRAMESET,
+	FRAME,
+	META,
+	CARRAY,
 	
-	@Override
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	@Override
-	public String getDescription() {
-		return null;
-	}
-
-	@Override
-	public String getKey() {
-		return "[" + startPosition + "," + endPosition + "]-" + displayName ;
-	}
-
-	@Override
-	public FileObject getFile() {
-		return this.file;
-	}
-
-	@Override
-	public int getStartPosition() {
-		return startPosition;
-	}
-
-	@Override
-	public int getEndPosition() {
-		return endPosition;
-	}
-
-	@Override
-	public boolean isLineError() {
-		return true;
-	}
-
-	@Override
-	public Severity getSeverity() {
-		return severity;
-	}
-
-	@Override
-	public Object[] getParameters() {
-		return parameters;
-	}
+	// Graphic Functions
+	GIFBUILDER,
+	GIFBUILDER_TEXT,
+	GIFBUILDER_IMAGE,
+	SHADOW,
+	EMBOSS,
+	OUTLINE,
+	BOX,
+	EFFECT,
+	WORKAREA,
+	CROP,
+	SCALE,
+	ADJUST,
+	IMGMAP,
 	
+	// Menu Objects
+	GMENU,
+	GMENU_LAYERS,
+	TMENU,
+	TMENU_LAYERS,
+	GMENU_FOLDOUT,
+	TMENUITEM,
+	IMGMENU,
+	IMGMENUITEM,
+	JSMENU,
+	JSMENUITEM,
+	
+	// Content Objects
+	HTML,
+	TEXT,
+	COBJ_ARRAY,
+	COA,
+	COA_INT,
+	FILE,
+	IMAGE,
+	IMG_RESOURCE,
+	CLEARGIF,
+	CONTENT,
+	RECORDS,
+	HMENU,
+	CTABLE,
+	OTABLE,
+	COLUMNS,
+	HRULER,
+	IMGTEXT,
+	CASE,
+	LOAD_REGISTER,
+	RESTORE_REGISTER,
+	FORM,
+	SEARCHRESULT,
+	USER,
+	USER_INT,
+	PHP_SCRIPT,
+	PHP_SCRIPT_INT,
+	PHP_SCRIPT_EXT,
+	TEMPLATE,
+	MULTIMEDIA,
+	EDITPANEL,
+	
+	// Relevant for Parsing
+	UNKNOWN,
+	VALUE,
+	ROOTLEVEL,
 }

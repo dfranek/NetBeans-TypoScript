@@ -45,9 +45,6 @@ import java.util.regex.Pattern;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
-/**
- * 
- */
 public class TSScanner {
 
 	private LexerInput input;
