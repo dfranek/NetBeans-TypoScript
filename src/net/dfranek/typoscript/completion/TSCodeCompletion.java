@@ -95,7 +95,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	@Override
 	public String document(ParserResult pr, ElementHandle eh) {
-		return "asdasdasd";
+		return null;
 	}
 	
 
