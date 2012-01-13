@@ -3,8 +3,7 @@
 #######################################################################
 
 /*
- *
- * asdasd
+ * Line Comment
  */
 page = PAGE
 page.config.SUBTEMPLATE = {$SUBTEMPLATE}
@@ -18,10 +17,7 @@ headerimg.file {
 [global]
 
 page.10.value ( 
-	asdasdasd
-	asdasd
-	as
-	das
-	d
-	sa
+	Multi
+	Line 
+	Value
 )
