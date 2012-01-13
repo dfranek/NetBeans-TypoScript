@@ -43,7 +43,7 @@ import org.openide.filesystems.FileObject;
 
 /**
  *
- * @author daniel
+ * @author Daniel Franek
  */
 public class TSError implements org.netbeans.modules.csl.api.Error{
 

@@ -55,7 +55,7 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 
 /**
  *
- * @author daniel
+ * @author Daniel Franek
  */
 public class TSParser extends Parser {
 

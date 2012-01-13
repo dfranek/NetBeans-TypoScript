@@ -49,7 +49,10 @@ import org.openide.nodes.Node;
 import org.openide.nodes.Children;
 import org.openide.util.Lookup;
 import org.openide.text.DataEditorSupport;
-
+/**
+ *
+ * @author Daniel Franek
+ */
 public class TSDataObject extends MultiDataObject {
 
 	public TSDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {

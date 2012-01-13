@@ -47,7 +47,7 @@ import org.netbeans.spi.lexer.TokenFactory;
 
 /**
  *
- * @author Daniel
+ * @author Daniel Franek
  */
 public class TSLexer implements Lexer<TSTokenId> {
 
