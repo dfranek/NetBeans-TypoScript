@@ -59,7 +59,7 @@ public class TSLanguage extends DefaultLanguageConfig {
 	public static final String TS_MIME_TYPE = "text/x-typoscript";//NOI18N
 	
 	@Override
-	public Language getLexerLanguage() {
+	public Language<TSTokenId> getLexerLanguage() {
 		return TSTokenId.getLanguage();
 	}
 

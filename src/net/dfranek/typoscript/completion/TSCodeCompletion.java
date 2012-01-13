@@ -95,7 +95,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	@Override
 	public String document(ParserResult pr, ElementHandle eh) {
-		return null;
+		return "asdasdasd";
 	}
 	
 
@@ -172,7 +172,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 			return QueryType.STOP;
 		}
 
-		Token t = null;
+		Token<TSTokenId> t = null;
 		int diff = ts.move(offset);
 		if (diff > 0 && ts.moveNext() || ts.movePrevious()) {
 			t = ts.token();

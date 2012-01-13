@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+	<folder name="Editors">
+		<folder name="text">
+			<folder name="x-typoscript">
+				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.Bundle"/>
+				<folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="FontAndColors.xml" url="FontAndColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+				<file name="language.instance">
+					<attr name="instanceCreate" methodvalue="net.dfranek.typoscript.lexer.TSTokenId.getLanguage"/>
+					<attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+			</folder>
+		</folder>
+	</folder>
+	<folder name="OptionsDialog">
+		<folder name="PreviewExamples">
+			<folder name="text">
+				<file name="x-typoscript" url="TSExample.ts"/>
+			</folder>
+		</folder>
+	</folder>
 	<folder name="Loaders">
 		<folder name="text">
 			<folder name="x-typoscript">
@@ -64,9 +91,9 @@
 				</folder>
 				<folder name="Factories">
 					<file name="TSDataLoader.instance">
-						<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/dfranek/typoscript/resources/ts.png"/>
 						<attr name="dataObjectClass" stringvalue="net.dfranek.typoscript.TSDataObject"/>
-						<attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
+						<attr name="iconBase" stringvalue="net/dfranek/typoscript/resources/ts.png"/>
+                        <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
 						<attr name="mimeType" stringvalue="text/x-typoscript"/>
 					</file>
 				</folder>
@@ -84,44 +111,17 @@
 			</file>
 		</folder>
 		<folder name="MIMEResolver">
-			<file name="TSResolver.xml" url="TSResolver.xml">
-				<attr name="displayName" bundlevalue="net.dfranek.typoscript.Bundle#Services/MIMEResolver/TSResolver.xml"/>
-			</file>
-		</folder>
+            <file name="TSResolver.xml" url="TSResolver.xml">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.Bundle"/>
+            </file>
+        </folder>
 	</folder>
 	<folder name="Templates">
 		<folder name="TypoScript">
 			<file name="TSTemplate.ts" url="TSTemplate.ts">
-				<attr name="displayName" bundlevalue="net.dfranek.typoscript.Bundle#Templates/Other/TSTemplate.ts"/>
+				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.Bundle"/>
 				<attr name="template" boolvalue="true"/>
 			</file>
-		</folder>
-	</folder>
-	<folder name="Editors">
-		<folder name="text">
-			<folder name="x-typoscript">
-				<attr name="displayName" bundlevalue="net.dfranek.typoscript.Bundle#Editors/text/x-typoscript"/>
-                <file name="language.instance">
-					<attr name="instanceCreate" methodvalue="net.dfranek.typoscript.lexer.TSTokenId.getLanguage"/>
-					<attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
-				</file>
-				<folder name="FontsColors">
-					<folder name="NetBeans">
-						<folder name="Defaults">
-							<file name="FontAndColors.xml" url="FontAndColors.xml">
-								<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.Bundle"/>
-                            </file>
-						</folder>
-					</folder>
-				</folder>
-			</folder>
-		</folder>
-	</folder>
-	<folder name="OptionsDialog">
-		<folder name="PreviewExamples">
-			<folder name="text">
-				<file name="x-typoscript" url="TSExample"/>
-			</folder>
 		</folder>
 	</folder>
 </filesystem>
