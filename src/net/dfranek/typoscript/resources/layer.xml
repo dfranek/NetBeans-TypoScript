@@ -24,7 +24,7 @@
 	<folder name="OptionsDialog">
 		<folder name="PreviewExamples">
 			<folder name="text">
-				<file name="x-typoscript" url="TSExample.ts"/>
+				<file name="x-typoscript" url="TSExample"/>
 			</folder>
 		</folder>
 	</folder>
