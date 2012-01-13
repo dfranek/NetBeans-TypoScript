@@ -451,7 +451,6 @@ public class TSScanner {
 				"config",
 				"content",
 				"copy",
-				"CSS_inlineStyle",
 				"cut",
 				"dataArray",
 				"dayofmonth",
