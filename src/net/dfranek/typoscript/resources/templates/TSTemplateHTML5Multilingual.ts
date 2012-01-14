@@ -66,7 +66,7 @@ page {
 		pageTitleFirst = 1
 		removeDefaultJS = 1
 		inlineStyle2TempFile = 1
-		}
+	}
 
 
 #| --- Header & Body ---------------------------------------------------------------------------------- |#
