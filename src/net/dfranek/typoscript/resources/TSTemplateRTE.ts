@@ -1,12 +1,11 @@
 /*
- *    Project:     {project.displayName} - {project.name}
- *    Version:    1.0.0
- *    Date:        ${date} ${time}
- *    Auhor:      ${user} 
+ *    Project:	${project.displayName} - ${project.name}
+ *    Version:	1.0.0
+ *    Date:		${date} ${time}
+ *    Author:	${user} 
  *
  *    Coded with Netbeans!
  */
-
 
 # RTE_for_all_users
 setup.default.edit_RTE = 1

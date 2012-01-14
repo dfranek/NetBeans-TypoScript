@@ -119,22 +119,27 @@
 	<folder name="Templates">
 		<folder name="TypoScript">
 			<file name="TSTemplate.ts" url="TSTemplate.ts">
+				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
 			</file>
 			<file name="TSTemplateComments.ts" url="TSTemplateComments.ts">
+				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
 			</file>
 			<file name="TSTemplateHTML5Advanced.ts" url="TSTemplateHTML5Advanced.ts">
+				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
 			</file>
 			<file name="TSTemplateHTML5Multilingual.ts" url="TSTemplateHTML5Multilingual.ts">
+				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
 			</file>
 			<file name="TSTemplateRTE.ts" url="TSTemplateRTE.ts">
+				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
 			</file>
