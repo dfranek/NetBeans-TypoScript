@@ -1,13 +1,12 @@
-//
-//		Project:	{project.displayName} - {project.name}
-//		Version:	1.0.0
-//		Date:		${date} ${time}
-//		Auhor:	${user}
-//
-//		Coded with Netbeans!
-//
-// Add this as a TypoScript-Include as a page TS in your root page
-//
+/*
+ *    Project:     {project.displayName} - {project.name}
+ *    Version:    1.0.0
+ *    Date:        ${date} ${time}
+ *    Auhor:      ${user} 
+ *
+ *    Coded with Netbeans!
+ */
+
 
 # RTE_for_all_users
 setup.default.edit_RTE = 1
