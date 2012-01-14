@@ -1,6 +1,8 @@
-#######################################################################
-# Page Object
-#######################################################################
-page = PAGE
-page.10 = TEXT
-page.10.value = Hello World!
+//
+//    Project:     {project.displayName} - {project.name}
+//    Version:    1.0.0
+//    Date:        ${date} ${time}
+//    Auhor:      ${user} 
+//
+//    Coded with Netbeans!
+//
