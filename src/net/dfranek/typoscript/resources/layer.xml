@@ -118,30 +118,35 @@
 	</folder>
 	<folder name="Templates">
 		<folder name="TypoScript">
-			<file name="TSTemplate.ts" url="TSTemplate.ts">
+			<file name="TSTemplate.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplate.ts">
 				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
+				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplate.html"/>
 			</file>
-			<file name="TSTemplateComments.ts" url="TSTemplateComments.ts">
+			<file name="TSTemplateComments.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateComments.ts">
 				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
+				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateComments.html"/>
 			</file>
-			<file name="TSTemplateHTML5Advanced.ts" url="TSTemplateHTML5Advanced.ts">
+			<file name="TSTemplateHTML5Advanced.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateHTML5Advanced.ts">
 				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
+				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateHTML5Advanced.html"/>
 			</file>
-			<file name="TSTemplateHTML5Multilingual.ts" url="TSTemplateHTML5Multilingual.ts">
+			<file name="TSTemplateHTML5Multilingual.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateHTML5Multilingual.ts">
 				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
+				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateHTML5Multilingual.html"/>
 			</file>
-			<file name="TSTemplateRTE.ts" url="TSTemplateRTE.ts">
+			<file name="TSTemplateRTE.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateRTE.ts">
 				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<attr name="template" boolvalue="true"/>
+				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateRTE.html"/>
 			</file>
 		</folder>
 	</folder>
