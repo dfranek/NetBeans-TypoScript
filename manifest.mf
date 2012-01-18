@@ -3,4 +3,3 @@ OpenIDE-Module: net.dfranek.typoscript/1
 OpenIDE-Module-Implementation-Version: 6
 OpenIDE-Module-Layer: net/dfranek/typoscript/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: net/dfranek/typoscript/resources/Bundle.properties
-
