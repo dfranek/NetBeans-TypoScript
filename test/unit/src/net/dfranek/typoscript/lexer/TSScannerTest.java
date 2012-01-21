@@ -48,4 +48,20 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_COMMENT, "*/");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 	}
+	
+	@Test
+	public void testProperty() {
+		TokenSequence<?> ts = TSLexerTestUtils.seqForText("page.10.marks.TEST = something", TSTokenId.getLanguage());
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "10");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "marks");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_PROPERTY, "TEST");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "something");
+	}
 }
