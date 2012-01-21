@@ -243,18 +243,19 @@ public class TSScanner {
 	protected String nextUntilUnescaped(char end) {
 		boolean escaped = false;
 		char next = (char) input.read();
-		while (((next = (char) input.read()) != LexerInput.EOF) && next != '\n') {
+		while (((next = (char) input.read()) != LexerInput.EOF) && next != '\n' && next != '\uffff') {
 			if (next == end && !escaped) {
 				break;
 			}
 			escaped = next == '\\';
 		}
+		if(next == '\n') input.backup(1);
 		return input.readText().toString();
 	}
 
 	protected TSTokenId readWhileInParanthese() {
 		char next;
-		while (((next = (char) input.read()) != LexerInput.EOF) && next != ')') {
+		while (((next = (char) input.read()) != LexerInput.EOF) && next != ')' && next != '\uffff') {
 		}
 		input.backup(1);
 

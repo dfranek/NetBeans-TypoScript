@@ -36,7 +36,8 @@ public class TSScannerTest extends TestCase {
 	@Test
 	public void testLineComment() {
 		TokenSequence<?> ts = TSLexerTestUtils.seqForText("# comment\n", TSTokenId.getLanguage());
-		TSLexerTestUtils.next(ts, TSTokenId.TS_COMMENT, "# comment\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_COMMENT, "# comment");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 	}
 	
 	@Test
