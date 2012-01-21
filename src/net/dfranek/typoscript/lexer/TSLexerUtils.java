@@ -40,6 +40,7 @@ package net.dfranek.typoscript.lexer;
 
 import java.util.List;
 import javax.swing.text.Document;
+import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 

@@ -73,7 +73,7 @@ public enum TSTokenId implements TokenId {
 	}
 	private static final Language<TSTokenId> language = new TSLanguageHierarchy().language();
 
-	public static final Language<TSTokenId> getLanguage() {
+	public static Language<TSTokenId> getLanguage() {
 		return language;
 	}
 

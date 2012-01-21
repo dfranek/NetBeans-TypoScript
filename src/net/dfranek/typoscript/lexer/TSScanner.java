@@ -57,7 +57,7 @@ public class TSScanner {
 	 * 
 	 * @param info information about current document
 	 */
-	public TSScanner(LexerRestartInfo info) {
+	public TSScanner(LexerRestartInfo<TSTokenId> info) {
 		this.input = info.input();
 		if (info.state() != null) {
 			this.state = (TSLexerState) info.state();
