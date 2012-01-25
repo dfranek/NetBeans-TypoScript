@@ -118,4 +118,5 @@ public enum TSASTNodeType {
 	UNKNOWN,
 	VALUE,
 	ROOTLEVEL,
+	CONDITION
 }
