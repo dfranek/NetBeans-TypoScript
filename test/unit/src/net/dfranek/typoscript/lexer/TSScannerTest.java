@@ -39,7 +39,7 @@
 package net.dfranek.typoscript.lexer;
 
 import junit.framework.TestCase;
-import org.junit.*;
+import org.junit.Test;
 import org.netbeans.api.lexer.TokenSequence;
 
 /**

@@ -38,23 +38,35 @@
  */
 package net.dfranek.typoscript.lexer;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
+import org.openide.util.Exceptions;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class TSScanner {
 
 	private LexerInput input;
 	private int readLength = 0;
 	private TSLexerState state;
-
+	private XPathFactory xpFactory = XPathFactory.newInstance();
+	private XPath xpath;
+	
+	private Document doc;
 	/**
-	 * Contructor.
-	 * Sets input and current state.
-	 * 
+	 * Contructor. Sets input and current state.
+	 *
 	 * @param info information about current document
 	 */
 	public TSScanner(LexerRestartInfo<TSTokenId> info) {
@@ -64,14 +76,29 @@ public class TSScanner {
 		} else {
 			this.state = TSLexerState.DEFAULT;
 		}
+		
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+		try {
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			doc = builder.parse(TSScanner.class.getResource("/net/dfranek/typoscript/resources/properties.xml").toString());
+		} catch (ParserConfigurationException ex) {
+			Exceptions.printStackTrace(ex);
+		} catch (SAXException ex) {
+			Exceptions.printStackTrace(ex);
+		} catch (IOException ex) {
+			Exceptions.printStackTrace(ex);
+		}
+		
+		xpath = xpFactory.newXPath();
 	}
 
 	/**
-	 * Resumes scanning until the next regular expression is matched,
-	 * the end of input is encountered or an I/O-Error occurs.
+	 * Resumes scanning until the next regular expression is matched, the end of
+	 * input is encountered or an I/O-Error occurs.
 	 *
-	 * @return      the next token
-	 * @exception   java.io.IOException  if any I/O-Error occurs
+	 * @return the next token
+	 * @exception java.io.IOException if any I/O-Error occurs
 	 */
 	public TSTokenId nextToken() throws java.io.IOException {
 		TSTokenId token = TSTokenId.UNKNOWN_TOKEN;
@@ -149,6 +176,21 @@ public class TSScanner {
 			token = TSTokenId.TS_OPERATOR;
 		} else {
 			String word = nextWhileWordChar(ch);
+			try {
+				XPathExpression expr = xpath.compile("//property[@name='"+word+"']");
+				NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+				if (nodes.getLength() > 0) {
+					Node node = nodes.item(0).getAttributes().getNamedItem("type");
+					String propertyType = node.getNodeValue();
+					if (propertyType.equals("object")) {
+						
+					}
+				}
+			} catch (XPathExpressionException ex) {
+				Exceptions.printStackTrace(ex);
+			}
+			
+			
 			if (TSScannerKeyWords.keywords.contains(word)) {
 				token = TSTokenId.TS_KEYWORD;
 			} else if (TSScannerKeyWords.keywords2.contains(word)) {
@@ -249,7 +291,9 @@ public class TSScanner {
 			}
 			escaped = next == '\\';
 		}
-		if(next == '\n') input.backup(1);
+		if (next == '\n') {
+			input.backup(1);
+		}
 		return input.readText().toString();
 	}
 
@@ -303,7 +347,7 @@ public class TSScanner {
 
 	/**
 	 * Returns the length that has been read by nextToken()
-	 * 
+	 *
 	 * @return the readLength
 	 */
 	public int getReadLength() {
@@ -312,7 +356,7 @@ public class TSScanner {
 
 	/**
 	 * Returns the current state of the scanner
-	 * 
+	 *
 	 * @return the current state
 	 */
 	public TSLexerState getState() {
@@ -322,7 +366,7 @@ public class TSScanner {
 	public static final class TSScannerKeyWords {
 
 		public static final Collection<String> keywords3 = new TreeSet<String>(
-			Arrays.asList(
+				Arrays.asList(
 				"ACT",
 				"ACTIFSUB",
 				"ACTIFSUBRO",
@@ -434,12 +478,9 @@ public class TSScanner {
 				"xhtml_strict",
 				"xhtml_trans",
 				"XY",
-				"ypMenu"
-			)
-		);
-		
+				"ypMenu"));
 		public static final Collection<String> keywords2 = new TreeSet<String>(
-			Arrays.asList(
+				Arrays.asList(
 				"admPanel",
 				"alt_print",
 				"auth",
@@ -535,12 +576,9 @@ public class TSScanner {
 				"userFunc",
 				"version",
 				"view",
-				"workOnSubpart"
-			)
-		);
-		
+				"workOnSubpart"));
 		public static final Collection<String> reservedWord = new TreeSet<String>(
-			Arrays.asList(
+				Arrays.asList(
 				"_offset",
 				"absRefPrefix",
 				"accessibility",
@@ -1374,12 +1412,9 @@ public class TSScanner {
 				"xhtml_cleaning",
 				"xmlprologue",
 				"xPosOffset",
-				"yPosOffset"
-			)
-		);
-		
+				"yPosOffset"));
 		public static final Collection<String> keywords = new TreeSet<String>(
-			Arrays.asList(
+				Arrays.asList(
 				"_CSS_DEFAULT_STYLE",
 				"_DEFAULT_PI_VARS",
 				"_GIFBUILDER",
@@ -1458,8 +1493,6 @@ public class TSScanner {
 				"TSFE",
 				"USER",
 				"USER_INT",
-				"userFunc"
-			)
-		);
+				"userFunc"));
 	}
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<properties>
+	<property type="property" name="stdWrap" />
+	<property type="object" name="PAGE" />
+	<property type="condition" name="globalVar" />
+</properties>

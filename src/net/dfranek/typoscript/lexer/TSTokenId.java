@@ -60,6 +60,8 @@ public enum TSTokenId implements TokenId {
 	TS_KEYWORD2(null,"keyword"),
 	TS_KEYWORD3(null,"keyword"),
 	TS_RESERVED(null,"reserved"),
+	TS_OBJECT(null, "keyword"),
+	TS_FUNCTION(null, "keyword"),
 	TS_NL(null, "whitespace"),
 	TS_PARANTHESE(null, "brace"),
 	WHITESPACE(null, "whitespace"),
