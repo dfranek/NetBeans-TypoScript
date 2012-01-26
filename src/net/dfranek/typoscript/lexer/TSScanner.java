@@ -176,6 +176,7 @@ public class TSScanner {
 			token = TSTokenId.TS_OPERATOR;
 		} else {
 			String word = nextWhileWordChar(ch);
+			token = TSTokenId.TS_PROPERTY;
 			try {
 				XPathExpression expr = xpath.compile("//property[@name='"+word+"']");
 				NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
@@ -183,13 +184,12 @@ public class TSScanner {
 					Node node = nodes.item(0).getAttributes().getNamedItem("type");
 					String propertyType = node.getNodeValue();
 					if (propertyType.equals("object")) {
-						
+						token = TSTokenId.TS_OBJECT;
 					}
 				}
 			} catch (XPathExpressionException ex) {
 				Exceptions.printStackTrace(ex);
 			}
-			
 			
 			if (TSScannerKeyWords.keywords.contains(word)) {
 				token = TSTokenId.TS_KEYWORD;
@@ -201,8 +201,6 @@ public class TSScanner {
 				token = TSTokenId.TS_RESERVED;
 			} else if (state == TSLexerState.IN_VALUE) {
 				token = TSTokenId.TS_VALUE;
-			} else {
-				token = TSTokenId.TS_PROPERTY;
 			}
 		}
 
