@@ -60,7 +60,6 @@ public class TSScanner {
 	private LexerInput input;
 	private int readLength = 0;
 	private TSLexerState state;
-	private XPathFactory xpFactory = XPathFactory.newInstance();
 	private XPath xpath;
 	
 	private Document doc;
@@ -89,7 +88,7 @@ public class TSScanner {
 		} catch (IOException ex) {
 			Exceptions.printStackTrace(ex);
 		}
-		
+		XPathFactory xpFactory = XPathFactory.newInstance();
 		xpath = xpFactory.newXPath();
 	}
 
@@ -119,7 +118,7 @@ public class TSScanner {
 		} else if (state != TSLexerState.IN_VALUE && (ch == '"' || ch == '\'')) {
 			nextUntilUnescaped(ch);
 			token = TSTokenId.TS_STRING;
-		} else if ((ch == '<' || ch == '>' || (ch == '=' && (char) input.read() != '<')) && (char) input.read() != '\n' && state != TSLexerState.IN_VALUE) { // there must be some value behind the operator!
+		} else if (((ch == '<' || ch == '>' || (ch == '=' && (char) input.read() != '<')) && (char) input.read() != '\n') && state != TSLexerState.IN_VALUE) { // there must be some value behind the operator!
 			state = TSLexerState.IN_VALUE;
 			token = TSTokenId.TS_OPERATOR;
 			input.backup(1);
@@ -191,6 +190,7 @@ public class TSScanner {
 				Exceptions.printStackTrace(ex);
 			}
 			
+			
 			if (TSScannerKeyWords.keywords.contains(word)) {
 				token = TSTokenId.TS_KEYWORD;
 			} else if (TSScannerKeyWords.keywords2.contains(word)) {
@@ -219,9 +219,14 @@ public class TSScanner {
 		if (ch == '>') {
 			input.backup(1);
 		}
+		if (ch == '=') {
+			input.backup(2);
+		}
 
+		StringBuilder sb = new StringBuilder();
 		char next;
 		while (((next = (char) input.read()) != LexerInput.EOF) && next != '\n' && isWordChar(new Character(next).toString())) {
+			sb.append(next);
 		}
 		input.backup(1);
 
@@ -328,7 +333,7 @@ public class TSScanner {
 	}
 
 	protected boolean isDigit(String input) {
-		return Pattern.matches("[0-9]", input);
+		return Pattern.matches("[0-9]+", input);
 	}
 
 	protected boolean isHexDigit(String input) {

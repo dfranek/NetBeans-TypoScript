@@ -38,6 +38,10 @@
  */
 package net.dfranek.typoscript.lexer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import junit.framework.TestCase;
 import org.netbeans.api.lexer.*;
 import org.netbeans.lib.lexer.LexerUtilsConstants;
@@ -48,7 +52,7 @@ import org.netbeans.lib.lexer.LexerUtilsConstants;
  * 
  * parts of the code are from LexerTestUtilities (org.netbeans.lib.lexer.test)
  */
-public class TSLexerTestUtils extends TestCase {
+public class TSLexerTestUtils extends TestCase{
 
 	static TokenSequence<?> seqForText(String text, Language<TSTokenId> language) {
 		TokenHierarchy<?> hi = TokenHierarchy.create(text, language);
@@ -150,6 +154,20 @@ public class TSLexerTestUtils extends TestCase {
             TestCase.assertEquals(messagePrefix(message)
                     + "Offsets equal", offset1, offset2);
         }
+    }
+	
+	public static String getFileContent (File file) throws Exception{
+        StringBuffer sb = new StringBuffer();
+        String lineSep = "\n";//NOI18N
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+        String line = br.readLine();
+        while (line != null) {
+            sb.append(line);
+            sb.append(lineSep);
+            line = br.readLine();
+        }
+        br.close();
+        return sb.toString();
     }
 	
 }

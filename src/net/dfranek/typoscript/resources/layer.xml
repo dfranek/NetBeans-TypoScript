@@ -24,7 +24,7 @@
 	<folder name="OptionsDialog">
 		<folder name="PreviewExamples">
 			<folder name="text">
-				<file name="x-typoscript" url="TSExample"/>
+				<file name="x-typoscript" url="TSExample.ts"/>
 			</folder>
 		</folder>
 	</folder>
@@ -92,7 +92,7 @@
 				<folder name="Factories">
 					<file name="TSDataLoader.instance">
 						<attr name="dataObjectClass" stringvalue="net.dfranek.typoscript.TSDataObject"/>
-						<attr name="iconBase" stringvalue="net/dfranek/typoscript/resources/ts.png"/>
+						<attr name="iconBase" stringvalue="net/dfranek/typoscript/resources/ts_file_16.png"/>
                         <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
 						<attr name="mimeType" stringvalue="text/x-typoscript"/>
 					</file>

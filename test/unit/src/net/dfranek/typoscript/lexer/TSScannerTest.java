@@ -38,6 +38,7 @@
  */
 package net.dfranek.typoscript.lexer;
 
+import java.io.File;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.netbeans.api.lexer.TokenSequence;
@@ -79,4 +80,80 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "something");
 	}
+	
+	@Test
+	public void testExampleFile() throws Exception {
+		TokenSequence<?> ts = TSLexerTestUtils.seqForText(TSLexerTestUtils.getFileContent(new File(TSScannerTest.class.getResource("/net/dfranek/typoscript/lexer/TSExample").toURI())), TSTokenId.getLanguage());
+		TSLexerTestUtils.next(ts, TSTokenId.TS_PROPERTY, "headerimg");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "file");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY, "{");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, "\t");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD3, "XY");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "[10");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, ".w");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "]");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "+2");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, ",20");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY, "}");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_CONDITION, "[globalVar=TSFE:type = 0]");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, "\t");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "typeNum");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "0");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_CONDITION, "[global]");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "10");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "value");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_PARANTHESE, "(");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "\n\tMulti\n\tLine\n\tValue\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_PARANTHESE, ")");
+	}
+	
+	@Test
+	public void testEqualsInValue() {
+		TokenSequence<?> ts = TSLexerTestUtils.seqForText("page.10.marks.TEST.select.where = colPos=0\npage.typeNum=0", TSTokenId.getLanguage());
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "10");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "marks");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_PROPERTY, "TEST");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "select");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "where");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "colPos");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "=0");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "typeNum");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "0");
+	}
+	
 }
