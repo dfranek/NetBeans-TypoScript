@@ -1,0 +1,5 @@
+1.2.9:
+- added highlighting for constants
+- added highlighting for extensions
+- changed highlighting for copied values, e.g. plugin.schluessel.config.value < tmp.schluessel.config.default
+- changed default style for conditions

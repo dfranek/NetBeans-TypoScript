@@ -53,16 +53,19 @@ import org.openide.util.ImageUtilities;
  * @author Daniel Franek
  */
 public class TSCompletionItem implements CompletionProposal {
+
 	private int anchor;
 	private String name;
 	private ElementKind kind;
-	
-	public TSCompletionItem(int anchor, String name, ElementKind kind) {
+	private String prefix;
+
+	public TSCompletionItem(int anchor, String name, ElementKind kind, String prefix) {
 		this.anchor = anchor;
 		this.name = name;
 		this.kind = kind;
+		this.prefix = prefix;
 	}
-	
+
 	@Override
 	public int getAnchorOffset() {
 		return anchor;
@@ -80,7 +83,8 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public String getInsertPrefix() {
-		return getName();
+		int indexOf = (this.prefix != null && this.name != null) ? this.name.toLowerCase().indexOf(this.prefix.toLowerCase()) : -1;
+		return indexOf > 0 ? this.name.substring(indexOf) : this.name;
 	}
 
 	@Override
@@ -127,5 +131,4 @@ public class TSCompletionItem implements CompletionProposal {
 	public String getCustomInsertTemplate() {
 		return null;
 	}
-	
 }
