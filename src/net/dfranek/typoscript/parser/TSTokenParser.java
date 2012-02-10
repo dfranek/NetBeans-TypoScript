@@ -53,7 +53,7 @@ import org.netbeans.modules.parsing.api.Snapshot;
 
 /**
  *
- * @author daniel
+ * @author daniel, Eric Waldburger
  */
 public class TSTokenParser {
 	private TokenSequence<TSTokenId> sequence;
@@ -86,26 +86,21 @@ public class TSTokenParser {
 			t = sequence.token();
                         //type of token
 			id = t.id();
-//                      Debugger.pr(t);
-//			Debugger.pr(t.id());
+			Debugger.pr(t);
+			Debugger.pr(t.id());
                         
 			//TODO bnf umsetzen von (http://wiki.typo3.org/TypoScript_technical_aspects)
 		
 			//TODO CC Objekt abhängig machen
 		
-			//TODO checken der Klammern ausbauen
-			
-			
-			
                         //ignore Comments
                         if(id.equals(TSTokenId.TS_COMMENT)){
                             continue;
                         }
                         
                         //Bracket Handling
-                        if(id.equals(TSTokenId.TS_CURLY)||id.equals(TSTokenId.TS_PARANTHESE)||id.equals(TSTokenId.TS_CONDITION)){
-			    Debugger.pr(t);
-                            switch (t.text().toString()){
+                        if(id.equals(TSTokenId.TS_CURLY)||id.equals(TSTokenId.TS_PARANTHESE)||id.equals(TSTokenId.TS_CONDITION)||id.equals(TSTokenId.TS_VALUE)||id.equals(TSTokenId.TS_OPERATOR)){
+			    switch (t.text().toString()){
 				    case "{":
 					//add bracket to list
 					if (last == null){
@@ -122,7 +117,7 @@ public class TSTokenParser {
 					    last = last.getPrev();
 					    last.setNext(null);
 					}else{
-					    Debugger.pr("missing {");
+//					    Debugger.pr("missing {");
 					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
 					}
 					break;
@@ -139,7 +134,7 @@ public class TSTokenParser {
 					    last = last.getPrev();
 					    last.setNext(null);
 					}else{
-					    Debugger.pr("missing (");
+//					    Debugger.pr("missing (");
 					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
 					}
 					break;
@@ -156,7 +151,7 @@ public class TSTokenParser {
 					    last = last.getPrev();
 					    last.setNext(null);
 					}else{
-					    Debugger.pr("missing [");
+//					    Debugger.pr("missing [");
 					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
 					}
 					break;
