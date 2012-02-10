@@ -3,3 +3,4 @@
 - added highlighting for extensions
 - changed highlighting for copied values, e.g. plugin.schluessel.config.value < tmp.schluessel.config.default
 - changed default style for conditions
+- fixed bug with code completion
