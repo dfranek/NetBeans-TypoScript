@@ -19,3 +19,5 @@ page.10.value (
 	Line 
 	Value
 )
+
+plugin.tx_something_pi1.10 >

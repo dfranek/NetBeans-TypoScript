@@ -118,7 +118,7 @@ public class TSScanner {
 		} else if (state != TSLexerState.IN_VALUE && (ch == '"' || ch == '\'')) {
 			nextUntilUnescaped(ch);
 			token = TSTokenId.TS_STRING;
-		} else if (((ch == '<' || ch == '>' || (ch == '=' && (char) input.read() != '<')) && (char) input.read() != '\n') && state != TSLexerState.IN_VALUE) { // there must be some value behind the operator!
+		} else if ((((ch == '=' && (char) input.read() != '<')) && (char) input.read() != '\n') && state != TSLexerState.IN_VALUE) { // there must be some value behind the operator!
 			state = TSLexerState.IN_VALUE;
 			token = TSTokenId.TS_OPERATOR;
 			input.backup(1);
@@ -190,7 +190,7 @@ public class TSScanner {
 				Exceptions.printStackTrace(ex);
 			}
 			
-			
+			// TODO: remove the follwing three conditions
 			if (TSScannerKeyWords.keywords.contains(word)) {
 				token = TSTokenId.TS_KEYWORD;
 			} else if (TSScannerKeyWords.keywords2.contains(word)) {
@@ -199,6 +199,10 @@ public class TSScanner {
 				token = TSTokenId.TS_KEYWORD3;
 			} else if (TSScannerKeyWords.reservedWord.contains(word)) {
 				token = TSTokenId.TS_RESERVED;
+			} else if(word.startsWith("{$") && word.endsWith("}")) {
+				token = TSTokenId.TS_CONSTANT;
+			} else if(word.startsWith("tt_") || word.startsWith("tx_")) {
+				token = TSTokenId.TS_EXTENSION;
 			} else if (state == TSLexerState.IN_VALUE) {
 				token = TSTokenId.TS_VALUE;
 			}

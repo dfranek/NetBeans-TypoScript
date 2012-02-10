@@ -6,10 +6,14 @@
     <fontcolor name="brace" default="separator"/>
     <fontcolor name="comment" default="comment"/>
     <fontcolor name="value" default="string"/>
-    <fontcolor name="condition" default="char"/>
+    <fontcolor name="condition" default="method">
+        <font style="italic" />
+    </fontcolor>
     <fontcolor name="ts" default="identifier"/>
     <fontcolor name="keyword" default="keyword"/>
 	<fontcolor name="reserved" default="keyword"/>
     <fontcolor name="whitespace" default="char"/>
     <fontcolor name="error" default="error"/>
+    <fontcolor name="constant" default="field"/>
+    <fontcolor name="extension" default="field" />
 </fontscolors>

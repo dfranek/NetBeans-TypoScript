@@ -107,7 +107,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		for (Iterator<String> it = TSScanner.TSScannerKeyWords.keywords.iterator(); it.hasNext();) {
 			String word = it.next();
 			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
-				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.KEYWORD));
+				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.KEYWORD, context.getPrefix()));
 			}
 		}
 	}
@@ -116,13 +116,13 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		for (Iterator<String> it = TSScanner.TSScannerKeyWords.reservedWord.iterator(); it.hasNext();) {
 			String word = it.next();
 			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
-				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY));
+				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY, context.getPrefix()));
 			}
 		}
 		for (Iterator<String> it = TSScanner.TSScannerKeyWords.keywords2.iterator(); it.hasNext();) {
 			String word = it.next();
 			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
-				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY));
+				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY, context.getPrefix()));
 			}
 		}
 	}
@@ -140,6 +140,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	@Override
 	public String getPrefix(ParserResult info, int caretOffset, boolean upToOffset) {
+		upToOffset = false;
 		try {
 			BaseDocument doc = (BaseDocument) info.getSnapshot().getSource().getDocument(false);
 			if (doc == null) {
