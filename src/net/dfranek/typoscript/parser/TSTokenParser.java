@@ -86,7 +86,7 @@ public class TSTokenParser {
 			t = sequence.token();
                         //type of token
 			id = t.id();
-//                        Debugger.pr(t);
+//                      Debugger.pr(t);
 //			Debugger.pr(t.id());
                         
 			//TODO bnf umsetzen von (http://wiki.typo3.org/TypoScript_technical_aspects)
@@ -122,7 +122,7 @@ public class TSTokenParser {
 					    last = last.getPrev();
 					    last.setNext(null);
 					}else{
-					    Debugger.pr("da fehlt ne öffnende klammer {");
+					    Debugger.pr("missing {");
 					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
 					}
 					break;
@@ -139,7 +139,7 @@ public class TSTokenParser {
 					    last = last.getPrev();
 					    last.setNext(null);
 					}else{
-					    Debugger.pr("da fehlt ne öffnende klammer (");
+					    Debugger.pr("missing (");
 					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
 					}
 					break;
@@ -156,7 +156,7 @@ public class TSTokenParser {
 					    last = last.getPrev();
 					    last.setNext(null);
 					}else{
-					    Debugger.pr("da fehlt ne öffnende klammer [");
+					    Debugger.pr("missing [");
 					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
 					}
 					break;
@@ -180,7 +180,7 @@ public class TSTokenParser {
 		    r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));
 		}
 		
-		Debugger.pr("return den dreck");
+		Debugger.pr("return value");
 		return r;
 	}
 
