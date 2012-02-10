@@ -38,6 +38,7 @@
  */
 package net.dfranek.typoscript.parser;
 
+
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -52,26 +53,29 @@ import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
+import net.dfranek.typoscript.debug.Debugger;
 
 /**
  *
  * @author Daniel Franek
  */
 public class TSParser extends Parser {
-
+    
 	private Snapshot snapshot;
 	private ParserResult result = null;
 	private static final Logger LOGGER = Logger.getLogger(TSParser.class.getName());
-
+        
 	@Override
 	public void parse(Snapshot snapshot, Task task, SourceModificationEvent sme) throws ParseException {
 		this.snapshot = snapshot;
+                //File split into tokens
 		TokenSequence<TSTokenId> sequence = snapshot.getTokenHierarchy().tokenSequence(TSTokenId.getLanguage());
 		try {
 			result = parseSource(sequence);
 		} catch(Exception e) {
 			LOGGER.log (Level.FINE, "Exception during parsing: {0}", e);
-			result = new TSParserResult(snapshot);
+			e.printStackTrace();
+                        result = new TSParserResult(snapshot);
 		}
 	}
 
@@ -94,33 +98,5 @@ public class TSParser extends Parser {
 		return pResult;
 	}
 
-	public static class TSParserResult extends ParserResult {
 
-		private List<Error> errors;
-		private boolean valid = true;
-
-		public TSParserResult(Snapshot snapshot) {
-			super(snapshot);
-			this.errors = Collections.<Error>emptyList();
-		}
-
-		private TSParserResult(Snapshot snapshot, TokenSequence<TSTokenId> source) {
-			super(snapshot);
-			this.errors = Collections.<Error>emptyList();
-		}
-
-		@Override
-		public List<? extends Error> getDiagnostics() {
-			return errors;
-		}
-		
-		public void addError(Error e ) {
-			errors.add(e);
-		}
-
-		@Override
-		protected void invalidate() {
-			valid = false;
-		}
-	}
 }

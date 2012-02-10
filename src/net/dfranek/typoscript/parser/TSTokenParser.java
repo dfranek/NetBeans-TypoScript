@@ -40,7 +40,9 @@
 package net.dfranek.typoscript.parser;
 
 import java.util.Enumeration;
+import java.util.Random;
 import javax.swing.tree.DefaultMutableTreeNode;
+import net.dfranek.typoscript.debug.Debugger;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
 import net.dfranek.typoscript.parser.ast.TSASTNodeType;
@@ -59,26 +61,108 @@ public class TSTokenParser {
 	private boolean commentOpen = false;
 	private boolean valueOpen = false;
 	private int curlyOpen = 0;
+	private BracketNode last = new BracketNode("root", null);
+	private BracketNode root = last; 
 	
-	private TSASTNode tree;
+        private TSASTNode tree;
 
 
 	TSTokenParser(TokenSequence<TSTokenId> source, Snapshot snapshot) {
 		sequence = source;
 		this.snapshot = snapshot;
+		this.curlyOpen = 0;
 		tree = new TSASTNode("", "", TSASTNodeType.ROOTLEVEL);
 	}
 	
-	public TSParser.TSParserResult analyze() {
+	public TSParserResult analyze() {
 		TSASTNode node;
-		TSParser.TSParserResult r = new TSParser.TSParserResult(snapshot);
+		TSParserResult r = new TSParserResult(snapshot);
 		Token<TSTokenId> t;
 		TSTokenId id;
 		TSASTNode actNode = tree;
 		
 		while (sequence.moveNext()) {
+                        //content of token
 			t = sequence.token();
+                        //type of token
 			id = t.id();
+//                        Debugger.pr(t);
+//			Debugger.pr(t.id());
+                        
+			//TODO bnf umsetzen von (http://wiki.typo3.org/TypoScript_technical_aspects)
+		
+			//TODO CC Objekt abhängig machen
+		
+			//TODO checken der Klammern ausbauen
+			
+			
+			
+                        //ignore Comments
+                        if(id.equals(TSTokenId.TS_COMMENT)){
+                            continue;
+                        }
+                        
+                        //Bracket Handling
+                        if(id.equals(TSTokenId.TS_CURLY)||id.equals(TSTokenId.TS_PARANTHESE)||id.equals(TSTokenId.TS_CONDITION)){
+			    Debugger.pr(t);
+                            switch (t.text().toString()){
+				    case "{":
+					//add bracket to list
+					if (last == null){
+					    last = new BracketNode("{", null);
+					}else{
+					    last.setNext(new BracketNode("{", last));
+					    last = last.getNext();
+					}
+					break;
+				    case "}":
+					//delete last bracket from list if its the opposite bracket
+					//else throw error
+					if (last.getValue().equals("{")){
+					    last = last.getPrev();
+					    last.setNext(null);
+					}else{
+					    Debugger.pr("da fehlt ne öffnende klammer {");
+					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
+					}
+					break;
+				    case "(":
+					if (last == null){
+					    last = new BracketNode("(", null);
+					}else{
+					    last.setNext(new BracketNode("(", last));
+					    last = last.getNext();
+					}
+					break;
+				    case ")":
+					if (last.getValue().equals("(")){
+					    last = last.getPrev();
+					    last.setNext(null);
+					}else{
+					    Debugger.pr("da fehlt ne öffnende klammer (");
+					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
+					}
+					break;
+				    case "[":
+					if (last == null){
+					    last = new BracketNode("[", null);
+					}else{
+					    last.setNext(new BracketNode("[", last));
+					    last = last.getNext();
+					}
+					break;
+				    case "]":
+					if (last.getValue().equals("[")){
+					    last = last.getPrev();
+					    last.setNext(null);
+					}else{
+					    Debugger.pr("da fehlt ne öffnende klammer [");
+					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
+					}
+					break;
+			    }
+                        }
+                        
 			if(!id.equals(TSTokenId.TS_COMMENT) && !id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
 				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN);
 
@@ -92,10 +176,11 @@ public class TSTokenParser {
 			if(id.equals(TSTokenId.TS_NL)) actNode = tree;
 		}
 		
-		if(curlyOpen != 0) {
-			r.addError(new TSError("On return to [GLOBAL] scope, the script was short of " + curlyOpen + " end brace(s)", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));
+		if(root.getNext() != null){
+		    r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));
 		}
 		
+		Debugger.pr("return den dreck");
 		return r;
 	}
 
