@@ -91,7 +91,7 @@ public class TSCompletionItem implements CompletionProposal {
 		final String insertPrefix = getName();
         int indexOf = (this.prefix != null && insertPrefix != null) ? insertPrefix.toLowerCase().indexOf(this.prefix.toLowerCase()) : -1;
         prefix = indexOf > 0 ? insertPrefix.substring(indexOf) : insertPrefix;
-		logger.log(Level.INFO, "insert Prefix for item {0} with completion prefix \"{1}\" :{2}", new Object[]{insertPrefix, this.prefix, prefix});
+		logger.log(Level.FINEST, "insert Prefix for item {0} with completion prefix \"{1}\" :{2}", new Object[]{insertPrefix, this.prefix, prefix});
 		return prefix;
 	}
 
