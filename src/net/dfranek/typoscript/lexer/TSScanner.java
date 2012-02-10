@@ -61,6 +61,7 @@ public class TSScanner {
 	private int readLength = 0;
 	private TSLexerState state;
 	private XPath xpath;
+	private int position = 0;
 	
 	private Document doc;
 	/**
@@ -208,7 +209,10 @@ public class TSScanner {
 			}
 		}
 
+		token.setStart(position);
 		this.readLength = input.readLength();
+		this.position += this.readLength;
+		token.setEnd(position);
 		return token;
 	}
 

@@ -129,6 +129,6 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public String getCustomInsertTemplate() {
-		return null;
+		return getName();
 	}
 }

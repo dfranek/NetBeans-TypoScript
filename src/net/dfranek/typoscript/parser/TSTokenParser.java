@@ -36,7 +36,6 @@
  * made subject to such option by the copyright holder.
  * 
  */
-
 package net.dfranek.typoscript.parser;
 
 import java.util.Enumeration;
@@ -56,16 +55,15 @@ import org.netbeans.modules.parsing.api.Snapshot;
  * @author daniel
  */
 public class TSTokenParser {
+
 	private TokenSequence<TSTokenId> sequence;
 	private Snapshot snapshot;
 	private boolean commentOpen = false;
 	private boolean valueOpen = false;
 	private int curlyOpen = 0;
 	private BracketNode last = new BracketNode("root", null);
-	private BracketNode root = last; 
-	
-        private TSASTNode tree;
-
+	private BracketNode root = last;
+	private TSASTNode tree;
 
 	TSTokenParser(TokenSequence<TSTokenId> source, Snapshot snapshot) {
 		sequence = source;
@@ -73,115 +71,116 @@ public class TSTokenParser {
 		this.curlyOpen = 0;
 		tree = new TSASTNode("", "", TSASTNodeType.ROOTLEVEL);
 	}
-	
+
 	public TSParserResult analyze() {
 		TSASTNode node;
 		TSParserResult r = new TSParserResult(snapshot);
 		Token<TSTokenId> t;
 		TSTokenId id;
 		TSASTNode actNode = tree;
-		
+
 		while (sequence.moveNext()) {
-                        //content of token
+			//content of token
 			t = sequence.token();
-                        //type of token
+			//type of token
 			id = t.id();
 //                      Debugger.pr(t);
 //			Debugger.pr(t.id());
-                        
+
 			//TODO bnf umsetzen von (http://wiki.typo3.org/TypoScript_technical_aspects)
-		
+
 			//TODO CC Objekt abhängig machen
-		
+
 			//TODO checken der Klammern ausbauen
-			
-			
-			
-                        //ignore Comments
-                        if(id.equals(TSTokenId.TS_COMMENT)){
-                            continue;
-                        }
-                        
-                        //Bracket Handling
-                        if(id.equals(TSTokenId.TS_CURLY)||id.equals(TSTokenId.TS_PARANTHESE)||id.equals(TSTokenId.TS_CONDITION)){
-			    Debugger.pr(t);
-                            switch (t.text().toString()){
-				    case "{":
-					//add bracket to list
-					if (last == null){
-					    last = new BracketNode("{", null);
-					}else{
-					    last.setNext(new BracketNode("{", last));
-					    last = last.getNext();
-					}
-					break;
-				    case "}":
-					//delete last bracket from list if its the opposite bracket
-					//else throw error
-					if (last.getValue().equals("{")){
-					    last = last.getPrev();
-					    last.setNext(null);
-					}else{
-					    Debugger.pr("missing {");
-					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
-					}
-					break;
-				    case "(":
-					if (last == null){
-					    last = new BracketNode("(", null);
-					}else{
-					    last.setNext(new BracketNode("(", last));
-					    last = last.getNext();
-					}
-					break;
-				    case ")":
-					if (last.getValue().equals("(")){
-					    last = last.getPrev();
-					    last.setNext(null);
-					}else{
-					    Debugger.pr("missing (");
-					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
-					}
-					break;
-				    case "[":
-					if (last == null){
-					    last = new BracketNode("[", null);
-					}else{
-					    last.setNext(new BracketNode("[", last));
-					    last = last.getNext();
-					}
-					break;
-				    case "]":
-					if (last.getValue().equals("[")){
-					    last = last.getPrev();
-					    last.setNext(null);
-					}else{
-					    Debugger.pr("missing [");
-					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
-					}
-					break;
-			    }
-                        }
-                        
-			if(!id.equals(TSTokenId.TS_COMMENT) && !id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
+
+
+
+			//ignore Comments
+			if (id.equals(TSTokenId.TS_COMMENT)) {
+				continue;
+			}
+
+			//Bracket Handling
+			if (id.equals(TSTokenId.TS_CURLY) || id.equals(TSTokenId.TS_PARANTHESE) || id.equals(TSTokenId.TS_CONDITION)) {
+				Debugger.pr(t);
+				switch (t.text().toString()) {
+					case "{":
+						//add bracket to list
+						if (last == null) {
+							last = new BracketNode("{", null);
+						} else {
+							last.setNext(new BracketNode("{", last));
+							last = last.getNext();
+						}
+						break;
+					case "}":
+						//delete last bracket from list if its the opposite bracket
+						//else throw error
+						if (last.getValue().equals("{")) {
+							last = last.getPrev();
+							last.setNext(null);
+						} else {
+							Debugger.pr("missing {");
+							r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));
+						}
+						break;
+					case "(":
+						if (last == null) {
+							last = new BracketNode("(", null);
+						} else {
+							last.setNext(new BracketNode("(", last));
+							last = last.getNext();
+						}
+						break;
+					case ")":
+						if (last.getValue().equals("(")) {
+							last = last.getPrev();
+							last.setNext(null);
+						} else {
+							Debugger.pr("missing (");
+							r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));
+						}
+						break;
+					case "[":
+						if (last == null) {
+							last = new BracketNode("[", null);
+						} else {
+							last.setNext(new BracketNode("[", last));
+							last = last.getNext();
+						}
+						break;
+					case "]":
+						if (last.getValue().equals("[")) {
+							last = last.getPrev();
+							last.setNext(null);
+						} else {
+							Debugger.pr("missing [");
+							r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));
+						}
+						break;
+				}
+			}
+
+			if (!id.equals(TSTokenId.TS_COMMENT) && !id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
 				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN);
 
-				if(!actNode.hasChild(node)){
+				if (!actNode.hasChild(node)) {
 					actNode.addChild(node);
 					actNode = node;
 				} else {
 					actNode = node;
 				}
 			}
-			if(id.equals(TSTokenId.TS_NL)) actNode = tree;
+			if (id.equals(TSTokenId.TS_NL)) {
+				actNode = tree;
+			}
 		}
-		
-		if(root.getNext() != null){
-		    r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));
+
+		if (root.getNext() != null) {
+			r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));
 		}
-		
+
 		Debugger.pr("return value");
 		return r;
 	}
-
 }

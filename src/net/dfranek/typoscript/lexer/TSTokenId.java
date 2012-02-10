@@ -70,6 +70,8 @@ public enum TSTokenId implements TokenId {
 	UNKNOWN_TOKEN(null, "error");
 	private final String primaryCategory;
 	private final String fixedText;
+	private int start;
+	private int end;
 
 	TSTokenId(String fixedText, String primaryCategory) {
 		this.fixedText = fixedText;
@@ -84,5 +86,33 @@ public enum TSTokenId implements TokenId {
 	@Override
 	public String primaryCategory() {
 		return primaryCategory;
+	}
+
+	/**
+	 * @return the start
+	 */
+	public int getStart() {
+		return start;
+	}
+
+	/**
+	 * @param start the start to set
+	 */
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	/**
+	 * @return the end
+	 */
+	public int getEnd() {
+		return end;
+	}
+
+	/**
+	 * @param end the end to set
+	 */
+	public void setEnd(int end) {
+		this.end = end;
 	}
 }
