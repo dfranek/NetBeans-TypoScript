@@ -63,6 +63,8 @@ import org.openide.util.Exceptions;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.ElementKind;
+import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
 
 /**
  *
@@ -72,6 +74,8 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	private final static Collection<Character> AUTOPOPUP_STOP_CHARS = new TreeSet<Character>(
 			Arrays.asList('=', ';', '+', '-', '*', '/', '%', '(', ')', '[', ']', '{', '}', '?','\n'));
+	private boolean caseSensitive;
+	private Kind nameKind;
 	
 	
 	@Override
@@ -82,8 +86,13 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 				return CodeCompletionResult.NONE;
 			}
 			final TSCompletionResult completionResult = new TSCompletionResult(context);
+			completionResult.setFilterable(true);
 			int caretOffset = context.getCaretOffset();
 			int lineBegin = Utilities.getRowStart(doc, caretOffset);
+			
+			this.caseSensitive = context.isCaseSensitive();
+            this.nameKind = caseSensitive ? QuerySupport.Kind.PREFIX : QuerySupport.Kind.CASE_INSENSITIVE_PREFIX;
+			
 			if (lineBegin != -1) {
 				
 				int lineEnd = Utilities.getRowEnd(doc, caretOffset);
@@ -95,6 +104,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 					addReservedWords(completionResult, context);
 				}
 			}
+			
 
 			return completionResult;
 		} catch (BadLocationException ex) {
@@ -140,7 +150,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	@Override
 	public String getPrefix(ParserResult info, int caretOffset, boolean upToOffset) {
-		upToOffset = false;
+
 		try {
 			BaseDocument doc = (BaseDocument) info.getSnapshot().getSource().getDocument(false);
 			if (doc == null) {
@@ -171,7 +181,6 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 						int end = lineOffset;
 						for (int j = lineOffset; j < n; j++) {
 							char d = line.charAt(j);
-							// Try to accept Foo::Bar as well
 							if (!Character.isJavaIdentifierPart(d)) {
 								break;
 							} else {

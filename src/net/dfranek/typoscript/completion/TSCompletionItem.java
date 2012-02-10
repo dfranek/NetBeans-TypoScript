@@ -40,6 +40,8 @@ package net.dfranek.typoscript.completion;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.ElementHandle;
@@ -58,8 +60,10 @@ public class TSCompletionItem implements CompletionProposal {
 	private String name;
 	private ElementKind kind;
 	private String prefix;
+	private static final Logger logger =  Logger.getLogger(TSCodeCompletion.class.getName());
 
 	public TSCompletionItem(int anchor, String name, ElementKind kind, String prefix) {
+		logger.setLevel(Level.ALL);
 		this.anchor = anchor;
 		this.name = name;
 		this.kind = kind;
@@ -83,8 +87,12 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public String getInsertPrefix() {
-		int indexOf = (this.prefix != null && this.name != null) ? this.name.toLowerCase().indexOf(this.prefix.toLowerCase()) : -1;
-		return indexOf > 0 ? this.name.substring(indexOf) : this.name;
+		String prefix;
+		final String insertPrefix = getName();
+        int indexOf = (this.prefix != null && insertPrefix != null) ? insertPrefix.toLowerCase().indexOf(this.prefix.toLowerCase()) : -1;
+        prefix = indexOf > 0 ? insertPrefix.substring(indexOf) : insertPrefix;
+		logger.log(Level.INFO, "insert Prefix for item {0} with completion prefix \"{1}\" :{2}", new Object[]{insertPrefix, this.prefix, prefix});
+		return prefix;
 	}
 
 	@Override

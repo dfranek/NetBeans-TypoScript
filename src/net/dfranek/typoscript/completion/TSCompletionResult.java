@@ -40,18 +40,22 @@ package net.dfranek.typoscript.completion;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.swing.text.BadLocationException;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.spi.DefaultCompletionResult;
-
+import org.openide.util.Exceptions;
 /**
  *
  * @author daniel
  */
 class TSCompletionResult extends DefaultCompletionResult {
+	
+	private CodeCompletionContext context;
 
 	public TSCompletionResult(CodeCompletionContext completionContext) {
 		super(new ArrayList<CompletionProposal>(), false);
+		context = completionContext;
 	}
 
 	public void addAll(final Collection<CompletionProposal>  proposals) {
@@ -61,4 +65,16 @@ class TSCompletionResult extends DefaultCompletionResult {
 	public void add(CompletionProposal  proposal) {
         list.add(proposal);
     }
+
+	@Override
+	public void beforeInsert(CompletionProposal cp) {
+//		super.beforeInsert(cp);
+		try {
+			// Remove typed characters
+			context.getParserResult().getSnapshot().getSource().getDocument(true).remove(cp.getAnchorOffset()-context.getPrefix().length(), context.getPrefix().length());
+		} catch (BadLocationException ex) {
+			Exceptions.printStackTrace(ex);
+		}
+	}
+	
 }

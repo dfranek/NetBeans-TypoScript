@@ -39,9 +39,8 @@
 package net.dfranek.typoscript.parser;
 
 import java.util.Enumeration;
-import java.util.Random;
+import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
-import net.dfranek.typoscript.debug.Debugger;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
 import net.dfranek.typoscript.parser.ast.TSASTNodeType;
@@ -64,6 +63,7 @@ public class TSTokenParser {
 	private BracketNode last = new BracketNode("root", null);
 	private BracketNode root = last;
 	private TSASTNode tree;
+	private static final Logger logger =  Logger.getLogger(TSTokenParser.class.getName());
 
 	TSTokenParser(TokenSequence<TSTokenId> source, Snapshot snapshot) {
 		sequence = source;
@@ -90,73 +90,74 @@ public class TSTokenParser {
 			//TODO bnf umsetzen von (http://wiki.typo3.org/TypoScript_technical_aspects)
 
 			//TODO CC Objekt abhängig machen
-		
-                        //ignore Comments
-                        if(id.equals(TSTokenId.TS_COMMENT)){
-                            continue;
-                        }
-                        
-                        //Bracket Handling
-                        if(id.equals(TSTokenId.TS_CURLY)||id.equals(TSTokenId.TS_PARANTHESE)||id.equals(TSTokenId.TS_CONDITION)||id.equals(TSTokenId.TS_VALUE)||id.equals(TSTokenId.TS_OPERATOR)){
-			    switch (t.text().toString()){
-				    case "{":
-					//add bracket to list
-					if (last == null){
-					    last = new BracketNode("{", null);
-					}else{
-					    last.setNext(new BracketNode("{", last));
-					    last = last.getNext();
-					}
-					break;
-				    case "}":
-					//delete last bracket from list if its the opposite bracket
-					//else throw error
-					if (last.getValue().equals("{")){
-					    last = last.getPrev();
-					    last.setNext(null);
-					}else{
+
+			//ignore Comments
+			if (id.equals(TSTokenId.TS_COMMENT)) {
+				continue;
+			}
+
+			//Bracket Handling
+			// DF: sollte nur für { und ( greifen, Conditions sind gesamt ein Token, hier sollte überprüft werden ob das letzte Zeichen ein ] ist. Bei Values wirds mit meinem momentanen Tokenizer nicht funktioneren, bei Operatoren sehe ich hier keinen Sinn
+			if (id.equals(TSTokenId.TS_CURLY) || id.equals(TSTokenId.TS_PARANTHESE)/* || id.equals(TSTokenId.TS_CONDITION) || id.equals(TSTokenId.TS_VALUE) || id.equals(TSTokenId.TS_OPERATOR))*/) {
+				switch (t.text().toString()) {
+					case "{":
+						//add bracket to list
+						if (last == null) {
+							last = new BracketNode("{", null);
+						} else {
+							last.setNext(new BracketNode("{", last));
+							last = last.getNext();
+						}
+						break;
+					case "}":
+						//delete last bracket from list if its the opposite bracket
+						//else throw error
+						if (last.getValue().equals("{")) {
+							last = last.getPrev();
+							last.setNext(null);
+						} else {
 //					    Debugger.pr("missing {");
-					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
-					}
-					break;
-				    case "(":
-					if (last == null){
-					    last = new BracketNode("(", null);
-					}else{
-					    last.setNext(new BracketNode("(", last));
-					    last = last.getNext();
-					}
-					break;
-				    case ")":
-					if (last.getValue().equals("(")){
-					    last = last.getPrev();
-					    last.setNext(null);
-					}else{
+							r.addError(new TSError("No matching bracket found for "+last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
+						}
+						break;
+					case "(":
+						if (last == null) {
+							last = new BracketNode("(", null);
+						} else {
+							last.setNext(new BracketNode("(", last));
+							last = last.getNext();
+						}
+						break;
+					case ")":
+						if (last.getValue().equals("(")) {
+							last = last.getPrev();
+							last.setNext(null);
+						} else {
 //					    Debugger.pr("missing (");
-					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
-					}
-					break;
-				    case "[":
-					if (last == null){
-					    last = new BracketNode("[", null);
-					}else{
-					    last.setNext(new BracketNode("[", last));
-					    last = last.getNext();
-					}
-					break;
-				    case "]":
-					if (last.getValue().equals("[")){
-					    last = last.getPrev();
-					    last.setNext(null);
-					}else{
+							r.addError(new TSError("No matching bracket found for "+last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
+						}
+						break;
+					case "[":
+						if (last == null) {
+							last = new BracketNode("[", null);
+						} else {
+							last.setNext(new BracketNode("[", last));
+							last = last.getNext();
+						}
+						break;
+					case "]":
+						if (last.getValue().equals("[")) {
+							last = last.getPrev();
+							last.setNext(null);
+						} else {
 //					    Debugger.pr("missing [");
-					    r.addError(new TSError("No matching bracket found", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));			    
-					}
-					break;
-			    }
-                        }
-                        
-			if(!id.equals(TSTokenId.TS_COMMENT) && !id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
+							r.addError(new TSError("No matching bracket found for "+last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
+						}
+						break;
+				}
+			}
+
+			if (!id.equals(TSTokenId.TS_COMMENT) && !id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
 				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN);
 
 				if (!actNode.hasChild(node)) {
@@ -170,12 +171,12 @@ public class TSTokenParser {
 				actNode = tree;
 			}
 		}
-
+		
 		if (root.getNext() != null) {
-			r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), 1, 2, Severity.ERROR, new Object[]{this}));
+			r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength()-1, snapshot.getSource().getDocument(true).getLength(), Severity.ERROR, new Object[]{this}));
 		}
 
-		Debugger.pr("return value");
+		logger.info("return value");
 		return r;
 	}
 }

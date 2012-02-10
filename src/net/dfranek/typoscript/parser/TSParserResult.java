@@ -12,7 +12,6 @@ import net.dfranek.typoscript.lexer.TSTokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
-import net.dfranek.typoscript.debug.Debugger;
 
 /**
  *
