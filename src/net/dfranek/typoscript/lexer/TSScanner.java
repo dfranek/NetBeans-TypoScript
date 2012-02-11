@@ -62,8 +62,8 @@ public class TSScanner {
 	private TSLexerState state;
 	private XPath xpath;
 	private int position = 0;
-	
 	private Document doc;
+
 	/**
 	 * Contructor. Sets input and current state.
 	 *
@@ -76,7 +76,7 @@ public class TSScanner {
 		} else {
 			this.state = TSLexerState.DEFAULT;
 		}
-		
+
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		try {
@@ -108,6 +108,8 @@ public class TSScanner {
 
 		if (state == TSLexerState.IN_PARANTHESE && ch != ')') {
 			token = readWhileInParanthese();
+		} else if (ch == '>') {
+			token = TSTokenId.TS_OPERATOR;
 		} else if (ch == '\n') {
 			token = TSTokenId.TS_NL;
 			state = TSLexerState.DEFAULT;
@@ -178,7 +180,7 @@ public class TSScanner {
 			String word = nextWhileWordChar(ch);
 			token = TSTokenId.TS_PROPERTY;
 			try {
-				XPathExpression expr = xpath.compile("//property[@name='"+word+"']");
+				XPathExpression expr = xpath.compile("//property[@name='" + word + "']");
 				NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 				if (nodes.getLength() > 0) {
 					Node node = nodes.item(0).getAttributes().getNamedItem("type");
@@ -190,7 +192,7 @@ public class TSScanner {
 			} catch (XPathExpressionException ex) {
 				Exceptions.printStackTrace(ex);
 			}
-			
+
 			// TODO: remove the follwing three conditions
 			if (TSScannerKeyWords.keywords.contains(word)) {
 				token = TSTokenId.TS_KEYWORD;
@@ -200,19 +202,24 @@ public class TSScanner {
 				token = TSTokenId.TS_KEYWORD3;
 			} else if (TSScannerKeyWords.reservedWord.contains(word)) {
 				token = TSTokenId.TS_RESERVED;
-			} else if(word.startsWith("{$") && word.endsWith("}")) {
+			} else if (word.startsWith("{$") && word.endsWith("}")) {
 				token = TSTokenId.TS_CONSTANT;
-			} else if(word.startsWith("tt_") || word.startsWith("tx_")) {
+			} else if (word.startsWith("tt_") || word.startsWith("tx_")) {
 				token = TSTokenId.TS_EXTENSION;
+			} else if (Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=\\+\\-]", word)) {
+				token = TSTokenId.TS_OPERATOR;
 			} else if (state == TSLexerState.IN_VALUE) {
 				token = TSTokenId.TS_VALUE;
 			}
 		}
 
+		token = token == null ? TSTokenId.TS_VALUE : token;
+		
 		token.setStart(position);
 		this.readLength = input.readLength();
 		this.position += this.readLength;
 		token.setEnd(position);
+		
 		return token;
 	}
 
@@ -223,12 +230,19 @@ public class TSScanner {
 	}
 
 	protected String nextWhileWordChar(char ch) {
+
+
+
 		// Backing up 1 position to fix bug
 		if (ch == '>') {
 			input.backup(1);
 		}
 		if (ch == '=') {
 			input.backup(2);
+		}
+
+		if (!isWordChar(new Character(ch).toString())) {
+			return input.readText().toString();
 		}
 
 		StringBuilder sb = new StringBuilder();

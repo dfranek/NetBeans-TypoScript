@@ -72,9 +72,9 @@ public class TSLexer implements Lexer<TSTokenId> {
         try {
             TSTokenId tokenId = scanner.nextToken();
             int readLen = scanner.getReadLength();
-            if (readLen < 1) return null;
             Token<TSTokenId> token = null;
-            
+            if (readLen < 1) return null;
+			
             if (tokenId != null) {
                 token = tokenFactory.createToken(tokenId);
             }
@@ -82,6 +82,7 @@ public class TSLexer implements Lexer<TSTokenId> {
         } catch (Exception ex) {
            Logger.getLogger(TSLexer.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return null;
     }
 

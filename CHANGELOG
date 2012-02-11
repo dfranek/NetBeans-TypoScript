@@ -4,3 +4,5 @@
 - changed highlighting for copied values, e.g. plugin.schluessel.config.value < tmp.schluessel.config.default
 - changed default style for conditions
 - fixed bug with code completion
+1.2.10
+- fixed a severe bug in the lexer
