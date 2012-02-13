@@ -196,6 +196,8 @@ public class TSScanner {
 			// TODO: remove the follwing three conditions
 			if (TSScannerKeyWords.keywords.contains(word)) {
 				token = TSTokenId.TS_KEYWORD;
+			} else if(isDigit(word)) {
+				token = TSTokenId.TS_NUMBER;
 			} else if (TSScannerKeyWords.keywords2.contains(word)) {
 				token = TSTokenId.TS_KEYWORD2;
 			} else if (TSScannerKeyWords.keywords3.contains(word)) {
