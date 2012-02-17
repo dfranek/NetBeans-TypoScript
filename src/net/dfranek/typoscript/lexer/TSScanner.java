@@ -38,31 +38,20 @@
  */
 package net.dfranek.typoscript.lexer;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
-import org.openide.util.Exceptions;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 public class TSScanner {
 
 	private LexerInput input;
 	private int readLength = 0;
 	private TSLexerState state;
-	private XPath xpath;
 	private int position = 0;
-	private Document doc;
 
 	/**
 	 * Contructor. Sets input and current state.
@@ -79,18 +68,6 @@ public class TSScanner {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
-		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			doc = builder.parse(TSScanner.class.getResource("/net/dfranek/typoscript/resources/properties.xml").toString());
-		} catch (ParserConfigurationException ex) {
-			Exceptions.printStackTrace(ex);
-		} catch (SAXException ex) {
-			Exceptions.printStackTrace(ex);
-		} catch (IOException ex) {
-			Exceptions.printStackTrace(ex);
-		}
-		XPathFactory xpFactory = XPathFactory.newInstance();
-		xpath = xpFactory.newXPath();
 	}
 
 	/**
@@ -179,49 +156,56 @@ public class TSScanner {
 		} else {
 			String word = nextWhileWordChar(ch);
 			token = TSTokenId.TS_PROPERTY;
-			try {
-				XPathExpression expr = xpath.compile("//property[@name='" + word + "']");
-				NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-				if (nodes.getLength() > 0) {
-					Node node = nodes.item(0).getAttributes().getNamedItem("type");
-					String propertyType = node.getNodeValue();
-					if (propertyType.equals("object")) {
-						token = TSTokenId.TS_OBJECT;
-					}
+
+			// try to find word in xml
+			String propertyType = TSLexerUtils.getWordFromXML(word);
+			if (!propertyType.isEmpty()) {
+				if (propertyType.equals("object")) {
+					token = TSTokenId.TS_OBJECT;
+				} else if (propertyType.equals("keyword")) {
+					token = TSTokenId.TS_KEYWORD;
+				} else if (propertyType.equals("reserved")) {
+					token = TSTokenId.TS_RESERVED;
+				} else if (propertyType.equals("function")) {
+					token = TSTokenId.TS_FUNCTION;
+				} else if (propertyType.equals("condition")) {
+					token = TSTokenId.TS_CONDITION;
+				} else if (propertyType.equals("property")) {
+					token = TSTokenId.TS_PROPERTY;
 				}
-			} catch (XPathExpressionException ex) {
-				Exceptions.printStackTrace(ex);
+			} else {
+				if (TSScannerKeyWords.keywords.contains(word)) {
+					token = TSTokenId.TS_KEYWORD;
+				} else if (TSScannerKeyWords.keywords2.contains(word)) {
+					token = TSTokenId.TS_KEYWORD2;
+				} else if (TSScannerKeyWords.keywords3.contains(word)) {
+					token = TSTokenId.TS_KEYWORD3;
+				} else if (TSScannerKeyWords.reservedWord.contains(word)) {
+					token = TSTokenId.TS_RESERVED;
+				} else if (isDigit(word)) {
+					token = TSTokenId.TS_NUMBER;
+				} else if (word.startsWith("{$") && word.endsWith("}")) {
+					token = TSTokenId.TS_CONSTANT;
+				} else if (word.startsWith("tt_") || word.startsWith("tx_")) {
+					token = TSTokenId.TS_EXTENSION;
+				} else if (Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=\\+\\-]", word)) {
+					token = TSTokenId.TS_OPERATOR;
+				} else if (state == TSLexerState.IN_VALUE) {
+					token = TSTokenId.TS_VALUE;
+				}
 			}
 
-			// TODO: remove the follwing three conditions
-			if (TSScannerKeyWords.keywords.contains(word)) {
-				token = TSTokenId.TS_KEYWORD;
-			} else if(isDigit(word)) {
-				token = TSTokenId.TS_NUMBER;
-			} else if (TSScannerKeyWords.keywords2.contains(word)) {
-				token = TSTokenId.TS_KEYWORD2;
-			} else if (TSScannerKeyWords.keywords3.contains(word)) {
-				token = TSTokenId.TS_KEYWORD3;
-			} else if (TSScannerKeyWords.reservedWord.contains(word)) {
-				token = TSTokenId.TS_RESERVED;
-			} else if (word.startsWith("{$") && word.endsWith("}")) {
-				token = TSTokenId.TS_CONSTANT;
-			} else if (word.startsWith("tt_") || word.startsWith("tx_")) {
-				token = TSTokenId.TS_EXTENSION;
-			} else if (Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=\\+\\-]", word)) {
-				token = TSTokenId.TS_OPERATOR;
-			} else if (state == TSLexerState.IN_VALUE) {
-				token = TSTokenId.TS_VALUE;
-			}
+
+
 		}
 
 		token = token == null ? TSTokenId.TS_VALUE : token;
-		
+
 		token.setStart(position);
 		this.readLength = input.readLength();
 		this.position += this.readLength;
 		token.setEnd(position);
-		
+
 		return token;
 	}
 

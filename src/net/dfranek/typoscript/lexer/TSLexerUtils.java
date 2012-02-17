@@ -38,45 +38,91 @@
  */
 package net.dfranek.typoscript.lexer;
 
+import java.io.IOException;
 import java.util.List;
 import javax.swing.text.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.openide.util.Exceptions;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author Daniel Franek
  */
 public class TSLexerUtils {
+
+	private static XPath xpath;
+	private static org.w3c.dom.Document doc;
+
+	static {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+		try {
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			doc = builder.parse(TSLexerUtils.class.getResource("/net/dfranek/typoscript/resources/properties.xml").toString());
+		} catch (ParserConfigurationException ex) {
+			Exceptions.printStackTrace(ex);
+		} catch (SAXException ex) {
+			Exceptions.printStackTrace(ex);
+		} catch (IOException ex) {
+			Exceptions.printStackTrace(ex);
+		}
+		XPathFactory xpFactory = XPathFactory.newInstance();
+		xpath = xpFactory.newXPath();
+	}
+
 	public static TokenSequence<TSTokenId> getTSTokenSequence(TokenHierarchy<?> th, int offset) {
-        TokenSequence<TSTokenId> ts = th == null ? null : th.tokenSequence(TSTokenId.getLanguage());
-        if (ts == null) {
-            // Possibly an embedding scenario such as an RHTML file
-            // First try with backward bias true
-            List<TokenSequence<?>> list = th.embeddedTokenSequences(offset, true);
-            for (TokenSequence t : list) {
-                if (t.language() == TSTokenId.getLanguage()) {
-                    ts = t;
-                    break;
-                }
-            }
-            if (ts == null) {
-                list = th.embeddedTokenSequences(offset, false);
-                for (TokenSequence t : list) {
-                    if (t.language() == TSTokenId.getLanguage()) {
-                        ts = t;
-                        break;
-                    }
-                }
-            }
-        }
-        return ts;
-    }
-	
+		TokenSequence<TSTokenId> ts = th == null ? null : th.tokenSequence(TSTokenId.getLanguage());
+		if (ts == null) {
+			// Possibly an embedding scenario such as an RHTML file
+			// First try with backward bias true
+			List<TokenSequence<?>> list = th.embeddedTokenSequences(offset, true);
+			for (TokenSequence t : list) {
+				if (t.language() == TSTokenId.getLanguage()) {
+					ts = t;
+					break;
+				}
+			}
+			if (ts == null) {
+				list = th.embeddedTokenSequences(offset, false);
+				for (TokenSequence t : list) {
+					if (t.language() == TSTokenId.getLanguage()) {
+						ts = t;
+						break;
+					}
+				}
+			}
+		}
+		return ts;
+	}
+
 	@SuppressWarnings("unchecked")
-    public static TokenSequence<TSTokenId> getTSTokenSequence(Document doc, int offset) {
-        TokenHierarchy<Document> th = TokenHierarchy.get(doc);
-        return getTSTokenSequence(th, offset);
-    }
+	public static TokenSequence<TSTokenId> getTSTokenSequence(Document doc, int offset) {
+		TokenHierarchy<Document> th = TokenHierarchy.get(doc);
+		return getTSTokenSequence(th, offset);
+	}
+
+	public static String getWordFromXML(String word) {
+		String propertyType = "";
+		try {
+			XPathExpression expr = xpath.compile("//property[@name='" + word + "']");
+			NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+			if (nodes.getLength() > 0) {
+				Node node = nodes.item(0).getAttributes().getNamedItem("type");
+				propertyType = node.getNodeValue();
+			}
+		} catch (XPathExpressionException ex) {
+			Exceptions.printStackTrace(ex);
+		}
+		
+		return propertyType;
+	}
 }
