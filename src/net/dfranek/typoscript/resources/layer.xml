@@ -14,10 +14,10 @@
                         </folder>
                     </folder>
                 </folder>
-				<file name="language.instance">
+<!--				<file name="language.instance">
 					<attr name="instanceCreate" methodvalue="net.dfranek.typoscript.lexer.TSTokenId.getLanguage"/>
 					<attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
-                </file>
+                </file>-->
 			</folder>
 		</folder>
 	</folder>
@@ -30,7 +30,12 @@
 	</folder>
 	<folder name="Loaders">
 		<folder name="text">
-			<folder name="x-typoscript">
+            <folder name="x-typoscript">
+                
+                <!-- GSF -->
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/dfranek/typoscript/resources/ts_file_16.png"/>
+                <attr name="iconBase" stringvalue="net/dfranek/typoscript/resources/ts_file_16.png"/>
+                <!-- eof GSF -->
 				<folder name="Actions">
 					<file name="org-openide-actions-CopyAction.shadow">
 						<attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
@@ -89,14 +94,14 @@
 						<attr name="position" intvalue="1200"/>
 					</file>
 				</folder>
-				<folder name="Factories">
+<!--				<folder name="Factories">
 					<file name="TSDataLoader.instance">
 						<attr name="dataObjectClass" stringvalue="net.dfranek.typoscript.TSDataObject"/>
 						<attr name="iconBase" stringvalue="net/dfranek/typoscript/resources/ts_file_16.png"/>
                         <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
 						<attr name="mimeType" stringvalue="text/x-typoscript"/>
 					</file>
-				</folder>
+				</folder>-->
 			</folder>
 		</folder>
 	</folder>

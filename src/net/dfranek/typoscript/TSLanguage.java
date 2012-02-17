@@ -42,21 +42,39 @@ import net.dfranek.typoscript.completion.TSCodeCompletion;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.TSParser;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.core.spi.multiview.MultiViewElement;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.parsing.spi.indexing.PathRecognizerRegistration;
+import org.openide.util.Lookup;
+import org.openide.windows.TopComponent;
 
 /**
  *
  * @author Daniel Franek
  */
 
-@LanguageRegistration(mimeType="text/x-typoscript")
+@LanguageRegistration(mimeType="text/x-typoscript", useMultiview = true)
+@PathRecognizerRegistration(mimeTypes = "text/x-typoscript", libraryPathIds = {}, binaryLibraryPathIds = {}) //NOI18N
 public class TSLanguage extends DefaultLanguageConfig {
 
 	private static final String LINE_COMMENT_PREFIX = "#";//NOI18N
 	public static final String TS_MIME_TYPE = "text/x-typoscript";//NOI18N
+	
+	@MultiViewElement.Registration(
+		displayName="#LBL_TSEditorTab",
+        iconBase="net/dfranek/typoscript/resources/ts_file_16.png",
+        persistenceType=TopComponent.PERSISTENCE_ONLY_OPENED,
+        preferredID="ts.source",
+        mimeType="text/x-typoscript",
+		position=1
+	)
+    public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
+        return new MultiViewEditorElement(context);
+    }
 	
 	@Override
 	public Language<TSTokenId> getLexerLanguage() {
