@@ -4,12 +4,11 @@
  */
 package net.dfranek.typoscript.parser;
 
-import java.util.AbstractList;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
 
@@ -17,33 +16,32 @@ import org.netbeans.modules.parsing.api.Snapshot;
  *
  * @author Eric Waldburger
  */
-
 public class TSParserResult extends ParserResult {
-                
-    private Vector<org.netbeans.modules.csl.api.Error> errors;
-    private boolean valid = true;
 
-    public TSParserResult(Snapshot snapshot) {
-            super(snapshot);
-	    this.errors = new Vector<org.netbeans.modules.csl.api.Error>();
-    }
+	private List<Error> errors;
+	private boolean valid = true;
 
-    private TSParserResult(Snapshot snapshot, TokenSequence<TSTokenId> source) {
-            super(snapshot);
-            this.errors = new Vector<org.netbeans.modules.csl.api.Error>();
-    }
+	public TSParserResult(Snapshot snapshot) {
+		super(snapshot);
+		this.errors = new ArrayList<Error>();
+	}
 
-    @Override
-    public List<? extends org.netbeans.modules.csl.api.Error> getDiagnostics() {
-            return errors;
-    }
+	private TSParserResult(Snapshot snapshot, TokenSequence<TSTokenId> source) {
+		super(snapshot);
+		this.errors = new ArrayList<Error>();
+	}
 
-    public void addError(org.netbeans.modules.csl.api.Error e ) {
-            errors.add(e);
-    }
+	@Override
+	public List<? extends Error> getDiagnostics() {
+		return errors;
+	}
 
-    @Override
-    protected void invalidate() {
-            valid = false;
-}
+	public void addError(Error e) {
+		errors.add(e);
+	}
+
+	@Override
+	protected void invalidate() {
+		valid = false;
+	}
 }
