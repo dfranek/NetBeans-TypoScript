@@ -97,7 +97,7 @@ public class TSTokenParser {
 			}
 
 			//Bracket Handling
-			// DF: sollte nur für { und ( greifen, Conditions sind gesamt ein Token, hier sollte überprüft werden ob das letzte Zeichen ein ] ist. Bei Values wirds mit meinem momentanen Tokenizer nicht funktioneren, bei Operatoren sehe ich hier keinen Sinn
+			// DF:  Conditions sind gesamt ein Token, hier sollte überprüft werden ob das letzte Zeichen ein ] ist.
 			if (id.equals(TSTokenId.TS_CURLY) || id.equals(TSTokenId.TS_PARANTHESE) || id.equals(TSTokenId.TS_CONDITION) || id.equals(TSTokenId.TS_VALUE) || id.equals(TSTokenId.TS_OPERATOR)) {
 				String tokenText = t.text().toString();
 				if (tokenText.equals("{")) {
@@ -163,8 +163,7 @@ public class TSTokenParser {
 		if (root.getNext() != null) {
 			r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength() - 1, snapshot.getSource().getDocument(true).getLength(), Severity.ERROR, new Object[]{this}));
 		}
-		
-		logger.info("return value");
+
 		System.out.println(logger.toString());
 		return r;
 	}
