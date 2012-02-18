@@ -8,3 +8,4 @@
 - fixed a severe bug in the lexer
 1.3.0
 - Source/History now works
+- errors for non closed bracket are now added in the parser
