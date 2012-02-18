@@ -96,14 +96,14 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "[");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "10");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "10");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "w");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "]");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "+");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "2");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "2");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ",");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "20");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "20");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY, "}");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
@@ -117,7 +117,7 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "0");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "0");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_CONDITION, "[global]");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
@@ -152,13 +152,13 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "colPos");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "0");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "0");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "typeNum");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "0");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "0");
 	}
 	
 }

@@ -38,9 +38,7 @@
  */
 package net.dfranek.typoscript.parser;
 
-import java.util.Enumeration;
 import java.util.logging.Logger;
-import javax.swing.tree.DefaultMutableTreeNode;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
 import net.dfranek.typoscript.parser.ast.TSASTNodeType;
@@ -164,7 +162,6 @@ public class TSTokenParser {
 			r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength() - 1, snapshot.getSource().getDocument(true).getLength(), Severity.ERROR, new Object[]{this}));
 		}
 
-		System.out.println(logger.toString());
 		return r;
 	}
 }
