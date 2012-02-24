@@ -40,7 +40,9 @@ package net.dfranek.typoscript.completion;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.spi.DefaultCompletionResult;
@@ -67,11 +69,12 @@ class TSCompletionResult extends DefaultCompletionResult {
     }
 
 	@Override
-	public void beforeInsert(CompletionProposal cp) {
-//		super.beforeInsert(cp);
+	public void afterInsert(CompletionProposal cp) {
+		Document doc = context.getParserResult().getSnapshot().getSource().getDocument(true);
 		try {
 			// Remove typed characters
-			context.getParserResult().getSnapshot().getSource().getDocument(true).remove(cp.getAnchorOffset()-context.getPrefix().length(), context.getPrefix().length());
+			Logger.getLogger(TSCompletionResult.class.getName()).finest(doc.getText(cp.getAnchorOffset()-context.getPrefix().length(), context.getPrefix().length()));
+			doc.remove(cp.getAnchorOffset()-context.getPrefix().length(), context.getPrefix().length());
 		} catch (BadLocationException ex) {
 			Exceptions.printStackTrace(ex);
 		}
