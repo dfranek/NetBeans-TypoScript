@@ -9,3 +9,4 @@
 1.3.0
 - Source/History now works
 - errors for non closed bracket are now added in the parser
+- fixed bug with code completion
