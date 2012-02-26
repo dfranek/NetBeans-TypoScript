@@ -155,4 +155,13 @@
 			</file>
 		</folder>
 	</folder>
+	<folder name="Navigator">
+		<folder name="Panels">
+			<folder name="text">
+				<folder name="x-typoscript">
+					<file name="net-dfranek-typoscript-nav-TSNavPanel.instance"/>
+				</folder>
+			</folder>
+		</folder>
+	</folder>
 </filesystem>
