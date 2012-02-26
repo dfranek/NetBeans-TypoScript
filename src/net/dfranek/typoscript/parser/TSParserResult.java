@@ -7,6 +7,7 @@ package net.dfranek.typoscript.parser;
 import java.util.ArrayList;
 import java.util.List;
 import net.dfranek.typoscript.lexer.TSTokenId;
+import net.dfranek.typoscript.parser.ast.TSASTNode;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.spi.ParserResult;
@@ -20,6 +21,7 @@ public class TSParserResult extends ParserResult {
 
 	private List<Error> errors;
 	private boolean valid = true;
+	private TSASTNode tree;
 
 	public TSParserResult(Snapshot snapshot) {
 		super(snapshot);
@@ -44,4 +46,13 @@ public class TSParserResult extends ParserResult {
 	protected void invalidate() {
 		valid = false;
 	}
+	
+	public TSASTNode getTree() {
+		return tree;
+	}
+	
+	public void setTree(TSASTNode tree) {
+		this.tree = tree;
+	}
+	
 }

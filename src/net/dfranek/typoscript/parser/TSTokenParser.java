@@ -157,6 +157,8 @@ public class TSTokenParser {
 				actNode = tree;
 			}
 		}
+		
+		r.setTree(tree);
 
 		if (root.getNext() != null) {
 			r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength() - 1, snapshot.getSource().getDocument(true).getLength(), Severity.ERROR, new Object[]{this}));
