@@ -68,7 +68,9 @@ public class TSNavPanelUI extends javax.swing.JPanel {
         hierarchyPane = new javax.swing.JScrollPane();
         tree = new javax.swing.JTree();
 
+        tree.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tree.setRootVisible(false);
+        tree.setShowsRootHandles(true);
         hierarchyPane.setViewportView(tree);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
