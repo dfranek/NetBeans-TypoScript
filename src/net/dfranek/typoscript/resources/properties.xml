@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <properties>
-	<property type="property" name="stdWrap" />
-	<property type="object" name="PAGE" />
+	<property type="object" name="TEXT" />
+	<property type="object" name="HTML" />
+	<property type="object" name="COA" />
+	<property type="object" name="COA_INT" />
+	<property type="object" name="FILE" />
+	<property type="object" name="IMAGE" />
+	<property type="object" name="IMG_RESOURCE" />
+	<property type="object" name="CLEARGIF" />
+	<property type="object" name="CONTENT" />
+	<property type="object" name="RECORDS" />
+	<property type="object" name="HMENU" />
+	<property type="object" name="CTABLE" />
+	<property type="object" name="OTABLE" />
+	<property type="object" name="COLUMNS" />
+	<property type="object" name="HRULER" />
+	<property type="object" name="IMGTEXT" />
+	<property type="object" name="CASE" />
+	<property type="object" name="LOAD_REGISTER" />
+	<property type="object" name="RESTORE_REGISTER" />
+	<property type="object" name="SEARCHRESULT" />
+	<property type="object" name="USER" />
+	<property type="object" name="USER_INT" />
+	<property type="object" name="TEMPLATE" />
+	<property type="object" name="FLUIDTEMPLATE" />
+	<property type="object" name="MEDIA" />
+	<property type="object" name="SWFOBJECT" />
+	<property type="object" name="QTOBJECT" />
+	<property type="object" name="MULTIMEDIA" />
+	<property type="object" name="SVG" />
+	<property type="object" name="EDITPANEL" />
+	<property type="object" name="GIFBUILDER" />
+	<property type="object" name="GMENU" />
+	<property type="object" name="GMENU_LAYERS" />
+	<property type="object" name="TMENU_LAYERS" />
+	<property type="object" name="GMENU_FOLDOUT" />
+	<property type="object" name="TMENU" />
+	<property type="object" name="TMENUITEM" />
+	<property type="object" name="IMGMENU" />
+	<property type="object" name="IMGMENUITEM" />
+	<property type="object" name="JSMENU" />
+	<property type="object" name="JSMENUITEM" />
+	<property type="object" name="JSMENU" />
+	<property type="object" name="JSMENU" />
 	<property type="condition" name="globalVar" />
+	<property type="property" name="stdWrap" />
 </properties>
