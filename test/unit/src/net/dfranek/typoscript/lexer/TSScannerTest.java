@@ -161,4 +161,10 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "0");
 	}
 	
+	public void testOpeningCurly() {
+		TokenSequence<?> ts = TSLexerTestUtils.seqForText("page{", TSTokenId.getLanguage());
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY, "{");
+	}
+	
 }

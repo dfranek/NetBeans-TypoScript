@@ -216,8 +216,8 @@ public class TSScanner {
 	}
 
 	protected String nextWhileWordChar(char ch) {
-
-
+		boolean inConstant = false;
+		if(ch == '{') inConstant = true;
 
 		// Backing up 1 position to fix bug
 		if (ch == '>') {
@@ -227,13 +227,13 @@ public class TSScanner {
 			input.backup(2);
 		}
 
-		if (!isWordChar(new Character(ch).toString())) {
+		if (!isWordChar(new Character(ch).toString(),inConstant)) {
 			return input.readText().toString();
 		}
 
 		StringBuilder sb = new StringBuilder();
 		char next;
-		while (((next = (char) input.read()) != LexerInput.EOF) && next != '\n' && isWordChar(new Character(next).toString())) {
+		while (((next = (char) input.read()) != LexerInput.EOF) && next != '\n' && isWordChar(new Character(next).toString(), inConstant)) {
 			sb.append(next);
 		}
 		input.backup(1);
@@ -348,8 +348,11 @@ public class TSScanner {
 		return Pattern.matches("[0-9A-Fa-f]", input);
 	}
 
-	protected boolean isWordChar(String input) {
-		return Pattern.matches("[\\w\\$_{}]", input);
+	protected boolean isWordChar(String input, boolean constant) {
+		if(constant)
+			return Pattern.matches("[\\w\\$_{}]", input);
+		else
+			return Pattern.matches("[\\w\\$_]", input);
 	}
 
 	protected boolean isWhiteSpace(char ch) {
