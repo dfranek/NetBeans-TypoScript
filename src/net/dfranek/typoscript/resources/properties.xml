@@ -43,6 +43,31 @@
 	<property type="object" name="JSMENUITEM" />
 	<property type="object" name="JSMENU" />
 	<property type="object" name="JSMENU" />
+	<property type="condition" name="browser" />
+	<property type="condition" name="system" />
+	<property type="condition" name="device" />
+	<property type="condition" name="useragent" />
+	<property type="condition" name="language" />
+	<property type="condition" name="IP" />
+	<property type="condition" name="hostname" />
+	<property type="condition" name="hour" />
+	<property type="condition" name="minute" />
+	<property type="condition" name="month" />
+	<property type="condition" name="year" />
+	<property type="condition" name="dayofweek" />
+	<property type="condition" name="dayofmonth" />
+	<property type="condition" name="dayofyear" />
+	<property type="condition" name="usergroup" />
+	<property type="condition" name="loginUser" />
+	<property type="condition" name="page" />
+	<property type="condition" name="treeLevel" />
+	<property type="condition" name="PIDinRootline" />
+	<property type="condition" name="PIDupinRootline" />
+	<property type="condition" name="compatVersion" />
 	<property type="condition" name="globalVar" />
+	<property type="condition" name="globalString" />
+	<property type="condition" name="userFunc" />
+	<property type="condition" name="ELSE" />
+	<property type="condition" name="GLOBAL" />
 	<property type="property" name="stdWrap" />
 </properties>
