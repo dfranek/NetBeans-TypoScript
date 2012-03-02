@@ -62,17 +62,20 @@ public class TSTokenParser {
 	private BracketNode root = last;
 	private TSASTNode tree;
 	private static final Logger logger = Logger.getLogger(TSTokenParser.class.getName());
+	
+	private TSParserResult result;
 
 	TSTokenParser(TokenSequence<TSTokenId> source, Snapshot snapshot) {
 		sequence = source;
 		this.snapshot = snapshot;
 		this.curlyOpen = 0;
+		result = new TSParserResult(snapshot);
 		tree = new TSASTNode("", "", TSASTNodeType.ROOTLEVEL);
 	}
 
 	public TSParserResult analyze() {
 		TSASTNode node;
-		TSParserResult r = new TSParserResult(snapshot);
+		
 		Token<TSTokenId> t;
 		TSTokenId id;
 		TSASTNode actNode = tree;
@@ -82,9 +85,6 @@ public class TSTokenParser {
 			t = sequence.token();
 			//type of token
 			id = t.id();
-//                      Debugger.pr(t);
-//			Debugger.pr(t.id());
-
 			//TODO bnf umsetzen von (http://wiki.typo3.org/TypoScript_technical_aspects)
 
 			//TODO CC Objekt abhängig machen
@@ -94,7 +94,35 @@ public class TSTokenParser {
 				continue;
 			}
 
-			//Bracket Handling
+			// DF: ausgelagert in eigene Funktion
+			checkBraces(id, t);
+
+			if (!id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
+				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN);
+
+				if (!actNode.hasChild(node)) {
+					actNode.addChild(node);
+					actNode = node;
+				} else {
+					actNode = node;
+				}
+			}
+			if (id.equals(TSTokenId.TS_NL)) {
+				actNode = tree;
+			}
+		}
+		
+		result.setTree(tree);
+
+		if (root.getNext() != null) {
+			result.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength() - 1, snapshot.getSource().getDocument(true).getLength(), Severity.ERROR, new Object[]{this}));
+		}
+
+		return result;
+	}
+
+	private void checkBraces(TSTokenId id, Token<TSTokenId> t) {
+		//Bracket Handling
 			// DF:  Conditions sind gesamt ein Token, hier sollte überprüft werden ob das letzte Zeichen ein ] ist.
 			if (id.equals(TSTokenId.TS_CURLY) || id.equals(TSTokenId.TS_PARANTHESE) || id.equals(TSTokenId.TS_CONDITION) || id.equals(TSTokenId.TS_VALUE) || id.equals(TSTokenId.TS_OPERATOR)) {
 				String tokenText = t.text().toString();
@@ -110,7 +138,7 @@ public class TSTokenParser {
 						last = last.getPrev();
 						last.setNext(null);
 					} else {
-						r.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
+						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
 				} else if (tokenText.equals("(")) {
 					if (last == null) {
@@ -124,7 +152,7 @@ public class TSTokenParser {
 						last = last.getPrev();
 						last.setNext(null);
 					} else {
-						r.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
+						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
 				} else if (tokenText.equals("[")) {
 					if (last == null) {
@@ -138,32 +166,9 @@ public class TSTokenParser {
 						last = last.getPrev();
 						last.setNext(null);
 					} else {
-						r.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
+						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
 				}
 			}
-
-			if (!id.equals(TSTokenId.TS_COMMENT) && !id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
-				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN);
-
-				if (!actNode.hasChild(node)) {
-					actNode.addChild(node);
-					actNode = node;
-				} else {
-					actNode = node;
-				}
-			}
-			if (id.equals(TSTokenId.TS_NL)) {
-				actNode = tree;
-			}
-		}
-		
-		r.setTree(tree);
-
-		if (root.getNext() != null) {
-			r.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength() - 1, snapshot.getSource().getDocument(true).getLength(), Severity.ERROR, new Object[]{this}));
-		}
-
-		return r;
 	}
 }
