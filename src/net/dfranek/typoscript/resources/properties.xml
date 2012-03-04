@@ -77,5 +77,26 @@
 	<property type="condition" name="userFunc" />
 	<property type="condition" name="usergroup" />
 	<property type="condition" name="year" />
-	<property type="property" name="stdWrap" />
+	<property type="function" name="addParams" />
+	<property type="function" name="encapsLines" />
+	<property type="function" name="filelink" />
+	<property type="function" name="HTMLparser" />
+	<property type="function" name="HTMLparser_tags" />
+	<property type="function" name="if" />
+	<property type="function" name="imageLinkWrap" />
+	<property type="function" name="imgResource" />
+	<property type="function" name="makelinks" />
+	<property type="function" name="numberFormat" />
+	<property type="function" name="numRows" />
+	<property type="function" name="parseFunc" />
+	<property type="function" name="replacement" />
+	<property type="function" name="round" />
+	<property type="function" name="select" />
+	<property type="function" name="split" />
+	<property type="function" name="stdWrap" />
+	<property type="function" name="tableStyle" />
+	<property type="function" name="tags" />
+	<property type="function" name="textStyle" />
+	<property type="function" name="typolink" />
+	<property type="function" name="userFunc" />
 </properties>
