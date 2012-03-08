@@ -144,7 +144,7 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_PROPERTY, "TEST");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "select");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_FUNCTION, "select");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "where");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");

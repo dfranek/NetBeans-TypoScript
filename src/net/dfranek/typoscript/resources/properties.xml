@@ -68,7 +68,7 @@
 	<property type="condition" name="loginUser" />
 	<property type="condition" name="minute" />
 	<property type="condition" name="month" />
-	<property type="condition" name="page" />
+<!--	<property type="condition" name="page" /> causes problems with things linke page.10.XY, temporarily disabled-->
 	<property type="condition" name="PIDinRootline" />
 	<property type="condition" name="PIDupinRootline" />
 	<property type="condition" name="system" />

@@ -350,7 +350,7 @@ public class TSScanner {
 
 	protected boolean isWordChar(String input, boolean constant) {
 		if(constant)
-			return Pattern.matches("[\\w\\$_{}]", input);
+			return Pattern.matches("[\\w\\$_{}\\.\\:]", input);
 		else
 			return Pattern.matches("[\\w\\$_]", input);
 	}
