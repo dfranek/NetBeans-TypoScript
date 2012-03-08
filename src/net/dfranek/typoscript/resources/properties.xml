@@ -1,73 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <properties>
-	<property type="object" name="TEXT" />
-	<property type="object" name="HTML" />
+	<property type="object" name="CASE" />
+	<property type="object" name="CARRAY" />
+	<property type="object" name="CLEARGIF" />
 	<property type="object" name="COA" />
 	<property type="object" name="COA_INT" />
-	<property type="object" name="FILE" />
-	<property type="object" name="IMAGE" />
-	<property type="object" name="IMG_RESOURCE" />
-	<property type="object" name="CLEARGIF" />
-	<property type="object" name="CONTENT" />
-	<property type="object" name="RECORDS" />
-	<property type="object" name="HMENU" />
-	<property type="object" name="CTABLE" />
-	<property type="object" name="OTABLE" />
 	<property type="object" name="COLUMNS" />
-	<property type="object" name="HRULER" />
-	<property type="object" name="IMGTEXT" />
-	<property type="object" name="CASE" />
-	<property type="object" name="LOAD_REGISTER" />
-	<property type="object" name="RESTORE_REGISTER" />
-	<property type="object" name="SEARCHRESULT" />
-	<property type="object" name="USER" />
-	<property type="object" name="USER_INT" />
-	<property type="object" name="TEMPLATE" />
-	<property type="object" name="FLUIDTEMPLATE" />
-	<property type="object" name="MEDIA" />
-	<property type="object" name="SWFOBJECT" />
-	<property type="object" name="QTOBJECT" />
-	<property type="object" name="MULTIMEDIA" />
-	<property type="object" name="SVG" />
+	<property type="object" name="CONFIG" />
+	<property type="object" name="CONTENT" />
+	<property type="object" name="CTABLE" />
 	<property type="object" name="EDITPANEL" />
+	<property type="object" name="FE_DATA" />
+	<property type="object" name="FE_TABLE" />
+	<property type="object" name="FILE" />
+	<property type="object" name="FLUIDTEMPLATE" />
+	<property type="object" name="FRAME" />
+	<property type="object" name="FRAMESET" />
 	<property type="object" name="GIFBUILDER" />
 	<property type="object" name="GMENU" />
-	<property type="object" name="GMENU_LAYERS" />
-	<property type="object" name="TMENU_LAYERS" />
 	<property type="object" name="GMENU_FOLDOUT" />
-	<property type="object" name="TMENU" />
-	<property type="object" name="TMENUITEM" />
+	<property type="object" name="GMENU_LAYERS" />
+	<property type="object" name="HMENU" />
+	<property type="object" name="HRULER" />
+	<property type="object" name="HTML" />
+	<property type="object" name="IMAGE" />
 	<property type="object" name="IMGMENU" />
 	<property type="object" name="IMGMENUITEM" />
+	<property type="object" name="IMG_RESOURCE" />
+	<property type="object" name="IMGTEXT" />
+	<property type="object" name="JSMENU" />
+	<property type="object" name="JSMENU" />
 	<property type="object" name="JSMENU" />
 	<property type="object" name="JSMENUITEM" />
-	<property type="object" name="JSMENU" />
-	<property type="object" name="JSMENU" />
+	<property type="object" name="LOAD_REGISTER" />
+	<property type="object" name="MEDIA" />
+	<property type="object" name="META" />
+	<property type="object" name="MULTIMEDIA" />
+	<property type="object" name="OTABLE" />
+	<property type="object" name="PAGE" />
+	<property type="object" name="QTOBJECT" />
+	<property type="object" name="RECORDS" />
+	<property type="object" name="RESTORE_REGISTER" />
+	<property type="object" name="SEARCHRESULT" />
+	<property type="object" name="SVG" />
+	<property type="object" name="SWFOBJECT" />
+	<property type="object" name="TEMPLATE" />
+	<property type="object" name="TEXT" />
+	<property type="object" name="TMENU" />
+	<property type="object" name="TMENUITEM" />
+	<property type="object" name="TMENU_LAYERS" />
+	<property type="object" name="USER" />
+	<property type="object" name="USER_INT" />
 	<property type="condition" name="browser" />
-	<property type="condition" name="system" />
-	<property type="condition" name="device" />
-	<property type="condition" name="useragent" />
-	<property type="condition" name="language" />
-	<property type="condition" name="IP" />
-	<property type="condition" name="hostname" />
-	<property type="condition" name="hour" />
-	<property type="condition" name="minute" />
-	<property type="condition" name="month" />
-	<property type="condition" name="year" />
-	<property type="condition" name="dayofweek" />
-	<property type="condition" name="dayofmonth" />
-	<property type="condition" name="dayofyear" />
-	<property type="condition" name="usergroup" />
-	<property type="condition" name="loginUser" />
-	<property type="condition" name="page" />
-	<property type="condition" name="treeLevel" />
-	<property type="condition" name="PIDinRootline" />
-	<property type="condition" name="PIDupinRootline" />
 	<property type="condition" name="compatVersion" />
-	<property type="condition" name="globalVar" />
-	<property type="condition" name="globalString" />
-	<property type="condition" name="userFunc" />
+	<property type="condition" name="dayofmonth" />
+	<property type="condition" name="dayofweek" />
+	<property type="condition" name="dayofyear" />
+	<property type="condition" name="device" />
 	<property type="condition" name="ELSE" />
 	<property type="condition" name="GLOBAL" />
-	<property type="property" name="stdWrap" />
+	<property type="condition" name="globalString" />
+	<property type="condition" name="globalVar" />
+	<property type="condition" name="hostname" />
+	<property type="condition" name="hour" />
+	<property type="condition" name="IP" />
+	<property type="condition" name="language" />
+	<property type="condition" name="loginUser" />
+	<property type="condition" name="minute" />
+	<property type="condition" name="month" />
+	<property type="condition" name="page" />
+	<property type="condition" name="PIDinRootline" />
+	<property type="condition" name="PIDupinRootline" />
+	<property type="condition" name="system" />
+	<property type="condition" name="treeLevel" />
+	<property type="condition" name="useragent" />
+	<property type="condition" name="userFunc" />
+	<property type="condition" name="usergroup" />
+	<property type="condition" name="year" />
+	<property type="function" name="addParams" />
+	<property type="function" name="encapsLines" />
+	<property type="function" name="filelink" />
+	<property type="function" name="HTMLparser" />
+	<property type="function" name="HTMLparser_tags" />
+	<property type="function" name="if" />
+	<property type="function" name="imageLinkWrap" />
+	<property type="function" name="imgResource" />
+	<property type="function" name="makelinks" />
+	<property type="function" name="numberFormat" />
+	<property type="function" name="numRows" />
+	<property type="function" name="parseFunc" />
+	<property type="function" name="replacement" />
+	<property type="function" name="round" />
+	<property type="function" name="select" />
+	<property type="function" name="split" />
+	<property type="function" name="stdWrap" />
+	<property type="function" name="tableStyle" />
+	<property type="function" name="tags" />
+	<property type="function" name="textStyle" />
+	<property type="function" name="typolink" />
+	<property type="function" name="userFunc" />
 </properties>
