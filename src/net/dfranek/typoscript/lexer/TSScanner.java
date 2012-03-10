@@ -90,11 +90,7 @@ public class TSScanner {
 		} else if (ch == '\n') {
 			token = TSTokenId.TS_NL;
 			state = TSLexerState.DEFAULT;
-		} else if(state == TSLexerState.IN_VALUE && ch == '#') {
-			nextUntilUnescaped('\n');
-			token = TSTokenId.TS_COMMENT;
-			state = TSLexerState.DEFAULT;
-		}else if (state != TSLexerState.IN_VALUE && state == TSLexerState.IN_COMMENT) {
+		} else if (state != TSLexerState.IN_VALUE && state == TSLexerState.IN_COMMENT) {
 			token = readMultilineComment(ch);
 		} else if (isWhiteSpace(ch)) {
 			nextWhileWhiteSpace();

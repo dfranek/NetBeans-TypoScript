@@ -177,8 +177,6 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "favicon");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "icon");
-		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_COMMENT, "# But doesn't work ofcourse");
 	}
 	
 }
