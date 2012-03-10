@@ -17,3 +17,5 @@
 - more keywords were added to xml
 1.3.3
 - fixed bug with constants and xml
+1.3.4
+- fixed bug with comment after value

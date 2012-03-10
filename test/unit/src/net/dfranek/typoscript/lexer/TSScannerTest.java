@@ -167,4 +167,18 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY, "{");
 	}
 	
+	public void testConstantAndComment() {
+		TokenSequence<?> ts = TSLexerTestUtils.seqForText("shortcutIcon = {$filepaths.templates.images}favicon.icon # But doesn't work ofcourse", TSTokenId.getLanguage());
+		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "shortcutIcon");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_CONSTANT, "{$filepaths.templates.images}");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "favicon");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "icon");
+		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_COMMENT, "# But doesn't work ofcourse");
+	}
+	
 }
