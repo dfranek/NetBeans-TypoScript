@@ -40,6 +40,7 @@ package net.dfranek.typoscript.lexer;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.text.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -121,6 +122,7 @@ public class TSLexerUtils {
 			}
 		} catch (XPathExpressionException ex) {
 			Exceptions.printStackTrace(ex);
+			Logger.getLogger(TSLexerUtils.class.getName()).warning("//property[@name='" + word.replace("'", "\\'") + "']");
 		}
 		
 		return propertyType;

@@ -158,7 +158,11 @@ public class TSScanner {
 			token = TSTokenId.TS_PROPERTY;
 
 			// try to find word in xml
-			String propertyType = TSLexerUtils.getWordFromXML(word);
+			String propertyType = "";
+			if (isWord(word, false)) {
+				propertyType = TSLexerUtils.getWordFromXML(word);
+			}
+			
 			if (!propertyType.isEmpty()) {
 				if (propertyType.equals("object")) {
 					token = TSTokenId.TS_OBJECT;
@@ -236,7 +240,9 @@ public class TSScanner {
 		while (((next = (char) input.read()) != LexerInput.EOF) && next != '\n' && isWordChar(new Character(next).toString(), inConstant)) {
 			sb.append(next);
 		}
-		input.backup(1);
+		
+		if(ch != '}' && !inConstant)
+			input.backup(1);
 
 		return input.readText().toString();
 	}
@@ -350,9 +356,16 @@ public class TSScanner {
 
 	protected boolean isWordChar(String input, boolean constant) {
 		if(constant)
-			return Pattern.matches("[\\w\\$_{}\\.\\:]", input);
+			return Pattern.matches("[\\w\\$_{\\.\\:]", input);
 		else
 			return Pattern.matches("[\\w\\$_]", input);
+	}
+
+	protected boolean isWord(String input, boolean constant) {
+		if(constant)
+			return Pattern.matches("[\\w\\$_{\\.\\:]+", input);
+		else
+			return Pattern.matches("[\\w\\$_]+", input);
 	}
 
 	protected boolean isWhiteSpace(char ch) {
