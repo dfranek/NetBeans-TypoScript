@@ -14,6 +14,11 @@
                         </folder>
                     </folder>
                 </folder>
+				<folder name="BracesMatchers">
+                    <file name="net-dfranek-typoscript-indent-TSBracesMatcherFactory.instance">
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
 <!--				<file name="language.instance">
 					<attr name="instanceCreate" methodvalue="net.dfranek.typoscript.lexer.TSTokenId.getLanguage"/>
 					<attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>

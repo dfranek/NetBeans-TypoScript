@@ -46,9 +46,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
-import org.netbeans.api.lexer.Language;
-import org.netbeans.api.lexer.TokenHierarchy;
-import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.*;
+import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.openide.util.Exceptions;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -110,6 +110,64 @@ public class TSLexerUtils {
 		TokenHierarchy<Document> th = TokenHierarchy.get(doc);
 		return getTSTokenSequence(th, offset);
 	}
+	
+	public static boolean textEquals(CharSequence text1, char... text2) {
+        int len = text1.length();
+        if (len == text2.length) {
+            for (int i = len - 1; i >= 0; i--) {
+                if (text1.charAt(i) != text2[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+	
+	/** Search forwards in the token sequence until a token of type <code>down</code> is found */
+    public static OffsetRange findFwd(BaseDocument doc, TokenSequence<?extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
+        int balance = 0;
+
+        while (ts.moveNext()) {
+            Token<?extends TSTokenId> token = ts.token();
+            
+            if ((token.id() == tokenUpId && textEquals(token.text(), up))/*
+                    || (tokenUpId == TSTokenId.TS_CURLY_OPEN && token.id() == TSTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')*/) {
+                balance++;
+            } else if (token.id() == tokenDownId && textEquals(token.text(), down)) {
+                if (balance == 0) {
+                    return new OffsetRange(ts.offset(), ts.offset() + token.length());
+                }
+
+                balance--;
+            }
+        }
+
+        return OffsetRange.NONE;
+    }
+	
+	/** Search backwards in the token sequence until a token of type <code>up</code> is found */
+    public static OffsetRange findBwd(BaseDocument doc, TokenSequence<?extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
+        int balance = 0;
+
+        while (ts.movePrevious()) {
+            Token<?extends TSTokenId> token = ts.token();
+            TokenId id = token.id();
+
+            if (token.id() == tokenUpId && textEquals(token.text(), up)/*
+                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')*/) {
+                if (balance == 0) {
+                    return new OffsetRange(ts.offset(), ts.offset() + token.length());
+                }
+
+                balance++;
+            } else if (token.id() == tokenDownId && textEquals(token.text(), down)) {
+                balance--;
+            }
+        }
+
+        return OffsetRange.NONE;
+    }
 
 	public static String getWordFromXML(String word) {
 		String propertyType = "";

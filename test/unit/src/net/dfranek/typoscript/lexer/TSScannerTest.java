@@ -88,7 +88,7 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "file");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY, "{");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY_OPEN, "{");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, "\t");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD3, "XY");
@@ -105,7 +105,7 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ",");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "20");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY, "}");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY_CLOSE, "}");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_CONDITION, "[globalVar=TSFE:type = 0]");
@@ -164,7 +164,7 @@ public class TSScannerTest extends TestCase {
 	public void testOpeningCurly() {
 		TokenSequence<?> ts = TSLexerTestUtils.seqForText("page{", TSTokenId.getLanguage());
 		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY, "{");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY_OPEN, "{");
 	}
 	
 	public void testConstantAndComment() {

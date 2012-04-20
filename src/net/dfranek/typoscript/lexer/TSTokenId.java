@@ -48,6 +48,8 @@ import org.netbeans.api.lexer.TokenId;
  */
 public enum TSTokenId implements TokenId {
 	TS_CURLY(null, "brace"),
+	TS_CURLY_OPEN(null, "brace"),
+	TS_CURLY_CLOSE(null, "brace"),
 	TS_COMMENT(null, "comment"),
 	TS_VALUE(null, "value"),
 	TS_PROPERTY(null, "ts"),

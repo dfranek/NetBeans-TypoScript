@@ -124,7 +124,7 @@ public class TSTokenParser {
 	private void checkBraces(TSTokenId id, Token<TSTokenId> t) {
 		//Bracket Handling
 			// DF:  Conditions sind gesamt ein Token, hier sollte überprüft werden ob das letzte Zeichen ein ] ist.
-			if (id.equals(TSTokenId.TS_CURLY) || id.equals(TSTokenId.TS_PARANTHESE) || id.equals(TSTokenId.TS_CONDITION) || id.equals(TSTokenId.TS_VALUE) || id.equals(TSTokenId.TS_OPERATOR)) {
+			if (id.equals(TSTokenId.TS_CURLY_OPEN) || id.equals(TSTokenId.TS_CURLY_CLOSE) || id.equals(TSTokenId.TS_PARANTHESE) || id.equals(TSTokenId.TS_CONDITION) || id.equals(TSTokenId.TS_VALUE) || id.equals(TSTokenId.TS_OPERATOR)) {
 				String tokenText = t.text().toString();
 				if (tokenText.equals("{")) {
 					if (last == null) {

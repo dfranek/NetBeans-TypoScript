@@ -124,7 +124,7 @@ public class TSScanner {
 		} else if (state != TSLexerState.IN_VALUE && Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=]", new Character(ch).toString())) {
 			token = TSTokenId.TS_OPERATOR;
 		} else if (state != TSLexerState.IN_VALUE && (ch == '{' || ch == '}')) {
-			token = TSTokenId.TS_CURLY;
+			token = ch == '{' ? TSTokenId.TS_CURLY_OPEN : TSTokenId.TS_CURLY_CLOSE;
 		} else if (state != TSLexerState.IN_VALUE && ch == '0' && (input.read() == 'x' || input.read() == 'X')) {
 			token = readHexNumber();
 		} else if (state != TSLexerState.IN_VALUE && isDigit(new Character(ch).toString())) {

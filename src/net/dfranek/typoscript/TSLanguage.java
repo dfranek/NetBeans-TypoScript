@@ -111,4 +111,5 @@ public class TSLanguage extends DefaultLanguageConfig {
 	public Parser getParser() {
 		return new TSParser();
 	}
+	
 }
