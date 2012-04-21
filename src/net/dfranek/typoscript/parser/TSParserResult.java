@@ -10,6 +10,7 @@ import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.Error;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
 
@@ -22,10 +23,13 @@ public class TSParserResult extends ParserResult {
 	private List<Error> errors;
 	private boolean valid = true;
 	private TSASTNode tree;
+	private TokenSequence<TSTokenId> sequence;
+	private List<OffsetRange> codeblocks;
 
 	public TSParserResult(Snapshot snapshot) {
 		super(snapshot);
 		this.errors = new ArrayList<Error>();
+		this.codeblocks = new ArrayList<OffsetRange>();
 	}
 
 	private TSParserResult(Snapshot snapshot, TokenSequence<TSTokenId> source) {
@@ -41,6 +45,10 @@ public class TSParserResult extends ParserResult {
 	public void addError(Error e) {
 		errors.add(e);
 	}
+	
+	public void addCodeBlock(OffsetRange r) {
+		codeblocks.add(r);
+	}
 
 	@Override
 	protected void invalidate() {
@@ -53,6 +61,18 @@ public class TSParserResult extends ParserResult {
 	
 	public void setTree(TSASTNode tree) {
 		this.tree = tree;
+	}
+
+	public void setSequence(TokenSequence<TSTokenId> sequence) {
+		this.sequence = sequence;
+	}
+	
+	public TokenSequence<TSTokenId> getSequence() {
+		return this.sequence;
+	}
+	
+	public List<OffsetRange> getCodeBlocks() {
+		return codeblocks;
 	}
 	
 }

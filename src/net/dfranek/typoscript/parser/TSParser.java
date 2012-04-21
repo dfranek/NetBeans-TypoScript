@@ -38,7 +38,6 @@
  */
 package net.dfranek.typoscript.parser;
 
-
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -59,22 +58,21 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
  * @author Daniel Franek
  */
 public class TSParser extends Parser {
-    
+
 	private Snapshot snapshot;
 	private ParserResult result = null;
 	private static final Logger LOGGER = Logger.getLogger(TSParser.class.getName());
-        
+
 	@Override
 	public void parse(Snapshot snapshot, Task task, SourceModificationEvent sme) throws ParseException {
 		this.snapshot = snapshot;
-                //File split into tokens
+		//File split into tokens
 		TokenSequence<TSTokenId> sequence = snapshot.getTokenHierarchy().tokenSequence(TSTokenId.getLanguage());
 		try {
 			result = parseSource(sequence);
-		} catch(Exception e) {
-			LOGGER.log (Level.FINE, "Exception during parsing: {0}", e);
-			e.printStackTrace();
-                        result = new TSParserResult(snapshot);
+		} catch (Exception e) {
+			LOGGER.log(Level.FINE, "Exception during parsing: {0}", e);
+			result = new TSParserResult(snapshot);
 		}
 	}
 
@@ -84,18 +82,18 @@ public class TSParser extends Parser {
 	}
 
 	@Override
-	public void addChangeListener(ChangeListener cl) {}
+	public void addChangeListener(ChangeListener cl) {
+	}
 
 	@Override
-	public void removeChangeListener(ChangeListener cl) {}
+	public void removeChangeListener(ChangeListener cl) {
+	}
 
 	private ParserResult parseSource(TokenSequence<TSTokenId> source) {
 		ParserResult pResult;
 		TSTokenParser p = new TSTokenParser(source, snapshot);
 		pResult = p.analyze();
-		
+
 		return pResult;
 	}
-
-
 }

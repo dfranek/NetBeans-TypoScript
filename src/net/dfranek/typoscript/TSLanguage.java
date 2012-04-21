@@ -41,10 +41,12 @@ package net.dfranek.typoscript;
 import net.dfranek.typoscript.completion.TSCodeCompletion;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.TSParser;
+import net.dfranek.typoscript.parser.TSStructureScanner;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
@@ -111,5 +113,14 @@ public class TSLanguage extends DefaultLanguageConfig {
 	public Parser getParser() {
 		return new TSParser();
 	}
-	
+
+	@Override
+	public boolean hasStructureScanner() {
+		return true;
+	}
+
+	@Override
+	public StructureScanner getStructureScanner() {
+		return new TSStructureScanner();
+	}
 }

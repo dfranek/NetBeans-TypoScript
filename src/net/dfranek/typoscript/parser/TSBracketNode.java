@@ -42,52 +42,75 @@ package net.dfranek.typoscript.parser;
  *
  * @author Eric Waldburger
  */
-public class BracketNode {
-    
-    private BracketNode next;
-    private BracketNode prev;
-    private String value;
-    
-    public BracketNode(){
-	this.next = null;
-	this.prev = null;
-	this.value = "";
-    }
+public class TSBracketNode {
 
-    public BracketNode(String inVal, BracketNode inPrev){
-	this.next = null;
-	this.prev = inPrev;
-	this.value = inVal;
-    }
-    
-    public BracketNode(String inVal, BracketNode inNext, BracketNode inPrev){
-	this.next = inNext;
-	this.prev = inPrev;
-	this.value = inVal;
-    }
-    
-    public BracketNode getNext() {
-	return next;
-    }
+	private TSBracketNode next;
+	private TSBracketNode prev;
+	private String value;
+	private int offset;
 
-    public BracketNode getPrev() {
-	return prev;
-    }
+	public TSBracketNode() {
+		this.next = null;
+		this.prev = null;
+		this.value = "";
+	}
 
-    public void setPrev(BracketNode prev) {
-	this.prev = prev;
-    }
+	public TSBracketNode(String inVal, TSBracketNode inPrev) {
+		this.next = null;
+		this.prev = inPrev;
+		this.value = inVal;
+		this.offset = 0;
+	}
+	
+	public TSBracketNode(String inVal, TSBracketNode inPrev, int offset) {
+		this.next = null;
+		this.prev = inPrev;
+		this.value = inVal;
+		this.offset = offset;
+	}
 
-    public void setNext(BracketNode next) {
-	this.next = next;
-    }
+	public TSBracketNode(String inVal, TSBracketNode inNext, TSBracketNode inPrev) {
+		this.next = inNext;
+		this.prev = inPrev;
+		this.value = inVal;
+		this.offset = 0;
+	}
 
-    public String getValue() {
-	return value;
-    }
+	public TSBracketNode(String inVal, TSBracketNode inNext, TSBracketNode inPrev, int offset) {
+		this.next = inNext;
+		this.prev = inPrev;
+		this.value = inVal;
+		this.offset = offset;
+	}
 
-    public void setValue(String value) {
-	this.value = value;
-    }
-    
+	public TSBracketNode getNext() {
+		return next;
+	}
+
+	public TSBracketNode getPrev() {
+		return prev;
+	}
+
+	public void setPrev(TSBracketNode prev) {
+		this.prev = prev;
+	}
+
+	public void setNext(TSBracketNode next) {
+		this.next = next;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * @return the offset
+	 */
+	public int getOffset() {
+		return offset;
+	}
 }

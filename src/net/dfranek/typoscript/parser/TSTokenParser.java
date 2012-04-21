@@ -44,6 +44,7 @@ import net.dfranek.typoscript.parser.ast.TSASTNode;
 import net.dfranek.typoscript.parser.ast.TSASTNodeType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.parsing.api.Snapshot;
 
@@ -58,8 +59,8 @@ public class TSTokenParser {
 	private boolean commentOpen = false;
 	private boolean valueOpen = false;
 	private int curlyOpen = 0;
-	private BracketNode last = new BracketNode("root", null);
-	private BracketNode root = last;
+	private TSBracketNode last = new TSBracketNode("root", null);
+	private TSBracketNode root = last;
 	private TSASTNode tree;
 	private static final Logger logger = Logger.getLogger(TSTokenParser.class.getName());
 	
@@ -75,6 +76,8 @@ public class TSTokenParser {
 
 	public TSParserResult analyze() {
 		TSASTNode node;
+		
+		result.setSequence(sequence);
 		
 		Token<TSTokenId> t;
 		TSTokenId id;
@@ -95,7 +98,7 @@ public class TSTokenParser {
 			}
 
 			// DF: ausgelagert in eigene Funktion
-			checkBraces(id, t);
+			checkBraces(id, t, sequence);
 
 			if (!id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
 				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN);
@@ -121,44 +124,46 @@ public class TSTokenParser {
 		return result;
 	}
 
-	private void checkBraces(TSTokenId id, Token<TSTokenId> t) {
+	private void checkBraces(TSTokenId id, Token<TSTokenId> t, TokenSequence<TSTokenId> ts) {
 		//Bracket Handling
 			// DF:  Conditions sind gesamt ein Token, hier sollte überprüft werden ob das letzte Zeichen ein ] ist.
 			if (id.equals(TSTokenId.TS_CURLY_OPEN) || id.equals(TSTokenId.TS_CURLY_CLOSE) || id.equals(TSTokenId.TS_PARANTHESE) || id.equals(TSTokenId.TS_CONDITION) || id.equals(TSTokenId.TS_VALUE) || id.equals(TSTokenId.TS_OPERATOR)) {
 				String tokenText = t.text().toString();
-				if (tokenText.equals("{")) {
+				if (id == TSTokenId.TS_CURLY_OPEN) {
 					if (last == null) {
-						last = new BracketNode("{", null);
+						last = new TSBracketNode("{", null, ts.offset());
 					} else {
-						last.setNext(new BracketNode("{", last));
+						last.setNext(new TSBracketNode("{", last, ts.offset()));
 						last = last.getNext();
 					}
-				} else if (tokenText.equals("}")) {
+				} else if (id == TSTokenId.TS_CURLY_CLOSE) {
 					if (last.getValue().equals("{")) {
 						last = last.getPrev();
 						last.setNext(null);
+						result.addCodeBlock(new OffsetRange(last.getOffset(), ts.offset()));
 					} else {
 						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
-				} else if (tokenText.equals("(")) {
+				} else if (tokenText.equals("(") && id == TSTokenId.TS_PARANTHESE) {
 					if (last == null) {
-						last = new BracketNode("(", null);
+						last = new TSBracketNode("(", null, ts.offset());
 					} else {
-						last.setNext(new BracketNode("(", last));
+						last.setNext(new TSBracketNode("(", last, ts.offset()));
 						last = last.getNext();
 					}
-				} else if (tokenText.equals(")")) {
+				} else if (tokenText.equals(")") && id == TSTokenId.TS_PARANTHESE) {
 					if (last.getValue().equals("(")) {
 						last = last.getPrev();
 						last.setNext(null);
+						result.addCodeBlock(new OffsetRange(last.getOffset(), ts.offset()));
 					} else {
 						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
 				} else if (tokenText.equals("[")) {
 					if (last == null) {
-						last = new BracketNode("[", null);
+						last = new TSBracketNode("[", null, ts.offset());
 					} else {
-						last.setNext(new BracketNode("[", last));
+						last.setNext(new TSBracketNode("[", last, ts.offset()));
 						last = last.getNext();
 					}
 				} else if (tokenText.equals("]")) {

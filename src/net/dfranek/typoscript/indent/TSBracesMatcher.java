@@ -94,13 +94,11 @@ public class TSBracesMatcher implements BracesMatcher {
                     return new int [] { ts.offset(), ts.offset() + token.length() };
                 } else if (id == TSTokenId.TS_CURLY_CLOSE) {
                     return new int [] { ts.offset(), ts.offset() + token.length() };
-                }/* else if (TSLexerUtils.textEquals(token.text(), '[')) {
+                } else if (TSLexerUtils.textEquals(token.text(), '[')) {
                     return new int [] { ts.offset(), ts.offset() + token.length() };
                 } else if (TSLexerUtils.textEquals(token.text(), ']')) {
                     return new int [] { ts.offset(), ts.offset() + token.length() };
-                } else if (TSLexerUtils.textEquals(token.text(), '$', '{')) {
-                    return new int [] { ts.offset(), ts.offset() + token.length() };
-                }*/
+                }
                 
             }
             return null;
@@ -135,24 +133,24 @@ public class TSBracesMatcher implements BracesMatcher {
                 
                 OffsetRange r;
                 if (TSLexerUtils.textEquals(token.text(), '(')) {
-                    r = TSLexerUtils.findFwd(doc, ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
+                    r = TSLexerUtils.findFwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
                     return new int [] {r.getStart(), r.getEnd() };
                 } else if (TSLexerUtils.textEquals(token.text(), ')')) {
-                    r = TSLexerUtils.findBwd(doc, ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
+                    r = TSLexerUtils.findBwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
                     return new int [] {r.getStart(), r.getEnd() };
                 } else if (id == TSTokenId.TS_CURLY_OPEN) {
-                    r= TSLexerUtils.findFwd(doc, ts, TSTokenId.TS_CURLY_OPEN ,'{', TSTokenId.TS_CURLY_CLOSE, '}');
+                    r= TSLexerUtils.findFwd(ts, TSTokenId.TS_CURLY_OPEN ,'{', TSTokenId.TS_CURLY_CLOSE, '}');
                     return new int [] {r.getStart(), r.getEnd() };
                 } else if (id == TSTokenId.TS_CURLY_CLOSE) {
-                    r = TSLexerUtils.findBwd(doc, ts, TSTokenId.TS_CURLY_OPEN, '{', TSTokenId.TS_CURLY_CLOSE, '}');
+                    r = TSLexerUtils.findBwd(ts, TSTokenId.TS_CURLY_OPEN, '{', TSTokenId.TS_CURLY_CLOSE, '}');
                     return new int [] {r.getStart(), r.getEnd() };
-                }/* else if (TSLexerUtils.textEquals(token.text(), '[')) {
-                    r = TSLexerUtils.findFwd(doc, ts, TSTokenId.PHP_TOKEN, '[', TSTokenId.PHP_TOKEN, ']');
+                } else if (TSLexerUtils.textEquals(token.text(), '[')) {
+                    r = TSLexerUtils.findFwd(ts, TSTokenId.TS_OPERATOR, '[', TSTokenId.TS_OPERATOR, ']');
                     return new int [] {r.getStart(), r.getEnd() };
                 } else if (TSLexerUtils.textEquals(token.text(), ']')) {
-                    r = TSLexerUtils.findBwd(doc, ts, TSTokenId.PHP_TOKEN, '[', TSTokenId.PHP_TOKEN, ']');
+                    r = TSLexerUtils.findBwd(ts, TSTokenId.TS_OPERATOR, '[', TSTokenId.TS_OPERATOR, ']');
                     return new int [] {r.getStart(), r.getEnd() };
-                }*/
+                }
             }
             return null;
         } finally {

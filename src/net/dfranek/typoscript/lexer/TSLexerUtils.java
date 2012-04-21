@@ -125,7 +125,7 @@ public class TSLexerUtils {
     }
 	
 	/** Search forwards in the token sequence until a token of type <code>down</code> is found */
-    public static OffsetRange findFwd(BaseDocument doc, TokenSequence<?extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
+    public static OffsetRange findFwd(TokenSequence<?extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
         int balance = 0;
 
         while (ts.moveNext()) {
@@ -147,7 +147,7 @@ public class TSLexerUtils {
     }
 	
 	/** Search backwards in the token sequence until a token of type <code>up</code> is found */
-    public static OffsetRange findBwd(BaseDocument doc, TokenSequence<?extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
+    public static OffsetRange findBwd(TokenSequence<?extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
         int balance = 0;
 
         while (ts.movePrevious()) {
