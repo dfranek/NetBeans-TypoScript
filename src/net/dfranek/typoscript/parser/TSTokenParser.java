@@ -136,11 +136,11 @@ public class TSTokenParser {
 						last.setNext(new TSBracketNode("{", last, ts.offset()));
 						last = last.getNext();
 					}
+					result.addCodeBlock(new OffsetRange(last.getOffset(), ts.offset()));
 				} else if (id == TSTokenId.TS_CURLY_CLOSE) {
 					if (last.getValue().equals("{")) {
 						last = last.getPrev();
 						last.setNext(null);
-						result.addCodeBlock(new OffsetRange(last.getOffset(), ts.offset()));
 					} else {
 						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
@@ -151,11 +151,11 @@ public class TSTokenParser {
 						last.setNext(new TSBracketNode("(", last, ts.offset()));
 						last = last.getNext();
 					}
+						result.addCodeBlock(new OffsetRange(last.getOffset(), ts.offset()));
 				} else if (tokenText.equals(")") && id == TSTokenId.TS_PARANTHESE) {
 					if (last.getValue().equals("(")) {
 						last = last.getPrev();
 						last.setNext(null);
-						result.addCodeBlock(new OffsetRange(last.getOffset(), ts.offset()));
 					} else {
 						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
@@ -173,6 +173,8 @@ public class TSTokenParser {
 					} else {
 						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
+				} else if (id == TSTokenId.TS_CONDITION && (!tokenText.equals("[global]") && !tokenText.equals("[end]"))) {
+					result.addCodeBlock(new OffsetRange(ts.offset(), ts.offset()+t.length()));
 				}
 			}
 	}

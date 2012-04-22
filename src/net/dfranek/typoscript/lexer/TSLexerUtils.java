@@ -110,64 +110,87 @@ public class TSLexerUtils {
 		TokenHierarchy<Document> th = TokenHierarchy.get(doc);
 		return getTSTokenSequence(th, offset);
 	}
-	
+
 	public static boolean textEquals(CharSequence text1, char... text2) {
-        int len = text1.length();
-        if (len == text2.length) {
-            for (int i = len - 1; i >= 0; i--) {
-                if (text1.charAt(i) != text2[i]) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-	
-	/** Search forwards in the token sequence until a token of type <code>down</code> is found */
-    public static OffsetRange findFwd(TokenSequence<?extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
-        int balance = 0;
+		int len = text1.length();
+		if (len == text2.length) {
+			for (int i = len - 1; i >= 0; i--) {
+				if (text1.charAt(i) != text2[i]) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 
-        while (ts.moveNext()) {
-            Token<?extends TSTokenId> token = ts.token();
-            
-            if ((token.id() == tokenUpId && textEquals(token.text(), up))/*
-                    || (tokenUpId == TSTokenId.TS_CURLY_OPEN && token.id() == TSTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')*/) {
-                balance++;
-            } else if (token.id() == tokenDownId && textEquals(token.text(), down)) {
-                if (balance == 0) {
-                    return new OffsetRange(ts.offset(), ts.offset() + token.length());
-                }
+	/**
+	 * Search forwards in the token sequence until a token of type
+	 * <code>down</code> is found
+	 */
+	public static OffsetRange findFwd(TokenSequence<? extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
+		int balance = 0;
 
-                balance--;
-            }
-        }
+		while (ts.moveNext()) {
+			Token<? extends TSTokenId> token = ts.token();
 
-        return OffsetRange.NONE;
-    }
-	
-	/** Search backwards in the token sequence until a token of type <code>up</code> is found */
-    public static OffsetRange findBwd(TokenSequence<?extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
-        int balance = 0;
+			if ((token.id() == tokenUpId && textEquals(token.text(), up))/*
+					 * || (tokenUpId == TSTokenId.TS_CURLY_OPEN && token.id() ==
+					 * TSTokenId.PHP_TOKEN &&
+					 * token.text().charAt(token.text().length() - 1) == '{')
+					 */) {
+				balance++;
+			} else if (token.id() == tokenDownId && textEquals(token.text(), down)) {
+				if (balance == 0) {
+					return new OffsetRange(ts.offset(), ts.offset() + token.length());
+				}
 
-        while (ts.movePrevious()) {
-            Token<?extends TSTokenId> token = ts.token();
-            TokenId id = token.id();
+				balance--;
+			}
+		}
 
-            if (token.id() == tokenUpId && textEquals(token.text(), up)/*
-                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')*/) {
-                if (balance == 0) {
-                    return new OffsetRange(ts.offset(), ts.offset() + token.length());
-                }
+		return OffsetRange.NONE;
+	}
 
-                balance++;
-            } else if (token.id() == tokenDownId && textEquals(token.text(), down)) {
-                balance--;
-            }
-        }
+	/**
+	 * Search backwards in the token sequence until a token of type
+	 * <code>up</code> is found
+	 */
+	public static OffsetRange findBwd(TokenSequence<? extends TSTokenId> ts, TSTokenId tokenUpId, char up, TSTokenId tokenDownId, char down) {
+		int balance = 0;
 
-        return OffsetRange.NONE;
-    }
+		while (ts.movePrevious()) {
+			Token<? extends TSTokenId> token = ts.token();
+			TokenId id = token.id();
+
+			if (token.id() == tokenUpId && textEquals(token.text(), up)/*
+					 * || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id()
+					 * == PHPTokenId.PHP_TOKEN &&
+					 * token.text().charAt(token.text().length() - 1) == '{')
+					 */) {
+				if (balance == 0) {
+					return new OffsetRange(ts.offset(), ts.offset() + token.length());
+				}
+
+				balance++;
+			} else if (token.id() == tokenDownId && textEquals(token.text(), down)) {
+				balance--;
+			}
+		}
+
+		return OffsetRange.NONE;
+	}
+
+	public static OffsetRange findNext(TokenSequence<? extends TSTokenId> ts, TSTokenId tokenId, String startsWith) {
+		while (ts.moveNext()) {
+			Token<? extends TSTokenId> token = ts.token();
+			TokenId id = token.id();
+			if (token.id() == tokenId && token.text().toString().startsWith(startsWith)) {
+				return new OffsetRange(ts.offset(), ts.offset() + token.length());
+			}
+		}
+		return OffsetRange.NONE;
+	}
 
 	public static String getWordFromXML(String word) {
 		String propertyType = "";
@@ -182,7 +205,7 @@ public class TSLexerUtils {
 			Exceptions.printStackTrace(ex);
 			Logger.getLogger(TSLexerUtils.class.getName()).warning("//property[@name='" + word.replace("'", "\\'") + "']");
 		}
-		
+
 		return propertyType;
 	}
 }

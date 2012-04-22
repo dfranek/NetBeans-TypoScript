@@ -73,37 +73,48 @@ public class TSStructureScanner implements StructureScanner {
 		TokenSequence<? extends TSTokenId> ts = tpr.getSequence();
 		ts.moveStart();
 		if (ts != null) {
-			while (ts.moveNext()) {
-				Token<? extends TSTokenId> token = ts.token();
-				TokenId id = token.id();
+			List<OffsetRange> blocks = tpr.getCodeBlocks();
+			for (Iterator<OffsetRange> it = blocks.iterator(); it.hasNext();) {
+				OffsetRange offsetRange = it.next();
+				ts.move(offsetRange.getStart());
+				if (ts.moveNext()) {
+					Token<? extends TSTokenId> token = ts.token();
+					TokenId id = token.id();
 
-				OffsetRange r = null;
-				String kind = "";
-				int offset = ts.offset();
-				if (TSLexerUtils.textEquals(token.text(), '(')) {
-					r = TSLexerUtils.findFwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
-					r = new OffsetRange(offset, r.getEnd());
-					kind = FOLD_BLOCKS;
-				} else if (TSLexerUtils.textEquals(token.text(), ')')) {
-					r = TSLexerUtils.findBwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
-					r = new OffsetRange(offset, r.getEnd());
-					kind = FOLD_BLOCKS;
-				} else if (id == TSTokenId.TS_CURLY_OPEN) {
-					r = TSLexerUtils.findFwd(ts, TSTokenId.TS_CURLY_OPEN, '{', TSTokenId.TS_CURLY_CLOSE, '}');
-					r = new OffsetRange(offset, r.getEnd());
-					kind = FOLD_BLOCKS;
-				} else if (id == TSTokenId.TS_CURLY_CLOSE) {
-					r = TSLexerUtils.findBwd(ts, TSTokenId.TS_CURLY_OPEN, '{', TSTokenId.TS_CURLY_CLOSE, '}');
-					r = new OffsetRange(offset, r.getEnd());
-					kind = FOLD_BLOCKS;
-				}/* else if(id == TSTokenId.TS_COMMENT && token.text().charAt(0) == '#') {
-					offset = ts.offset();
-					r = TSLexerUtils.findFwd(ts, TSTokenId.TS_COMMENT, '#', TSTokenId.TS_COMMENT, '#');
-					r = new OffsetRange(offset, r.getEnd());
-					kind = FOLD_COMMENTS;
-				}*/
-				if (r != null) {
-					getRanges(folds, kind).add(r);
+					OffsetRange r = null;
+					String kind = "";
+					int offset = ts.offset();
+					if (TSLexerUtils.textEquals(token.text(), '(')) {
+						r = TSLexerUtils.findFwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
+						r = new OffsetRange(offset, r.getEnd());
+						kind = FOLD_BLOCKS;
+					} else if (TSLexerUtils.textEquals(token.text(), ')')) {
+						r = TSLexerUtils.findBwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
+						r = new OffsetRange(offset, r.getEnd());
+						kind = FOLD_BLOCKS;
+					} else if (id == TSTokenId.TS_CURLY_OPEN) {
+						r = TSLexerUtils.findFwd(ts, TSTokenId.TS_CURLY_OPEN, '{', TSTokenId.TS_CURLY_CLOSE, '}');
+						r = new OffsetRange(offset, r.getEnd());
+						kind = FOLD_BLOCKS;
+					} else if (id == TSTokenId.TS_CURLY_CLOSE) {
+						r = TSLexerUtils.findBwd(ts, TSTokenId.TS_CURLY_OPEN, '{', TSTokenId.TS_CURLY_CLOSE, '}');
+						r = new OffsetRange(offset, r.getEnd());
+						kind = FOLD_BLOCKS;
+					} else if(id == TSTokenId.TS_CONDITION) {
+						r = TSLexerUtils.findNext(ts, TSTokenId.TS_CONDITION, "[global]");
+						r = new OffsetRange(offset, r.getEnd());
+						kind = FOLD_BLOCKS;
+					}/*
+					 * else if(id == TSTokenId.TS_COMMENT &&
+					 * token.text().charAt(0) == '#') { offset = ts.offset(); r
+					 * = TSLexerUtils.findFwd(ts, TSTokenId.TS_COMMENT, '#',
+					 * TSTokenId.TS_COMMENT, '#'); r = new OffsetRange(offset,
+					 * r.getEnd()); kind = FOLD_COMMENTS;
+				}
+					 */
+					if (r != null) {
+						getRanges(folds, kind).add(r);
+					}
 				}
 			}
 
