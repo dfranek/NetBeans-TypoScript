@@ -85,11 +85,6 @@ public class TSLanguageHierarchy extends LanguageHierarchy<TSTokenId> {
 
 	@Override
 	protected LanguageEmbedding<?> embedding(Token<TSTokenId> token, LanguagePath languagePath, InputAttributes inputAttributes) {
-		TSTokenId id = token.id();
-		if(id == TSTokenId.TS_COMMENT) {
-			
-		}
-		
 		return null;
 	}
 	

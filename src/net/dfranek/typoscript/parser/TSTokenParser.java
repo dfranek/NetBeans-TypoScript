@@ -38,7 +38,6 @@
  */
 package net.dfranek.typoscript.parser;
 
-import java.util.logging.Logger;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
 import net.dfranek.typoscript.parser.ast.TSASTNodeType;
@@ -56,20 +55,16 @@ public class TSTokenParser {
 
 	private TokenSequence<TSTokenId> sequence;
 	private Snapshot snapshot;
-	private boolean commentOpen = false;
-	private boolean valueOpen = false;
-	private int curlyOpen = 0;
 	private TSBracketNode last = new TSBracketNode("root", null);
 	private TSBracketNode root = last;
 	private TSASTNode tree;
-	private static final Logger logger = Logger.getLogger(TSTokenParser.class.getName());
+	private boolean conditionOpen = false;
 	
 	private TSParserResult result;
 
 	TSTokenParser(TokenSequence<TSTokenId> source, Snapshot snapshot) {
 		sequence = source;
 		this.snapshot = snapshot;
-		this.curlyOpen = 0;
 		result = new TSParserResult(snapshot);
 		tree = new TSASTNode("", "", TSASTNodeType.ROOTLEVEL);
 	}
@@ -93,8 +88,12 @@ public class TSTokenParser {
 			//TODO CC Objekt abhängig machen
 
 			//ignore Comments
-			if (id.equals(TSTokenId.TS_COMMENT)) {
-				continue;
+//			if (id.equals(TSTokenId.TS_COMMENT)) {
+//				continue;
+//			}
+			
+			if(id == TSTokenId.TS_MULTILINE_COMMENT && t.text().toString().startsWith("/*")) {
+				result.addCodeBlock(new OffsetRange(sequence.offset(), sequence.offset()+1));
 			}
 
 			// DF: ausgelagert in eigene Funktion
@@ -117,8 +116,16 @@ public class TSTokenParser {
 		
 		result.setTree(tree);
 
-		if (root.getNext() != null) {
-			result.addError(new TSError("Not all brackets where closed", snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength() - 1, snapshot.getSource().getDocument(true).getLength(), Severity.ERROR, new Object[]{this}));
+		if (conditionOpen) {
+			result.addError(new TSError("Not all conditions were ended with [global]", snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength() - 1, snapshot.getSource().getDocument(true).getLength(), Severity.WARNING, new Object[]{this}));
+		}
+		
+		TSBracketNode end = root.getNext();
+		if (end != null) {
+			String message;
+			if("(".equals(end.getValue())) message = "A multiline value section is not ended with a parenthesis!";
+			else message = "An end brace is in excess.";
+			result.addError(new TSError(message, snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength() - 1, snapshot.getSource().getDocument(true).getLength(), Severity.ERROR, new Object[]{this}));
 		}
 
 		return result;
@@ -142,7 +149,7 @@ public class TSTokenParser {
 						last = last.getPrev();
 						last.setNext(null);
 					} else {
-						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
+						result.addError(new TSError("No matching brace found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
 				} else if (tokenText.equals("(") && id == TSTokenId.TS_PARANTHESE) {
 					if (last == null) {
@@ -157,7 +164,7 @@ public class TSTokenParser {
 						last = last.getPrev();
 						last.setNext(null);
 					} else {
-						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
+						result.addError(new TSError("No matching paranthese found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
 				} else if (tokenText.equals("[")) {
 					if (last == null) {
@@ -174,7 +181,10 @@ public class TSTokenParser {
 						result.addError(new TSError("No matching bracket found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 					}
 				} else if (id == TSTokenId.TS_CONDITION && (!tokenText.equals("[global]") && !tokenText.equals("[end]"))) {
+					conditionOpen = true;
 					result.addCodeBlock(new OffsetRange(ts.offset(), ts.offset()+t.length()));
+				} else if(id == TSTokenId.TS_CONDITION && tokenText.equals("[global]")) {
+					conditionOpen = false;
 				}
 			}
 	}

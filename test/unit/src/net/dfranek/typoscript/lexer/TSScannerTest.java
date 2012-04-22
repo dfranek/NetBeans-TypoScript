@@ -59,9 +59,9 @@ public class TSScannerTest extends TestCase {
 	@Test
 	public void testMultiLineComment() {
 		TokenSequence<?> ts = TSLexerTestUtils.seqForText("/* first line\n*second line\n*/\n", TSTokenId.getLanguage());
-		TSLexerTestUtils.next(ts, TSTokenId.TS_COMMENT, "/* first line\n");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_COMMENT, "*second line\n");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_COMMENT, "*/");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_MULTILINE_COMMENT, "/* first line\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_MULTILINE_COMMENT, "*second line\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_MULTILINE_COMMENT, "*/");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 	}
 	

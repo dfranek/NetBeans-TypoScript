@@ -51,6 +51,7 @@ public enum TSTokenId implements TokenId {
 	TS_CURLY_OPEN(null, "brace"),
 	TS_CURLY_CLOSE(null, "brace"),
 	TS_COMMENT(null, "comment"),
+	TS_MULTILINE_COMMENT(null, "comment"),
 	TS_VALUE(null, "value"),
 	TS_PROPERTY(null, "ts"),
 	TS_CONDITION(null, "condition"),

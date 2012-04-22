@@ -101,9 +101,21 @@ public class TSStructureScanner implements StructureScanner {
 						r = new OffsetRange(offset, r.getEnd());
 						kind = FOLD_BLOCKS;
 					} else if(id == TSTokenId.TS_CONDITION) {
-						r = TSLexerUtils.findNext(ts, TSTokenId.TS_CONDITION, "[global]");
-						r = new OffsetRange(offset, r.getEnd());
+						r = TSLexerUtils.findNextStartsWith(ts, TSTokenId.TS_CONDITION, "[global]");
+						if(r == OffsetRange.NONE) {
+							r = null;
+						} else {
+							r = new OffsetRange(offset, r.getEnd());
+						}
 						kind = FOLD_BLOCKS;
+					} else if(id == TSTokenId.TS_MULTILINE_COMMENT) {
+						r = TSLexerUtils.findNextEndsWith(ts, TSTokenId.TS_MULTILINE_COMMENT, "*/");
+						if(r == OffsetRange.NONE) {
+							r = null;
+						} else {
+							r = new OffsetRange(offset, r.getEnd());
+						}
+						kind = FOLD_COMMENTS;
 					}/*
 					 * else if(id == TSTokenId.TS_COMMENT &&
 					 * token.text().charAt(0) == '#') { offset = ts.offset(); r

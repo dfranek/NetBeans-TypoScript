@@ -339,7 +339,7 @@ public class TSScanner {
 			maybeEnd = (next == '*');
 		}
 
-		return TSTokenId.TS_COMMENT;
+		return TSTokenId.TS_MULTILINE_COMMENT;
 	}
 
 	protected boolean isOperatorChar(String input) {

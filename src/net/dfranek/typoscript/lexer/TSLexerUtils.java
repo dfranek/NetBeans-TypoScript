@@ -181,11 +181,23 @@ public class TSLexerUtils {
 		return OffsetRange.NONE;
 	}
 
-	public static OffsetRange findNext(TokenSequence<? extends TSTokenId> ts, TSTokenId tokenId, String startsWith) {
+	public static OffsetRange findNextStartsWith(TokenSequence<? extends TSTokenId> ts, TSTokenId tokenId, String startsWith) {
 		while (ts.moveNext()) {
 			Token<? extends TSTokenId> token = ts.token();
 			TokenId id = token.id();
 			if (token.id() == tokenId && token.text().toString().startsWith(startsWith)) {
+				return new OffsetRange(ts.offset(), ts.offset() + token.length());
+			}
+		}
+		return OffsetRange.NONE;
+	}
+	
+	
+	public static OffsetRange findNextEndsWith(TokenSequence<? extends TSTokenId> ts, TSTokenId tokenId, String endsWith) {
+		while (ts.moveNext()) {
+			Token<? extends TSTokenId> token = ts.token();
+			TokenId id = token.id();
+			if (token.id() == tokenId && token.text().toString().endsWith(endsWith)) {
 				return new OffsetRange(ts.offset(), ts.offset() + token.length());
 			}
 		}
