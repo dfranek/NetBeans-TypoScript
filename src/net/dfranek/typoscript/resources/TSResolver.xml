@@ -42,4 +42,12 @@ made subject to such option by the copyright holder.
 		<ext name="t3"/>
 		<resolver mime="text/x-typoscript"/>
 	</file>
+	<file>
+		<name name="setup.txt" />
+		<name name="constants.txt" />
+		<name name="ext_conf_template.txt" />
+		<name name="ext_typoscript_setup.txt" />
+		<name name="ext_typoscript_constants.txt" />
+		<resolver mime="text/x-typoscript"/>
+	</file>
 </MIME-resolver>

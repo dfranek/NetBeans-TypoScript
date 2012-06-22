@@ -17,3 +17,10 @@
 - more keywords were added to xml
 1.3.3
 - fixed bug with constants and xml
+1.3.8
+- added more filetypes to resolver:
+setup.txt
+constants.txt
+ext_conf_template.txt
+ext_typoscript_setup.txt
+ext_typoscript_constants.txt
