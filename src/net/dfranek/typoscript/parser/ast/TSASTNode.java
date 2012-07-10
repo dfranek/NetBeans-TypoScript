@@ -51,11 +51,16 @@ public class TSASTNode {
 	private TSASTNodeType type;
 	private HashMap<String, TSASTNode> children = new HashMap<String, TSASTNode>();
 	private TSASTNode parent;
+	
+	private int length;
+	private int offset;
 
-	public TSASTNode(String name, String value, TSASTNodeType type) {
+	public TSASTNode(String name, String value, TSASTNodeType type, int offset, int length) {
 		this.name = name;
 		this.value = value;
 		this.type = type;
+		this.length = length;
+		this.offset = offset;
 	}
 
 	/**
@@ -82,6 +87,10 @@ public class TSASTNode {
 		return children.containsKey(node.getName());
 	}
 
+	public boolean hasChildren() {
+		return children.isEmpty();
+	}
+	
 	/**
 	 * @return the value
 	 */
@@ -116,6 +125,20 @@ public class TSASTNode {
 	
 	public TSASTNode getParent() {
 		return this.parent;
+	}
+
+	/**
+	 * @return the length
+	 */
+	public int getLength() {
+		return length;
+	}
+
+	/**
+	 * @return the offset
+	 */
+	public int getOffset() {
+		return offset;
 	}
 	
 }

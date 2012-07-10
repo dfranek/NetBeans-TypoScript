@@ -6,22 +6,22 @@
 			<folder name="x-typoscript">
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
 				<folder name="FontsColors">
-                    <folder name="NetBeans">
-                        <folder name="Defaults">
-                            <file name="FontAndColors.xml" url="FontAndColors.xml">
-                                <attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
-                            </file>
-                        </folder>
-                    </folder>
-                </folder>
+					<folder name="NetBeans">
+						<folder name="Defaults">
+							<file name="FontAndColors.xml" url="FontAndColors.xml">
+								<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
+							</file>
+						</folder>
+					</folder>
+				</folder>
 				<folder name="BracesMatchers">
-                    <file name="net-dfranek-typoscript-indent-TSBracesMatcherFactory.instance">
-                        <attr name="position" intvalue="0"/>
-                    </file>
-                </folder>
-				 <folder name="FoldManager">
-                    <file name="org-netbeans-editor-CustomFoldManager$Factory.instance"/>
-                </folder>
+					<file name="net-dfranek-typoscript-indent-TSBracesMatcherFactory.instance">
+						<attr name="position" intvalue="0"/>
+					</file>
+				</folder>
+				<folder name="FoldManager">
+					<file name="org-netbeans-editor-CustomFoldManager$Factory.instance"/>
+				</folder>
 <!--				<file name="language.instance">
 					<attr name="instanceCreate" methodvalue="net.dfranek.typoscript.lexer.TSTokenId.getLanguage"/>
 					<attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
@@ -38,11 +38,11 @@
 	</folder>
 	<folder name="Loaders">
 		<folder name="text">
-            <folder name="x-typoscript">
+			<folder name="x-typoscript">
                 
                 <!-- GSF -->
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/dfranek/typoscript/resources/ts_file_16.png"/>
-                <attr name="iconBase" stringvalue="net/dfranek/typoscript/resources/ts_file_16.png"/>
+				<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/dfranek/typoscript/resources/ts_file_16.png"/>
+				<attr name="iconBase" stringvalue="net/dfranek/typoscript/resources/ts_file_16.png"/>
                 <!-- eof GSF -->
 				<folder name="Actions">
 					<file name="org-openide-actions-CopyAction.shadow">
@@ -124,10 +124,10 @@
 			</file>
 		</folder>
 		<folder name="MIMEResolver">
-            <file name="TSResolver.xml" url="TSResolver.xml">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
-            </file>
-        </folder>
+			<file name="TSResolver.xml" url="TSResolver.xml">
+				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
+			</file>
+		</folder>
 	</folder>
 	<folder name="Templates">
 		<folder name="TypoScript">
@@ -164,14 +164,35 @@
 		</folder>
 	</folder>
 	<folder name="CslPlugins">
-        <folder name="text">
-            <folder name="x-typoscript">
-                <file name="language.instance">
-                    <attr name="instanceClass" stringvalue="net.dfranek.typoscript.TSLanguage"/>
-                </file>
-                <file name="structure.instance">
-                    <attr name="instanceClass" stringvalue="net.dfranek.typoscript.parser.TSStructureScanner"/>
-                </file>
+		<folder name="text">
+			<folder name="x-typoscript">
+				<file name="language.instance">
+					<attr name="instanceClass" stringvalue="net.dfranek.typoscript.TSLanguage"/>
+				</file>
+				<file name="structure.instance">
+					<attr name="instanceClass" stringvalue="net.dfranek.typoscript.parser.TSStructureScanner"/>
+				</file>
+			</folder>
+		</folder>
+	</folder>
+<!--	<folder name="Navigator">
+		<folder name="Panels">
+			<folder name="text">
+				<folder name="x-typoscript">
+					<file name="net-dfranek-typoscript-nav-TSNavPanel.instance"/>
+				</folder>
+			</folder>
+		</folder>
+	</folder>-->
+	<folder name="Navigator">
+        <folder name="Panels">
+            <folder name="text">
+                <folder name="x-typoscript">
+                    <file name="org-netbeans-modules-csl-navigation-ClassMemberPanel.instance">
+                        <!--org.netbeans.modules.javascript.editing.JsLanguage-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.navigation.ClassMemberPanel"/>
+                    </file>
+                </folder>
             </folder>
         </folder>
     </folder>

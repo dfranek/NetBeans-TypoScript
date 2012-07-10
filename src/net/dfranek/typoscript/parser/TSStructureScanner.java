@@ -39,17 +39,18 @@
 package net.dfranek.typoscript.parser;
 
 import java.util.*;
+import javax.swing.ImageIcon;
 import javax.swing.text.Document;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
+import net.dfranek.typoscript.parser.ast.TSASTNode;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.csl.api.StructureItem;
-import org.netbeans.modules.csl.api.StructureScanner;
+import org.netbeans.modules.csl.api.*;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Source;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -64,6 +65,24 @@ public class TSStructureScanner implements StructureScanner {
 
 	public List<? extends StructureItem> scan(ParserResult pr) {
 		final List<StructureItem> items = new ArrayList<StructureItem>();
+//		TSASTNode root = ((TSParserResult) pr).getTree();
+//		for (Iterator<TSASTNode> it = root.getChildren().iterator(); it.hasNext();) {
+//			TSASTNode node = it.next();
+//
+//			List<StructureItem> itemsSub;
+//			if (node.hasChildren()) {
+//				itemsSub = null;
+//			} else {
+//				itemsSub = new ArrayList<StructureItem>();
+//				for (Iterator<TSASTNode> itSub = node.getChildren().iterator(); itSub.hasNext();) {
+//					TSASTNode nodeSub = itSub.next();
+//					itemsSub.add(new TSStructureItem(nodeSub, null, ""));
+//				}
+//			}
+//
+//			items.add(new TSStructureItem(node, itemsSub, ""));
+//		}
+
 		return items;
 	}
 
@@ -100,17 +119,17 @@ public class TSStructureScanner implements StructureScanner {
 						r = TSLexerUtils.findBwd(ts, TSTokenId.TS_CURLY_OPEN, '{', TSTokenId.TS_CURLY_CLOSE, '}');
 						r = new OffsetRange(offset, r.getEnd());
 						kind = FOLD_BLOCKS;
-					} else if(id == TSTokenId.TS_CONDITION) {
+					} else if (id == TSTokenId.TS_CONDITION) {
 						r = TSLexerUtils.findNextStartsWith(ts, TSTokenId.TS_CONDITION, "[global]");
-						if(r == OffsetRange.NONE) {
+						if (r == OffsetRange.NONE) {
 							r = null;
 						} else {
 							r = new OffsetRange(offset, r.getEnd());
 						}
 						kind = FOLD_BLOCKS;
-					} else if(id == TSTokenId.TS_MULTILINE_COMMENT) {
+					} else if (id == TSTokenId.TS_MULTILINE_COMMENT) {
 						r = TSLexerUtils.findNextEndsWith(ts, TSTokenId.TS_MULTILINE_COMMENT, "*/");
-						if(r == OffsetRange.NONE) {
+						if (r == OffsetRange.NONE) {
 							r = null;
 						} else {
 							r = new OffsetRange(offset, r.getEnd());
@@ -121,8 +140,7 @@ public class TSStructureScanner implements StructureScanner {
 					 * token.text().charAt(0) == '#') { offset = ts.offset(); r
 					 * = TSLexerUtils.findFwd(ts, TSTokenId.TS_COMMENT, '#',
 					 * TSTokenId.TS_COMMENT, '#'); r = new OffsetRange(offset,
-					 * r.getEnd()); kind = FOLD_COMMENTS;
-				}
+					 * r.getEnd()); kind = FOLD_COMMENTS; }
 					 */
 					if (r != null) {
 						getRanges(folds, kind).add(r);
@@ -154,5 +172,67 @@ public class TSStructureScanner implements StructureScanner {
 
 	public Configuration getConfiguration() {
 		return new Configuration(true, true);
+	}
+
+	private class TSStructureItem implements StructureItem {
+
+		final private TSASTNode node;
+		final private List<? extends StructureItem> children;
+		final private String sortPrefix;
+
+		public TSStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			this.sortPrefix = sortPrefix;
+			this.node = node;
+			if (children != null) {
+				this.children = children;
+			} else {
+				this.children = Collections.emptyList();
+			}
+		}
+
+		public String getName() {
+			return node.getName();
+		}
+
+		public String getSortText() {
+			return sortPrefix + this.getName();
+		}
+
+		public ElementHandle getElementHandle() {
+			return null;
+		}
+
+		public ElementKind getKind() {
+			return ElementKind.PROPERTY;
+		}
+
+		public Set<Modifier> getModifiers() {
+			return null;
+		}
+
+		public boolean isLeaf() {
+			return (children.size() == 0);
+		}
+
+		public List<? extends StructureItem> getNestedItems() {
+			return children;
+		}
+
+		public long getPosition() {
+			return node.getOffset();
+		}
+
+		public long getEndPosition() {
+			return node.getOffset() + node.getLength();
+		}
+
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/ts.png"));
+		}
+
+		@Override
+		public String getHtml(HtmlFormatter hf) {
+			return node.getName();
+		}
 	}
 }

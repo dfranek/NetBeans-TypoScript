@@ -66,7 +66,7 @@ public class TSTokenParser {
 		sequence = source;
 		this.snapshot = snapshot;
 		result = new TSParserResult(snapshot);
-		tree = new TSASTNode("", "", TSASTNodeType.ROOTLEVEL);
+		tree = new TSASTNode("", "", TSASTNodeType.ROOTLEVEL,0,1);
 	}
 
 	public TSParserResult analyze() {
@@ -100,7 +100,7 @@ public class TSTokenParser {
 			checkBraces(id, t, sequence);
 
 			if (!id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
-				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN);
+				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN, sequence.offset(), t.length());
 
 				if (!actNode.hasChild(node)) {
 					actNode.addChild(node);

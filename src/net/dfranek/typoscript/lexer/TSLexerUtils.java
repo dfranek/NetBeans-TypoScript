@@ -39,15 +39,21 @@
 package net.dfranek.typoscript.lexer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
-import org.netbeans.api.lexer.*;
-import org.netbeans.editor.BaseDocument;
+import org.netbeans.api.lexer.Token;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenId;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.openide.util.Exceptions;
 import org.w3c.dom.Node;
@@ -62,6 +68,8 @@ public class TSLexerUtils {
 
 	private static XPath xpath;
 	private static org.w3c.dom.Document doc;
+	
+	protected static HashMap<String, Collection<String>> keywordCache;
 
 	static {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -78,6 +86,7 @@ public class TSLexerUtils {
 		}
 		XPathFactory xpFactory = XPathFactory.newInstance();
 		xpath = xpFactory.newXPath();
+		keywordCache = new HashMap<String, Collection<String>>();
 	}
 
 	public static TokenSequence<TSTokenId> getTSTokenSequence(TokenHierarchy<?> th, int offset) {
@@ -215,9 +224,31 @@ public class TSLexerUtils {
 			}
 		} catch (XPathExpressionException ex) {
 			Exceptions.printStackTrace(ex);
-			Logger.getLogger(TSLexerUtils.class.getName()).warning("//property[@name='" + word.replace("'", "\\'") + "']");
+			Logger.getLogger(TSLexerUtils.class.getName()).log(Level.WARNING, "//property[@name=''{0}'']", word.replace("'", "\\'"));
 		}
 
 		return propertyType;
 	}
+	
+	public static Collection<String> getAllKeywordsOfType(String type) {
+		if(keywordCache.containsKey(type)) {
+			return keywordCache.get(type);
+		}
+		Collection<String> properties = new ArrayList<String>();
+		try {
+			XPathExpression expr = xpath.compile("//property[@type='" + type + "']");
+			NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node node = nodes.item(i).getAttributes().getNamedItem("name");
+				properties.add(node.getNodeValue());
+			}
+			keywordCache.put(type, properties);
+		} catch (XPathExpressionException ex) {
+			Exceptions.printStackTrace(ex);
+			Logger.getLogger(TSLexerUtils.class.getName()).log(Level.WARNING, "//property[@name=''{0}'']", type.replace("'", "\\'"));
+		}
+
+		return properties;
+	}
+	
 }

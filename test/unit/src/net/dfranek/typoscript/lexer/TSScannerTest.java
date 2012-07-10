@@ -68,11 +68,11 @@ public class TSScannerTest extends TestCase {
 	@Test
 	public void testProperty() {
 		TokenSequence<?> ts = TSLexerTestUtils.seqForText("page.10.marks.TEST = something", TSTokenId.getLanguage());
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD, "page");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "10");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "marks");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD, "marks");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_PROPERTY, "TEST");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
@@ -91,7 +91,7 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY_OPEN, "{");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, "\t");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD3, "XY");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD, "XY");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
@@ -111,7 +111,7 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_CONDITION, "[globalVar=TSFE:type = 0]");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, "\t");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD, "page");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "typeNum");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
@@ -122,7 +122,7 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_CONDITION, "[global]");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD, "page");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "10");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
@@ -136,11 +136,11 @@ public class TSScannerTest extends TestCase {
 	@Test
 	public void testEqualsInValue() {
 		TokenSequence<?> ts = TSLexerTestUtils.seqForText("page.10.marks.TEST.select.where = colPos=0\npage.typeNum=0", TSTokenId.getLanguage());
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD, "page");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "10");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "marks");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD, "marks");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_PROPERTY, "TEST");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
@@ -154,7 +154,7 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NUMBER, "0");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_NL, "\n");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD, "page");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "typeNum");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, "=");
@@ -163,7 +163,7 @@ public class TSScannerTest extends TestCase {
 	
 	public void testOpeningCurly() {
 		TokenSequence<?> ts = TSLexerTestUtils.seqForText("page{", TSTokenId.getLanguage());
-		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD2, "page");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_KEYWORD, "page");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_CURLY_OPEN, "{");
 	}
 	

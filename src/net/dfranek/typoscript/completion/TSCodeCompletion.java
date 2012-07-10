@@ -114,7 +114,8 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 	}
 	
 	private void addKeywords(TSCompletionResult result, CodeCompletionContext context) {
-		for (Iterator<String> it = TSScanner.TSScannerKeyWords.keywords.iterator(); it.hasNext();) {
+		Collection<String> keywords = TSLexerUtils.getAllKeywordsOfType("keywords");
+		for (Iterator<String> it = keywords.iterator(); it.hasNext();) {
 			String word = it.next();
 			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
 				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.KEYWORD, context.getPrefix()));
@@ -123,13 +124,8 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 	}
 	
 	private void addReservedWords(TSCompletionResult result, CodeCompletionContext context) {
-		for (Iterator<String> it = TSScanner.TSScannerKeyWords.reservedWord.iterator(); it.hasNext();) {
-			String word = it.next();
-			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
-				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY, context.getPrefix()));
-			}
-		}
-		for (Iterator<String> it = TSScanner.TSScannerKeyWords.keywords2.iterator(); it.hasNext();) {
+		Collection<String> reservedWords = TSLexerUtils.getAllKeywordsOfType("reserved");
+		for (Iterator<String> it = reservedWords.iterator(); it.hasNext();) {
 			String word = it.next();
 			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
 				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY, context.getPrefix()));
