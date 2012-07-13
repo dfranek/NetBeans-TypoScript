@@ -251,4 +251,9 @@ public class TSLexerUtils {
 		return properties;
 	}
 	
+	public static Token<? extends TSTokenId> findFwdNonSpace(TokenSequence<? extends TSTokenId> ts) {
+		while (ts.moveNext() && ts.token().id().equals(TSTokenId.WHITESPACE)) {}
+		return ts.token();
+	}
+	
 }

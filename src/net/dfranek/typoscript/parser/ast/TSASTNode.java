@@ -140,5 +140,9 @@ public class TSASTNode {
 	public int getOffset() {
 		return offset;
 	}
+
+	public TSASTNode getChild(String name) {
+		return children.get(name);
+	}
 	
 }

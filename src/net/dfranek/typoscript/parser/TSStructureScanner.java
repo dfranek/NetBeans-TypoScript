@@ -65,23 +65,23 @@ public class TSStructureScanner implements StructureScanner {
 
 	public List<? extends StructureItem> scan(ParserResult pr) {
 		final List<StructureItem> items = new ArrayList<StructureItem>();
-//		TSASTNode root = ((TSParserResult) pr).getTree();
-//		for (Iterator<TSASTNode> it = root.getChildren().iterator(); it.hasNext();) {
-//			TSASTNode node = it.next();
-//
-//			List<StructureItem> itemsSub;
-//			if (node.hasChildren()) {
-//				itemsSub = null;
-//			} else {
-//				itemsSub = new ArrayList<StructureItem>();
-//				for (Iterator<TSASTNode> itSub = node.getChildren().iterator(); itSub.hasNext();) {
-//					TSASTNode nodeSub = itSub.next();
-//					itemsSub.add(new TSStructureItem(nodeSub, null, ""));
-//				}
-//			}
-//
-//			items.add(new TSStructureItem(node, itemsSub, ""));
-//		}
+		TSASTNode root = ((TSParserResult) pr).getTree();
+		for (Iterator<TSASTNode> it = root.getChildren().iterator(); it.hasNext();) {
+			TSASTNode node = it.next();
+
+			List<StructureItem> itemsSub;
+			if (node.hasChildren()) {
+				itemsSub = null;
+			} else {
+				itemsSub = new ArrayList<StructureItem>();
+				for (Iterator<TSASTNode> itSub = node.getChildren().iterator(); itSub.hasNext();) {
+					TSASTNode nodeSub = itSub.next();
+					itemsSub.add(new TSStructureItem(nodeSub, null, ""));
+				}
+			}
+
+			items.add(new TSStructureItem(node, itemsSub, ""));
+		}
 
 		return items;
 	}

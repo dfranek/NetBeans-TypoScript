@@ -118,5 +118,15 @@ public enum TSASTNodeType {
 	UNKNOWN,
 	VALUE,
 	ROOTLEVEL,
-	CONDITION
+	CONDITION;
+	
+	public static TSASTNodeType getNodeTypeForObject(String name) {
+		for (TSASTNodeType type : TSASTNodeType.values()) {
+			if(type.name().equals(name)){
+				return type;
+			}
+		}
+		return TSASTNodeType.UNKNOWN;
+	}
+	
 }

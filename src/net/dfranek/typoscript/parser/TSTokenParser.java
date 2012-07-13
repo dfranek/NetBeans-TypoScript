@@ -38,6 +38,7 @@
  */
 package net.dfranek.typoscript.parser;
 
+import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
 import net.dfranek.typoscript.parser.ast.TSASTNodeType;
@@ -83,14 +84,6 @@ public class TSTokenParser {
 			t = sequence.token();
 			//type of token
 			id = t.id();
-			//TODO bnf umsetzen von (http://wiki.typo3.org/TypoScript_technical_aspects)
-
-			//TODO CC Objekt abhängig machen
-
-			//ignore Comments
-//			if (id.equals(TSTokenId.TS_COMMENT)) {
-//				continue;
-//			}
 			
 			if(id == TSTokenId.TS_MULTILINE_COMMENT && t.text().toString().startsWith("/*")) {
 				result.addCodeBlock(new OffsetRange(sequence.offset(), sequence.offset()+1));
@@ -98,18 +91,48 @@ public class TSTokenParser {
 
 			// DF: ausgelagert in eigene Funktion
 			checkBraces(id, t, sequence);
-
-			if (!id.equals(TSTokenId.WHITESPACE) && !id.equals(TSTokenId.TS_NL) && !id.equals(TSTokenId.TS_OPERATOR)) {
+		}
+		
+		sequence.moveStart();
+		boolean curlyMode = false;
+		while (sequence.moveNext()) {
+			//content of token
+			t = sequence.token();
+			//type of token
+			id = t.id();
+			if(id.equals(TSTokenId.TS_PROPERTY) || id.equals(TSTokenId.TS_NUMBER) || id.equals(TSTokenId.TS_KEYWORD) || id.equals(TSTokenId.TS_KEYWORD2) || id.equals(TSTokenId.TS_KEYWORD3) || id.equals(TSTokenId.TS_RESERVED)) {
+				TSASTNode newActNode = actNode;
 				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN, sequence.offset(), t.length());
-
+				if(actNode.hasChild(node)) {
+					node = actNode.getChild(node.getName());
+				}
+				
+				Token<? extends TSTokenId> tVal = TSLexerUtils.findFwdNonSpace(sequence);
+				if(tVal.id().equals(TSTokenId.TS_OPERATOR) && tVal.text().toString().equals("=")) {
+					tVal = TSLexerUtils.findFwdNonSpace(sequence);
+					if(tVal.id().equals(TSTokenId.TS_OBJECT)) {
+						node.setType(TSASTNodeType.getNodeTypeForObject(tVal.text().toString()));
+					}  else {
+						node.setValue(tVal.text().toString());
+					}
+					newActNode = actNode;
+				} else if((tVal.id().equals(TSTokenId.TS_OPERATOR) && tVal.text().toString().equals("."))) {
+					newActNode = node;
+				} else if(tVal.id().equals(TSTokenId.TS_CURLY_OPEN) ) {
+					curlyMode = true;
+					newActNode = node;
+				} 
 				if (!actNode.hasChild(node)) {
 					actNode.addChild(node);
-					actNode = node;
+					actNode = newActNode;
 				} else {
-					actNode = node;
+					actNode = newActNode;
 				}
 			}
-			if (id.equals(TSTokenId.TS_NL)) {
+			if(id.equals(TSTokenId.TS_NL) && !curlyMode) {
+				actNode = tree;
+			}
+			if(curlyMode && id.equals(TSTokenId.TS_CURLY_CLOSE)) {
 				actNode = tree;
 			}
 		}
