@@ -24,3 +24,7 @@ constants.txt
 ext_conf_template.txt
 ext_typoscript_setup.txt
 ext_typoscript_constants.txt
+1.4.0
+- removed the internal class for keywords, moved all keywords to external xml file
+- parser now builds a tree
+- the navigator now shows a tree with all the properties

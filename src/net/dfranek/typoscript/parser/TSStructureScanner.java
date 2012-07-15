@@ -79,7 +79,18 @@ public class TSStructureScanner implements StructureScanner {
 			if (node.hasChildren()) {
 				itemsSub = buildHierarchy(node);
 			}
-			items.add(new TSStructureItem(node, itemsSub, ""));
+
+			TSStructureItem sItem;
+			if (node.getType() != TSASTNodeType.UNKNOWN && node.getType() != TSASTNodeType.COPIED_PROPERTY && node.getType() != TSASTNodeType.CLEARED_PROPERY) {
+				sItem = new TSTypedStructureItem(node, itemsSub, "");
+			} else if (node.getType() == TSASTNodeType.CLEARED_PROPERY) {
+				sItem = new TSClearedStructureItem(node, itemsSub, "");
+			} else if (node.getType() == TSASTNodeType.COPIED_PROPERTY) {
+				sItem = new TSCopiedStructureItem(node, itemsSub, "");
+			} else {
+				sItem = new TSValueStructureItem(node, itemsSub, "");
+			}
+			items.add(sItem);
 		}
 
 		return items;
@@ -173,13 +184,11 @@ public class TSStructureScanner implements StructureScanner {
 		return new Configuration(true, true);
 	}
 
-	private class TSStructureItem implements StructureItem {
+	abstract private class TSStructureItem implements StructureItem {
 
-		final private TSASTNode node;
-		final private List<? extends StructureItem> children;
-		final private String sortPrefix;
-		private static final String FONT_GRAY_COLOR = "<font color=\"#999999\">"; //NOI18N
-		private static final String CLOSE_FONT = "</font>";                   //NOI18N
+		final protected TSASTNode node;
+		final protected List<? extends StructureItem> children;
+		final protected String sortPrefix;     //NOI18N
 
 		public TSStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
 			this.sortPrefix = sortPrefix;
@@ -227,41 +236,102 @@ public class TSStructureScanner implements StructureScanner {
 			return node.getOffset() + node.getLength();
 		}
 
-		public ImageIcon getCustomIcon() {
-			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/ts.png"));
-		}
+		public abstract ImageIcon getCustomIcon();
 
 		@Override
 		public String getHtml(HtmlFormatter hf) {
 			hf.reset();
 			hf.appendText(getName());
-			if (node.getType() != TSASTNodeType.UNKNOWN && node.getType() != TSASTNodeType.COPIED_PROPERTY && node.getType() != TSASTNodeType.CLEARED_PROPERY) {
-				hf.appendHtml(FONT_GRAY_COLOR + " : ");
-				hf.appendText(node.getType().toString());
-				hf.appendHtml(CLOSE_FONT);
-			}
-			
-			if( node.getType() == TSASTNodeType.CLEARED_PROPERY) {
-				hf.appendHtml(FONT_GRAY_COLOR + " &gt;");
-				hf.appendHtml(CLOSE_FONT);
-			}
-			
-			if( node.getType() == TSASTNodeType.COPIED_PROPERTY) {
-				hf.appendHtml(FONT_GRAY_COLOR + " &lt; ");
-				hf.appendText(node.getValue());
-				hf.appendHtml(CLOSE_FONT);
-			}
-			
-			if (!node.getValue().equals("") && node.getType() != TSASTNodeType.COPIED_PROPERTY && node.getType() != TSASTNodeType.CLEARED_PROPERY) {
+			return hf.getText();
+		}
+	}
+
+	private class TSValueStructureItem extends TSStructureItem {
+
+		public TSValueStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/value.png"));
+		}
+
+		@Override
+		public String getHtml(HtmlFormatter hf) {
+			super.getHtml(hf);
+			if (!node.getValue().equals("")) {
 				hf.appendHtml(FONT_GRAY_COLOR + " = ");
 				String nodeValue = node.getValue();
-				if(nodeValue.length() > 45) {
-					nodeValue = nodeValue.substring(0, 45)+"...";
+				if (nodeValue.length() > 45) {
+					nodeValue = nodeValue.substring(0, 45) + "...";
 				}
 				hf.appendText(nodeValue);
 				hf.appendHtml(CLOSE_FONT);
 			}
 
+			return hf.getText();
+		}
+	}
+
+	private class TSTypedStructureItem extends TSStructureItem {
+
+		public TSTypedStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/type.png"));
+		}
+
+		@Override
+		public String getHtml(HtmlFormatter hf) {
+			super.getHtml(hf);
+			hf.appendHtml(FONT_GRAY_COLOR + " : ");
+			hf.appendText(node.getType().toString());
+			hf.appendHtml(CLOSE_FONT);
+			return hf.getText();
+		}
+	}
+
+	private class TSCopiedStructureItem extends TSStructureItem {
+
+		public TSCopiedStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/value.png"));
+		}
+
+		@Override
+		public String getHtml(HtmlFormatter hf) {
+			super.getHtml(hf);
+			hf.appendHtml(FONT_GRAY_COLOR + " &lt; ");
+			hf.appendText(node.getValue());
+			hf.appendHtml(CLOSE_FONT);
+			return hf.getText();
+		}
+	}
+
+	private class TSClearedStructureItem extends TSStructureItem {
+
+		public TSClearedStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/value.png"));
+		}
+
+		@Override
+		public String getHtml(HtmlFormatter hf) {
+			super.getHtml(hf);
+			hf.appendHtml(FONT_GRAY_COLOR + " &gt;");
+			hf.appendHtml(CLOSE_FONT);
 			return hf.getText();
 		}
 	}
