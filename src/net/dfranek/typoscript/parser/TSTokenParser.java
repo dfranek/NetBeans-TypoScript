@@ -38,6 +38,8 @@
  */
 package net.dfranek.typoscript.parser;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
@@ -94,13 +96,15 @@ public class TSTokenParser {
 		}
 		
 		sequence.moveStart();
-		boolean curlyMode = false;
+		int curlyDepth = 0;
+		Map<Integer, TSASTNode> curlyHierarchy = new HashMap<Integer, TSASTNode>();
+		curlyHierarchy.put(curlyDepth, tree);
 		while (sequence.moveNext()) {
 			//content of token
 			t = sequence.token();
 			//type of token
 			id = t.id();
-			if(id.equals(TSTokenId.TS_PROPERTY) || id.equals(TSTokenId.TS_NUMBER) || id.equals(TSTokenId.TS_KEYWORD) || id.equals(TSTokenId.TS_KEYWORD2) || id.equals(TSTokenId.TS_KEYWORD3) || id.equals(TSTokenId.TS_RESERVED)) {
+			if(id.equals(TSTokenId.TS_EXTENSION) || id.equals(TSTokenId.TS_PROPERTY) || id.equals(TSTokenId.TS_NUMBER) || id.equals(TSTokenId.TS_KEYWORD) || id.equals(TSTokenId.TS_KEYWORD2) || id.equals(TSTokenId.TS_KEYWORD3) || id.equals(TSTokenId.TS_RESERVED)) {
 				TSASTNode newActNode = actNode;
 				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN, sequence.offset(), t.length());
 				if(actNode.hasChild(node)) {
@@ -113,14 +117,34 @@ public class TSTokenParser {
 					if(tVal.id().equals(TSTokenId.TS_OBJECT)) {
 						node.setType(TSASTNodeType.getNodeTypeForObject(tVal.text().toString()));
 					}  else {
-						node.setValue(tVal.text().toString());
+						String tokenText = "";
+						sequence.movePrevious();
+						while (sequence.moveNext() && !sequence.token().id().equals(TSTokenId.TS_NL)) {
+							tokenText += sequence.token().text().toString();
+						}
+						sequence.movePrevious();
+						node.setValue(tokenText);
 					}
 					newActNode = actNode;
+				} else if(tVal.id().equals(TSTokenId.TS_PARANTHESE)) {
+					tVal = TSLexerUtils.findFwdNonSpace(sequence);
+					node.setValue(tVal.text().toString());
 				} else if((tVal.id().equals(TSTokenId.TS_OPERATOR) && tVal.text().toString().equals("."))) {
 					newActNode = node;
+				} else if((tVal.id().equals(TSTokenId.TS_OPERATOR) && tVal.text().toString().equals(">"))) {
+					node.setType(TSASTNodeType.CLEARED_PROPERY);
+				} else if((tVal.id().equals(TSTokenId.TS_OPERATOR) && tVal.text().toString().equals("<"))) {
+					String tokenText = "";
+					while (sequence.moveNext() && !sequence.token().id().equals(TSTokenId.TS_NL)) {
+						tokenText += sequence.token().text().toString();
+					}
+					sequence.movePrevious();
+					node.setValue(tokenText);
+					node.setType(TSASTNodeType.COPIED_PROPERTY);
 				} else if(tVal.id().equals(TSTokenId.TS_CURLY_OPEN) ) {
-					curlyMode = true;
 					newActNode = node;
+					curlyDepth++;
+					curlyHierarchy.put(curlyDepth, node);
 				} 
 				if (!actNode.hasChild(node)) {
 					actNode.addChild(node);
@@ -129,11 +153,12 @@ public class TSTokenParser {
 					actNode = newActNode;
 				}
 			}
-			if(id.equals(TSTokenId.TS_NL) && !curlyMode) {
-				actNode = tree;
+			if(id.equals(TSTokenId.TS_NL)) {
+				actNode = curlyHierarchy.get(curlyDepth);
 			}
-			if(curlyMode && id.equals(TSTokenId.TS_CURLY_CLOSE)) {
-				actNode = tree;
+			if(curlyDepth > 0 && id.equals(TSTokenId.TS_CURLY_CLOSE)) {
+				curlyDepth--;
+				actNode = curlyHierarchy.get(curlyDepth);
 			}
 		}
 		

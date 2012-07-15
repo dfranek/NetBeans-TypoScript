@@ -88,7 +88,7 @@ public class TSASTNode {
 	}
 
 	public boolean hasChildren() {
-		return children.isEmpty();
+		return !children.isEmpty();
 	}
 	
 	/**

@@ -118,6 +118,8 @@ public enum TSASTNodeType {
 	UNKNOWN,
 	VALUE,
 	ROOTLEVEL,
+	COPIED_PROPERTY,
+	CLEARED_PROPERY,
 	CONDITION;
 	
 	public static TSASTNodeType getNodeTypeForObject(String name) {

@@ -44,6 +44,7 @@ import javax.swing.text.Document;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
+import net.dfranek.typoscript.parser.ast.TSASTNodeType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
@@ -64,22 +65,20 @@ public class TSStructureScanner implements StructureScanner {
 	private static final String CLOSE_FONT = "</font>";                   //NOI18N
 
 	public List<? extends StructureItem> scan(ParserResult pr) {
-		final List<StructureItem> items = new ArrayList<StructureItem>();
+		List<? extends StructureItem> items;
 		TSASTNode root = ((TSParserResult) pr).getTree();
-		for (Iterator<TSASTNode> it = root.getChildren().iterator(); it.hasNext();) {
+		items = buildHierarchy(root);
+		return items;
+	}
+
+	protected List<? extends StructureItem> buildHierarchy(TSASTNode tree) {
+		final List<StructureItem> items = new ArrayList<StructureItem>();
+		for (Iterator<TSASTNode> it = tree.getChildren().iterator(); it.hasNext();) {
 			TSASTNode node = it.next();
-
-			List<StructureItem> itemsSub;
+			List<? extends StructureItem> itemsSub = null;
 			if (node.hasChildren()) {
-				itemsSub = null;
-			} else {
-				itemsSub = new ArrayList<StructureItem>();
-				for (Iterator<TSASTNode> itSub = node.getChildren().iterator(); itSub.hasNext();) {
-					TSASTNode nodeSub = itSub.next();
-					itemsSub.add(new TSStructureItem(nodeSub, null, ""));
-				}
+				itemsSub = buildHierarchy(node);
 			}
-
 			items.add(new TSStructureItem(node, itemsSub, ""));
 		}
 
@@ -179,6 +178,8 @@ public class TSStructureScanner implements StructureScanner {
 		final private TSASTNode node;
 		final private List<? extends StructureItem> children;
 		final private String sortPrefix;
+		private static final String FONT_GRAY_COLOR = "<font color=\"#999999\">"; //NOI18N
+		private static final String CLOSE_FONT = "</font>";                   //NOI18N
 
 		public TSStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
 			this.sortPrefix = sortPrefix;
@@ -232,7 +233,36 @@ public class TSStructureScanner implements StructureScanner {
 
 		@Override
 		public String getHtml(HtmlFormatter hf) {
-			return node.getName();
+			hf.reset();
+			hf.appendText(getName());
+			if (node.getType() != TSASTNodeType.UNKNOWN && node.getType() != TSASTNodeType.COPIED_PROPERTY && node.getType() != TSASTNodeType.CLEARED_PROPERY) {
+				hf.appendHtml(FONT_GRAY_COLOR + " : ");
+				hf.appendText(node.getType().toString());
+				hf.appendHtml(CLOSE_FONT);
+			}
+			
+			if( node.getType() == TSASTNodeType.CLEARED_PROPERY) {
+				hf.appendHtml(FONT_GRAY_COLOR + " &gt;");
+				hf.appendHtml(CLOSE_FONT);
+			}
+			
+			if( node.getType() == TSASTNodeType.COPIED_PROPERTY) {
+				hf.appendHtml(FONT_GRAY_COLOR + " &lt; ");
+				hf.appendText(node.getValue());
+				hf.appendHtml(CLOSE_FONT);
+			}
+			
+			if (!node.getValue().equals("") && node.getType() != TSASTNodeType.COPIED_PROPERTY && node.getType() != TSASTNodeType.CLEARED_PROPERY) {
+				hf.appendHtml(FONT_GRAY_COLOR + " = ");
+				String nodeValue = node.getValue();
+				if(nodeValue.length() > 45) {
+					nodeValue = nodeValue.substring(0, 45)+"...";
+				}
+				hf.appendText(nodeValue);
+				hf.appendHtml(CLOSE_FONT);
+			}
+
+			return hf.getText();
 		}
 	}
 }
