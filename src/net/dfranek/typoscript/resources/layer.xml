@@ -175,25 +175,4 @@
 			</folder>
 		</folder>
 	</folder>
-<!--	<folder name="Navigator">
-		<folder name="Panels">
-			<folder name="text">
-				<folder name="x-typoscript">
-					<file name="net-dfranek-typoscript-nav-TSNavPanel.instance"/>
-				</folder>
-			</folder>
-		</folder>
-	</folder>-->
-	<folder name="Navigator">
-        <folder name="Panels">
-            <folder name="text">
-                <folder name="x-typoscript">
-                    <file name="org-netbeans-modules-csl-navigation-ClassMemberPanel.instance">
-                        <!--org.netbeans.modules.javascript.editing.JsLanguage-->
-                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.navigation.ClassMemberPanel"/>
-                    </file>
-                </folder>
-            </folder>
-        </folder>
-    </folder>
 </filesystem>
