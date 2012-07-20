@@ -28,3 +28,5 @@ ext_typoscript_constants.txt
 - removed the internal class for keywords, moved all keywords to external xml file
 - parser now builds a tree
 - the navigator now shows a tree with all the properties
+1.4.1
+- a bug in the lexer was fixed (issue #16)

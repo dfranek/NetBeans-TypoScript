@@ -294,7 +294,7 @@ public class TSScanner {
 	protected String nextUntilUnescaped(char end) {
 		boolean escaped = false;
 		char next = (char) input.read();
-		while (((next = (char) input.read()) != LexerInput.EOF) && next != '\n' && next != '\uffff') {
+		while (next != '\n' && ((next = (char) input.read()) != LexerInput.EOF) && next != '\uffff') {
 			if (next == end && !escaped) {
 				break;
 			}
