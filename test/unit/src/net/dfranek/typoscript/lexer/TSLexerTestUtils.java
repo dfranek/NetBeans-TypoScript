@@ -54,7 +54,7 @@ import org.netbeans.lib.lexer.LexerUtilsConstants;
  */
 public class TSLexerTestUtils extends TestCase{
 
-	static TokenSequence<?> seqForText(String text, Language<TSTokenId> language) {
+	public static TokenSequence<?> seqForText(String text, Language<TSTokenId> language) {
 		TokenHierarchy<?> hi = TokenHierarchy.create(text, language);
         return hi.tokenSequence(language);
 	}

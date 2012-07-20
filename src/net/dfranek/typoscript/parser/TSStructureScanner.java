@@ -81,7 +81,7 @@ public class TSStructureScanner implements StructureScanner {
 			}
 
 			TSStructureItem sItem;
-			if (node.getType() != TSASTNodeType.UNKNOWN && node.getType() != TSASTNodeType.COPIED_PROPERTY && node.getType() != TSASTNodeType.CLEARED_PROPERY) {
+			if (node.getType() != TSASTNodeType.VALUE && node.getType() != TSASTNodeType.UNKNOWN && node.getType() != TSASTNodeType.COPIED_PROPERTY && node.getType() != TSASTNodeType.CLEARED_PROPERY) {
 				sItem = new TSTypedStructureItem(node, itemsSub, "");
 			} else if (node.getType() == TSASTNodeType.CLEARED_PROPERY) {
 				sItem = new TSClearedStructureItem(node, itemsSub, "");
