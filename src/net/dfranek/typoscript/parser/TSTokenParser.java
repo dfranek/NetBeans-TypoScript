@@ -159,7 +159,7 @@ public class TSTokenParser {
 			t = sequence.token();
 			//type of token
 			id = t.id();
-			if (id.equals(TSTokenId.TS_EXTENSION) || id.equals(TSTokenId.TS_PROPERTY) || id.equals(TSTokenId.TS_NUMBER) || id.equals(TSTokenId.TS_KEYWORD) || id.equals(TSTokenId.TS_KEYWORD2) || id.equals(TSTokenId.TS_KEYWORD3) || id.equals(TSTokenId.TS_RESERVED)) {
+			if (isPossibleParent(id)) {
 				TSASTNode newActNode = actNode;
 				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN, sequence.offset(), t.length());
 				if (actNode.hasChild(node)) {
@@ -256,6 +256,10 @@ public class TSTokenParser {
 			result.addError(new TSError(message, snapshot.getSource().getFileObject(), snapshot.getSource().getDocument(true).getLength() - 1, snapshot.getSource().getDocument(true).getLength(), Severity.ERROR, new Object[]{this}));
 		}
 		
+	}
+	
+	protected boolean isPossibleParent(TSTokenId id) {
+		return id.equals(TSTokenId.TS_EXTENSION) || id.equals(TSTokenId.TS_PROPERTY) || id.equals(TSTokenId.TS_NUMBER) || id.equals(TSTokenId.TS_KEYWORD) || id.equals(TSTokenId.TS_KEYWORD2) || id.equals(TSTokenId.TS_KEYWORD3) || id.equals(TSTokenId.TS_RESERVED) || id.equals(TSTokenId.TS_FUNCTION);
 	}
 	
 }

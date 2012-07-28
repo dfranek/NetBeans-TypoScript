@@ -125,7 +125,7 @@ public class TSScanner {
 			token = TSTokenId.TS_OPERATOR;
 		} else if (state != TSLexerState.IN_VALUE && (ch == '{' || ch == '}')) {
 			token = ch == '{' ? TSTokenId.TS_CURLY_OPEN : TSTokenId.TS_CURLY_CLOSE;
-		} else if (state != TSLexerState.IN_VALUE && ch == '0' && (input.read() == 'x' || input.read() == 'X')) {
+		} else if (state != TSLexerState.IN_VALUE && ch == '0' && ((readAndBackup() == 'x') || (readAndBackup() == 'X'))) {
 			token = readHexNumber();
 		} else if (state != TSLexerState.IN_VALUE && isDigit(new Character(ch).toString())) {
 			token = readNumber();
@@ -380,5 +380,11 @@ public class TSScanner {
 	 */
 	public TSLexerState getState() {
 		return state;
+	}
+	
+	public int readAndBackup() {
+		int c = input.read();
+		input.backup(1);
+		return c;
 	}
 }

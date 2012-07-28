@@ -30,3 +30,6 @@ ext_typoscript_constants.txt
 - the navigator now shows a tree with all the properties
 1.4.1
 - a bug in the lexer was fixed (issue #16)
+1.4.2
+- fixed an error in the lexer (issue #17)
+- fixed an error in the parser
