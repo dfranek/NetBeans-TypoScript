@@ -1,5 +1,9 @@
 This Project aims to provide support for the TypoScript Language used by TYPO3. 
 
-So far there is the lexer implemented, the TSScanner Class was developed on base of the t3editor tokenizetyposcript.js.
-
-Furthermore, a very simple code completion has been implemented.
+The currently implemented features are:
+- Syntax highlighting (based on the file tokenizetyposcript.js form the TYPO3 extension t3editor).
+- a navigator for alle properties declared in a file
+- a check for syntax errors (thanks to familie-redlich)
+- Code-Folding
+- a parser, responsible for syntax errors, navigator an other things
+- Code-Completion
