@@ -38,27 +38,19 @@
  */
 package net.dfranek.typoscript.lexer;
 
-import java.io.IOException;
+import com.google.gson.Gson;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import javax.swing.text.Document;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.openide.util.Exceptions;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -66,28 +58,8 @@ import org.xml.sax.SAXException;
  */
 public class TSLexerUtils {
 
-	private static XPath xpath;
-	private static org.w3c.dom.Document doc;
-	
-	protected static HashMap<String, Collection<String>> keywordCache;
-
-	static {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setNamespaceAware(true);
-		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			doc = builder.parse(TSLexerUtils.class.getResource("/net/dfranek/typoscript/resources/properties.xml").toString());
-		} catch (ParserConfigurationException ex) {
-			Exceptions.printStackTrace(ex);
-		} catch (SAXException ex) {
-			Exceptions.printStackTrace(ex);
-		} catch (IOException ex) {
-			Exceptions.printStackTrace(ex);
-		}
-		XPathFactory xpFactory = XPathFactory.newInstance();
-		xpath = xpFactory.newXPath();
-		keywordCache = new HashMap<String, Collection<String>>();
-	}
+	protected static HashMap<String, Collection<String>> completionList = new HashMap<String, Collection<String>>();
+	protected static HashMap<String, String> keywords;
 
 	public static TokenSequence<TSTokenId> getTSTokenSequence(TokenHierarchy<?> th, int offset) {
 		TokenSequence<TSTokenId> ts = th == null ? null : th.tokenSequence(TSTokenId.getLanguage());
@@ -212,48 +184,40 @@ public class TSLexerUtils {
 		}
 		return OffsetRange.NONE;
 	}
+	
+	
+	public static Token<? extends TSTokenId> findFwdNonSpace(TokenSequence<? extends TSTokenId> ts) {
+		while (ts.moveNext() && ts.token().id().equals(TSTokenId.WHITESPACE)) {}
+		return ts.token();
+	}
 
 	public static String getWordFromXML(String word) {
 		String propertyType = "";
-		try {
-			XPathExpression expr = xpath.compile("//property[@name='" + word + "']");
-			NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-			if (nodes.getLength() > 0) {
-				Node node = nodes.item(0).getAttributes().getNamedItem("type");
-				propertyType = node.getNodeValue();
-			}
-		} catch (XPathExpressionException ex) {
-			Exceptions.printStackTrace(ex);
-			Logger.getLogger(TSLexerUtils.class.getName()).log(Level.WARNING, "//property[@name=''{0}'']", word.replace("'", "\\'"));
+		if(keywords.containsKey(word)) {
+			propertyType = keywords.get(word);
 		}
 
 		return propertyType;
 	}
 	
 	public static Collection<String> getAllKeywordsOfType(String type) {
-		if(keywordCache.containsKey(type)) {
-			return keywordCache.get(type);
+		if(completionList.containsKey(type)) {
+			return completionList.get(type);
 		}
 		Collection<String> properties = new ArrayList<String>();
-		try {
-			XPathExpression expr = xpath.compile("//property[@type='" + type + "']");
-			NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i).getAttributes().getNamedItem("name");
-				properties.add(node.getNodeValue());
+		for (Map.Entry<String, String> entry : keywords.entrySet()) {
+			String property = entry.getKey();
+			if (entry.getValue().equals(type)) {
+				properties.add(property);
 			}
-			keywordCache.put(type, properties);
-		} catch (XPathExpressionException ex) {
-			Exceptions.printStackTrace(ex);
-			Logger.getLogger(TSLexerUtils.class.getName()).log(Level.WARNING, "//property[@name=''{0}'']", type.replace("'", "\\'"));
 		}
+		completionList.put(type, properties);
 
 		return properties;
 	}
-	
-	public static Token<? extends TSTokenId> findFwdNonSpace(TokenSequence<? extends TSTokenId> ts) {
-		while (ts.moveNext() && ts.token().id().equals(TSTokenId.WHITESPACE)) {}
-		return ts.token();
+
+	static void initKeywords() {
+		Gson gson = new Gson();
+		keywords = gson.fromJson(new InputStreamReader(TSLexerUtils.class.getResourceAsStream("/net/dfranek/typoscript/resources/properties.json")), HashMap.class);		
 	}
-	
 }

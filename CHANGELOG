@@ -33,3 +33,5 @@ ext_typoscript_constants.txt
 1.4.2
 - fixed an error in the lexer (issue #17)
 - fixed an error in the parser
+1.4.3
+- fixed slow loading of editor (issue #18)

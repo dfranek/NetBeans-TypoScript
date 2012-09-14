@@ -59,6 +59,7 @@ public class TSLexer implements Lexer<TSTokenId> {
         this.info = info;
         scanner = new TSScanner(info);
         tokenFactory = info.tokenFactory();
+		TSLexerUtils.initKeywords();
     }
 
 	/**
