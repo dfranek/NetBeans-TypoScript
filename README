@@ -1,9 +1,9 @@
 This Project aims to provide support for the TypoScript Language used by TYPO3. 
 
 The currently implemented features are:
-- Syntax highlighting (based on the file tokenizetyposcript.js form the TYPO3 extension t3editor).
-- a navigator for alle properties declared in a file
+- Syntax highlighting (based on the file tokenizetyposcript.js from the TYPO3 extension t3editor).
+- a navigator for all properties declared in a file
 - a check for syntax errors (thanks to familie-redlich)
-- Code-Folding
-- a parser, responsible for syntax errors, navigator an other things
-- Code-Completion
+- Code folding
+- a parser, responsible for syntax errors, navigator and other things
+- Code completion
