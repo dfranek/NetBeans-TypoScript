@@ -259,7 +259,7 @@ public class TSTokenParser {
 	}
 	
 	protected boolean isPossibleParent(TSTokenId id) {
-		return id.equals(TSTokenId.TS_EXTENSION) || id.equals(TSTokenId.TS_PROPERTY) || id.equals(TSTokenId.TS_NUMBER) || id.equals(TSTokenId.TS_KEYWORD) || id.equals(TSTokenId.TS_KEYWORD2) || id.equals(TSTokenId.TS_KEYWORD3) || id.equals(TSTokenId.TS_RESERVED) || id.equals(TSTokenId.TS_FUNCTION);
+		return TSLexerUtils.tokenIsKeyword(id);
 	}
 	
 }

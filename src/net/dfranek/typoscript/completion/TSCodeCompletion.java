@@ -38,9 +38,12 @@
  */
 package net.dfranek.typoscript.completion;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -48,23 +51,25 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
-import net.dfranek.typoscript.lexer.TSScanner;
 import net.dfranek.typoscript.lexer.TSTokenId;
+import net.dfranek.typoscript.parser.TSParserResult;
+import net.dfranek.typoscript.parser.ast.TSASTNode;
 import org.netbeans.api.lexer.Token;
+import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.editor.BaseDocument;
+import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.ElementHandle;
+import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.ParameterInfo;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.openide.util.Exceptions;
-import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
-import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -73,38 +78,62 @@ import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
 public class TSCodeCompletion implements CodeCompletionHandler {
 
 	private final static Collection<Character> AUTOPOPUP_STOP_CHARS = new TreeSet<Character>(
-			Arrays.asList('=', ';', '+', '-', '*', '/', '%', '(', ')', '[', ']', '{', '}', '?','\n'));
+			Arrays.asList('=', ';', '+', '-', '*', '/', '%', '(', ')', '[', ']', '{', '}', '?', '\n'));
 	private boolean caseSensitive;
 	private Kind nameKind;
-	
-	
+
 	@Override
 	public CodeCompletionResult complete(CodeCompletionContext context) {
+		TSParserResult result = (TSParserResult) context.getParserResult();
+		TSASTNode tree = result.getTree();
+
+		List<Token<TSTokenId>> h = new ArrayList<Token<TSTokenId>>();
+
 		try {
-			BaseDocument doc = (BaseDocument) context.getParserResult().getSnapshot().getSource().getDocument(false);
+			BaseDocument doc = (BaseDocument) result.getSnapshot().getSource().getDocument(false);
 			if (doc == null) {
 				return CodeCompletionResult.NONE;
 			}
 			final TSCompletionResult completionResult = new TSCompletionResult(context);
 			completionResult.setFilterable(true);
 			int caretOffset = context.getCaretOffset();
+
 			int lineBegin = Utilities.getRowStart(doc, caretOffset);
-			
+
 			this.caseSensitive = context.isCaseSensitive();
-            this.nameKind = caseSensitive ? QuerySupport.Kind.PREFIX : QuerySupport.Kind.CASE_INSENSITIVE_PREFIX;
-			
+			this.nameKind = caseSensitive ? QuerySupport.Kind.PREFIX : QuerySupport.Kind.CASE_INSENSITIVE_PREFIX;
+
 			if (lineBegin != -1) {
-				
+				TokenHierarchy<?> th = result.getSnapshot().getTokenHierarchy();
+				TokenSequence<TSTokenId> ts = th.tokenSequence(TSTokenId.getLanguage());
+
+				getCurrentHierarchy(findHierarchyStart(ts, caretOffset), doc, ts, tree, h);
+//				h.remove(0);
+				Collections.reverse(h);
+				TSASTNode currTree = tree;
+				for (Iterator<Token<TSTokenId>> it = h.iterator(); it.hasNext();) {
+					Token<TSTokenId> token = it.next();
+					if (currTree.hasChild(token.text().toString())) {
+						currTree = currTree.getChild(token.text().toString());
+					}
+				}
+
+				for (Iterator<TSASTNode> it = currTree.getChildren().iterator(); it.hasNext();) {
+					TSASTNode node = it.next();
+					completionResult.add(new TSCompletionItem(context.getCaretOffset(), node.getName(), ElementKind.PROPERTY, context.getPrefix(), true, currTree.getName()));
+				}
+
+
 				int lineEnd = Utilities.getRowEnd(doc, caretOffset);
 				int lineOffset = caretOffset - lineBegin;
 				String line = doc.getText(lineBegin, lineEnd - lineBegin);
-				if(line.lastIndexOf("=", lineOffset) != -1) {
+				if (line.lastIndexOf("=", lineOffset) != -1) {
 					addKeywords(completionResult, context);
 				} else {
 					addReservedWords(completionResult, context);
 				}
 			}
-			
+
 
 			return completionResult;
 		} catch (BadLocationException ex) {
@@ -112,23 +141,98 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		}
 		return CodeCompletionResult.NONE;
 	}
-	
+
+	protected int findHierarchyStart(TokenSequence<TSTokenId> ts, int caretOffset) {
+		ts.move(caretOffset);
+		ts.moveNext();
+		ts.movePrevious();
+		Token<TSTokenId> t = ts.token();
+		while (!TSLexerUtils.tokenIsKeyword(t.id()) && !t.id().equals(TSTokenId.TS_NL)) {
+			ts.movePrevious();
+			t = ts.token();
+		}
+
+		if (t.id().equals(TSTokenId.TS_NL)) {
+			do {
+				ts.movePrevious();
+				t = ts.token();
+			} while (!t.id().equals(TSTokenId.TS_CURLY_OPEN));
+			ts.movePrevious();
+			t = ts.token();
+			while (t.id().equals(TSTokenId.WHITESPACE)) {
+				ts.movePrevious();
+				t = ts.token();
+			}
+		}
+		return ts.offset();
+	}
+
+	protected List<Token<TSTokenId>> getCurrentHierarchy(int caretOffset, BaseDocument doc, TokenSequence<TSTokenId> ts, TSASTNode tree, List<Token<TSTokenId>> h) throws BadLocationException {
+		int lineStart = Utilities.getRowFirstNonWhite(doc, caretOffset);
+		ts.move(caretOffset);
+		ts.moveNext();
+		Token<TSTokenId> token = ts.token();
+		if (token == null) {
+			ts.movePrevious();
+			token = ts.token();
+		}
+
+		if (token.text().toString().equals(".")) {
+			ts.movePrevious();
+			token = ts.token();
+		}
+
+		if (TSLexerUtils.tokenIsKeyword(token.id())) {
+			h.add(token);
+		}
+		while (ts.offset() > lineStart) {
+			ts.movePrevious();
+			token = ts.token();
+			if (token.id().equals(TSTokenId.TS_OPERATOR) && token.text().toString().equals("<")) {
+				return h;
+			}
+			if (TSLexerUtils.tokenIsKeyword(token.id())) {
+				h.add(token);
+			}
+		}
+		if (tree.getChild(token.text().toString()) != null) {
+			return h;
+		} else {
+			do {
+				ts.movePrevious();
+				token = ts.token();
+			} while (!token.id().equals(TSTokenId.TS_CURLY_OPEN));
+			ts.movePrevious();
+			token = ts.token();
+			while (token.id().equals(TSTokenId.WHITESPACE)) {
+				ts.movePrevious();
+				token = ts.token();
+			}
+
+			if (tree.getChild(token.text().toString()) != null) {
+				return h;
+			} else {
+				return getCurrentHierarchy(ts.offset(), doc, ts, tree, h);
+			}
+		}
+	}
+
 	private void addKeywords(TSCompletionResult result, CodeCompletionContext context) {
 		Collection<String> keywords = TSLexerUtils.getAllKeywordsOfType("keywords");
 		for (Iterator<String> it = keywords.iterator(); it.hasNext();) {
 			String word = it.next();
 			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
-				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.KEYWORD, context.getPrefix()));
+				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.KEYWORD, context.getPrefix(), false));
 			}
 		}
 	}
-	
+
 	private void addReservedWords(TSCompletionResult result, CodeCompletionContext context) {
 		Collection<String> reservedWords = TSLexerUtils.getAllKeywordsOfType("reserved");
 		for (Iterator<String> it = reservedWords.iterator(); it.hasNext();) {
 			String word = it.next();
 			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
-				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY, context.getPrefix()));
+				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY, context.getPrefix(), false));
 			}
 		}
 	}
@@ -137,7 +241,6 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 	public String document(ParserResult pr, ElementHandle eh) {
 		return null;
 	}
-	
 
 	@Override
 	public ElementHandle resolveLink(String string, ElementHandle eh) {
@@ -159,12 +262,12 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 				String line = doc.getText(lineBegin, lineEnd - lineBegin);
 				int lineOffset = caretOffset - lineBegin;
 				int start = 0;
-				if(line.lastIndexOf(".", lineOffset) != -1) {
-					start = line.lastIndexOf(".", lineOffset)+1;	
-				} else if(line.lastIndexOf("=", lineOffset) != -1) {
-					start = line.lastIndexOf("=", lineOffset)+1;
+				if (line.lastIndexOf(".", lineOffset) != -1) {
+					start = line.lastIndexOf(".", lineOffset) + 1;
+				} else if (line.lastIndexOf("=", lineOffset) != -1) {
+					start = line.lastIndexOf("=", lineOffset) + 1;
 				}
-				
+
 
 				String prefix;
 				if (upToOffset) {
@@ -183,7 +286,12 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 								end = j + 1;
 							}
 						}
-						prefix = line.substring(start, end);
+						try {
+							prefix = line.substring(start, end);
+						} catch (StringIndexOutOfBoundsException e) {
+							return null;
+						}
+
 					}
 				}
 				return prefix;
@@ -203,7 +311,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		char lastChar = typedText.charAt(typedText.length() - 1);
 		if (AUTOPOPUP_STOP_CHARS.contains(Character.valueOf(lastChar))) {
 			return QueryType.STOP;
-	}
+		}
 
 		Document document = component.getDocument();
 		int offset = component.getCaretPosition();
@@ -212,7 +320,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 			return QueryType.STOP;
 		}
 
-		Token<TSTokenId> t = null;
+		Token<TSTokenId> t;
 		int diff = ts.move(offset);
 		if (diff > 0 && ts.moveNext() || ts.movePrevious()) {
 			t = ts.token();
@@ -220,7 +328,6 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 				return QueryType.COMPLETION;
 			}
 		}
-
 
 		return QueryType.NONE;
 	}

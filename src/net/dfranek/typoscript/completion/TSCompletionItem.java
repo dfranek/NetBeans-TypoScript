@@ -57,13 +57,26 @@ public class TSCompletionItem implements CompletionProposal {
 	private ElementKind kind;
 	private String prefix;
 	private static final Logger logger =  Logger.getLogger(TSCodeCompletion.class.getName());
+	private final boolean smart;
+	private String typeName;
 
-	public TSCompletionItem(int anchor, String name, ElementKind kind, String prefix) {
+	public TSCompletionItem(int anchor, String name, ElementKind kind, String prefix, boolean smart) {
 		logger.setLevel(Level.ALL);
 		this.anchor = anchor;
 		this.name = name;
 		this.kind = kind;
 		this.prefix = prefix;
+		this.smart = smart;
+	}
+
+	public TSCompletionItem(int anchor, String name, ElementKind kind, String prefix, boolean smart, String type) {
+		logger.setLevel(Level.ALL);
+		this.anchor = anchor;
+		this.name = name;
+		this.kind = kind;
+		this.prefix = prefix;
+		this.smart = smart;
+		this.typeName = type;
 	}
 
 	@Override
@@ -83,12 +96,12 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public String getInsertPrefix() {
-		String prefix;
+		String prefixL;
 		final String insertPrefix = getName();
         int indexOf = (this.prefix != null && insertPrefix != null) ? insertPrefix.toLowerCase().indexOf(this.prefix.toLowerCase()) : -1;
-        prefix = indexOf > 0 ? insertPrefix.substring(indexOf) : insertPrefix;
-		logger.log(Level.FINEST, "insert Prefix for item {0} with completion prefix \"{1}\" :{2}", new Object[]{insertPrefix, this.prefix, prefix});
-		return prefix;
+        prefixL = indexOf > 0 ? insertPrefix.substring(indexOf) : insertPrefix;
+		logger.log(Level.FINEST, "insert Prefix for item {0} with completion prefix \"{1}\" :{2}", new Object[]{insertPrefix, this.prefix, prefixL});
+		return prefixL;
 	}
 
 	@Override
@@ -103,7 +116,7 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public String getRhsHtml(HtmlFormatter hf) {
-		return this.kind.toString();
+		return this.typeName == null ? this.kind.toString() : this.typeName;
 	}
 
 	@Override
@@ -123,7 +136,7 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public boolean isSmart() {
-		return true;
+		return smart;
 	}
 
 	@Override

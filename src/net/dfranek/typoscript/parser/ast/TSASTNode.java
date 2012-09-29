@@ -86,6 +86,10 @@ public class TSASTNode {
 	public boolean hasChild(TSASTNode node) {
 		return children.containsKey(node.getName());
 	}
+	
+	public boolean hasChild(String name) {
+		return children.containsKey(name);
+	}
 
 	public boolean hasChildren() {
 		return !children.isEmpty();
