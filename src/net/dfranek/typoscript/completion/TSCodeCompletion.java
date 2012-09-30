@@ -147,20 +147,26 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		ts.moveNext();
 		ts.movePrevious();
 		Token<TSTokenId> t = ts.token();
-		while (!TSLexerUtils.tokenIsKeyword(t.id()) && !t.id().equals(TSTokenId.TS_NL)) {
-			ts.movePrevious();
+		while (!TSLexerUtils.tokenIsKeyword(t.id()) && !t.id().equals(TSTokenId.TS_NL) && ts.movePrevious()) {
 			t = ts.token();
 		}
 
 		if (t.id().equals(TSTokenId.TS_NL)) {
-			do {
-				ts.movePrevious();
-				t = ts.token();
-			} while (!t.id().equals(TSTokenId.TS_CURLY_OPEN));
+			int balance = 0;
 			ts.movePrevious();
+
+			do {
+				if (balance > 0 && t.id().equals(TSTokenId.TS_CURLY_OPEN)) {
+					balance--;
+				}
+				t = ts.token();
+				if (t.id().equals(TSTokenId.TS_CURLY_CLOSE)) {
+					balance++;
+				}
+			} while (ts.movePrevious() && (!t.id().equals(TSTokenId.TS_CURLY_OPEN) || balance != 0));
+
 			t = ts.token();
-			while (t.id().equals(TSTokenId.WHITESPACE)) {
-				ts.movePrevious();
+			while (t.id().equals(TSTokenId.WHITESPACE) && ts.movePrevious()) {
 				t = ts.token();
 			}
 		}
@@ -168,6 +174,9 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 	}
 
 	protected List<Token<TSTokenId>> getCurrentHierarchy(int caretOffset, BaseDocument doc, TokenSequence<TSTokenId> ts, TSASTNode tree, List<Token<TSTokenId>> h) throws BadLocationException {
+		if (caretOffset == 0) {
+			return h;
+		}
 		int lineStart = Utilities.getRowFirstNonWhite(doc, caretOffset);
 		ts.move(caretOffset);
 		ts.moveNext();
@@ -195,26 +204,45 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 				h.add(token);
 			}
 		}
-		if (tree.getChild(token.text().toString()) != null) {
+		if (tree.getChild(token.text().toString()) != null && getCurlyBalance(ts) == 0) {
 			return h;
 		} else {
+			ts.movePrevious();
 			do {
-				ts.movePrevious();
 				token = ts.token();
-			} while (!token.id().equals(TSTokenId.TS_CURLY_OPEN));
+			} while (!token.id().equals(TSTokenId.TS_CURLY_OPEN) && ts.movePrevious());
 			ts.movePrevious();
 			token = ts.token();
-			while (token.id().equals(TSTokenId.WHITESPACE)) {
-				ts.movePrevious();
+			while (token.id().equals(TSTokenId.WHITESPACE) && ts.movePrevious()) {
 				token = ts.token();
 			}
 
-			if (tree.getChild(token.text().toString()) != null) {
+			if (tree.getChild(token.text().toString()) != null && getCurlyBalance(ts) == 0) {
+				h.add(token);
 				return h;
 			} else {
 				return getCurrentHierarchy(ts.offset(), doc, ts, tree, h);
 			}
 		}
+	}
+
+	private int getCurlyBalance(TokenSequence<TSTokenId> ts) {
+		int balance = 0;
+		int curOffset = ts.offset();
+		Token<TSTokenId> t;
+		while (ts.movePrevious()) {
+			t = ts.token();
+			if (t.id().equals(TSTokenId.TS_CURLY_OPEN)) {
+				balance--;
+			}
+			if (t.id().equals(TSTokenId.TS_CURLY_CLOSE)) {
+				balance++;
+			}
+		}
+		ts.move(curOffset);
+		ts.movePrevious();
+
+		return balance;
 	}
 
 	private void addKeywords(TSCompletionResult result, CodeCompletionContext context) {
@@ -271,7 +299,11 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 				String prefix;
 				if (upToOffset) {
-					prefix = line.substring(start, lineOffset).trim();
+					try {
+						prefix = line.substring(start, lineOffset).trim();
+					} catch (StringIndexOutOfBoundsException e) {
+						return null;
+					}
 				} else {
 					if (lineOffset == line.length()) {
 						prefix = line.substring(start);
