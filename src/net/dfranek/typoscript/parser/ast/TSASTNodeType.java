@@ -113,6 +113,7 @@ public enum TSASTNodeType {
 	TEMPLATE,
 	MULTIMEDIA,
 	EDITPANEL,
+	STDWRAP,
 	
 	// Relevant for Parsing
 	UNKNOWN,
@@ -126,6 +127,12 @@ public enum TSASTNodeType {
 		for (TSASTNodeType type : TSASTNodeType.values()) {
 			if(type.name().equals(name)){
 				return type;
+			}
+			if(name.equals("config")) {
+				return TSASTNodeType.CONFIG;
+			}
+			if (name.equals("stdWrap")) {
+				return TSASTNodeType.STDWRAP;
 			}
 		}
 		return TSASTNodeType.UNKNOWN;

@@ -161,7 +161,7 @@ public class TSTokenParser {
 			id = t.id();
 			if (isPossibleParent(id)) {
 				TSASTNode newActNode = actNode;
-				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.UNKNOWN, sequence.offset(), t.length());
+				node = new TSASTNode(t.text().toString(), "", TSASTNodeType.getNodeTypeForObject(t.text().toString()), sequence.offset(), t.length());
 				if (actNode.hasChild(node)) {
 					node = actNode.getChild(node.getName());
 				}
