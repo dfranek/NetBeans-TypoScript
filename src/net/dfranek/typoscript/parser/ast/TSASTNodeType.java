@@ -113,7 +113,7 @@ public enum TSASTNodeType {
 	TEMPLATE,
 	MULTIMEDIA,
 	EDITPANEL,
-	STDWRAP,
+	STDWRAP("stdWrap"),
 	
 	// Relevant for Parsing
 	UNKNOWN,
@@ -122,6 +122,20 @@ public enum TSASTNodeType {
 	COPIED_PROPERTY,
 	CLEARED_PROPERY,
 	CONDITION;
+	
+	TSASTNodeType(){
+		typeName = this.name();
+	}
+	TSASTNodeType(String name){
+		typeName = name;
+	}
+
+	@Override
+	public String toString() {
+		return typeName;
+	}
+	
+	protected String typeName;
 	
 	public static TSASTNodeType getNodeTypeForObject(String name) {
 		for (TSASTNodeType type : TSASTNodeType.values()) {

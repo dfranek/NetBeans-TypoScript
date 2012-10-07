@@ -59,6 +59,7 @@ public class TSCompletionItem implements CompletionProposal {
 	private static final Logger logger =  Logger.getLogger(TSCodeCompletion.class.getName());
 	private final boolean smart;
 	private String typeName;
+	private ElementHandle element;
 
 	public TSCompletionItem(int anchor, String name, ElementKind kind, String prefix, boolean smart) {
 		logger.setLevel(Level.ALL);
@@ -67,6 +68,7 @@ public class TSCompletionItem implements CompletionProposal {
 		this.kind = kind;
 		this.prefix = prefix;
 		this.smart = smart;
+		this.element = new TSElement(name);
 	}
 
 	public TSCompletionItem(int anchor, String name, ElementKind kind, String prefix, boolean smart, String type) {
@@ -77,6 +79,18 @@ public class TSCompletionItem implements CompletionProposal {
 		this.prefix = prefix;
 		this.smart = smart;
 		this.typeName = type;
+		this.element = new TSElement(name);
+	}
+
+	public TSCompletionItem(int anchor, String name, ElementKind kind, String prefix, boolean smart, String type, String documentation) {
+		logger.setLevel(Level.ALL);
+		this.anchor = anchor;
+		this.name = name;
+		this.kind = kind;
+		this.prefix = prefix;
+		this.smart = smart;
+		this.typeName = type;
+		this.element = new TSElement(name, documentation);
 	}
 
 	@Override
@@ -86,7 +100,7 @@ public class TSCompletionItem implements CompletionProposal {
 
 	@Override
 	public ElementHandle getElement() {
-		return new TSElement(getName());
+		return element;
 	}
 
 	@Override

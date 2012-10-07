@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,9 @@ import java.util.TreeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import net.dfranek.typoscript.completion.tsref.TSRef;
+import net.dfranek.typoscript.completion.tsref.TSRefProperty;
+import net.dfranek.typoscript.completion.tsref.TSRefType;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.TSParserResult;
@@ -84,6 +88,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	@Override
 	public CodeCompletionResult complete(CodeCompletionContext context) {
+		TSRef.initTSRef();
 		TSParserResult result = (TSParserResult) context.getParserResult();
 		TSASTNode tree = result.getTree();
 
@@ -108,7 +113,6 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 				TokenSequence<TSTokenId> ts = th.tokenSequence(TSTokenId.getLanguage());
 
 				getCurrentHierarchy(findHierarchyStart(ts, caretOffset), doc, ts, tree, h);
-//				h.remove(0);
 				Collections.reverse(h);
 				TSASTNode currTree = tree;
 				for (Iterator<Token<TSTokenId>> it = h.iterator(); it.hasNext();) {
@@ -118,19 +122,44 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 					}
 				}
 
+				TSRefType help = TSRef.getHelpForType(currTree.getType().toString());
+
+				List<String> addedItems = new ArrayList<String>();
+
 				for (Iterator<TSASTNode> it = currTree.getChildren().iterator(); it.hasNext();) {
 					TSASTNode node = it.next();
-					completionResult.add(new TSCompletionItem(context.getCaretOffset(), node.getName(), ElementKind.PROPERTY, context.getPrefix(), true, currTree.getName()));
+					addedItems.add(node.getName());
+					if (help != null) {
+						TSRefProperty p = help.getProperty(node.getName());
+						String documentation = "";
+						if(p != null) {
+							documentation = p.getDescription();
+						}
+						completionResult.add(new TSCompletionItem(context.getCaretOffset(), node.getName(), ElementKind.PROPERTY, context.getPrefix(), true, currTree.getName(), documentation));
+					} else {
+						completionResult.add(new TSCompletionItem(context.getCaretOffset(), node.getName(), ElementKind.PROPERTY, context.getPrefix(), true, currTree.getName()));
+					}
 				}
 
-
-				int lineEnd = Utilities.getRowEnd(doc, caretOffset);
-				int lineOffset = caretOffset - lineBegin;
-				String line = doc.getText(lineBegin, lineEnd - lineBegin);
-				if (line.lastIndexOf("=", lineOffset) != -1) {
-					addKeywords(completionResult, context);
+				if (help != null) {
+					HashMap<String, TSRefProperty> properties = help.getProperties();
+					for (Map.Entry<String, TSRefProperty> entry : properties.entrySet()) {
+						String name = entry.getKey();
+						TSRefProperty property = entry.getValue();
+						
+						if (!addedItems.contains(name)) {
+							completionResult.add(new TSCompletionItem(context.getCaretOffset(), name, ElementKind.PROPERTY, context.getPrefix(), false, currTree.getType().toString(), property.getDescription()));
+						}
+					}
 				} else {
-					addReservedWords(completionResult, context);
+					int lineEnd = Utilities.getRowEnd(doc, caretOffset);
+					int lineOffset = caretOffset - lineBegin;
+					String line = doc.getText(lineBegin, lineEnd - lineBegin);
+					if (line.lastIndexOf("=", lineOffset) != -1) {
+						addKeywords(completionResult, context);
+					} else {
+						addReservedWords(completionResult, context);
+					}
 				}
 			}
 
@@ -267,7 +296,14 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	@Override
 	public String document(ParserResult pr, ElementHandle eh) {
-		return null;
+		TSElement tseh = (TSElement) eh;
+		
+		String documentation = tseh.getDocumentation();
+		if (!documentation.isEmpty()) {
+			documentation = "<h3>" + eh.getName() + "</h3>" + documentation;
+		}
+		
+		return documentation;
 	}
 
 	@Override

@@ -55,9 +55,16 @@ import org.openide.filesystems.FileObject;
 public class TSElement implements ElementHandle {
 	
 	private CharSequence name;
+	private String doc;
 
 	public TSElement(CharSequence name) {
 		this.name = name;
+		this.doc = null;
+	}
+
+	public TSElement(CharSequence name, String doc) {
+		this.name = name;
+		this.doc = doc;
 	}
 
 	@Override
@@ -98,6 +105,10 @@ public class TSElement implements ElementHandle {
 	@Override
 	public OffsetRange getOffsetRange(ParserResult pr) {
 		return null;
+	}
+	
+	public String getDocumentation() {
+		return doc;
 	}
 	
 }

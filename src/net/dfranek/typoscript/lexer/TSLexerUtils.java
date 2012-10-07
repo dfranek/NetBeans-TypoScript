@@ -39,7 +39,9 @@
 package net.dfranek.typoscript.lexer;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -224,5 +226,4 @@ public class TSLexerUtils {
 	public static boolean tokenIsKeyword(TSTokenId id) {
 		return id.equals(TSTokenId.TS_OBJECT) || id.equals(TSTokenId.TS_EXTENSION) || id.equals(TSTokenId.TS_PROPERTY) || id.equals(TSTokenId.TS_NUMBER) || id.equals(TSTokenId.TS_KEYWORD) || id.equals(TSTokenId.TS_KEYWORD2) || id.equals(TSTokenId.TS_KEYWORD3) || id.equals(TSTokenId.TS_RESERVED) || id.equals(TSTokenId.TS_FUNCTION);
 	}
-	
 }
