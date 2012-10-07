@@ -35,3 +35,7 @@ ext_typoscript_constants.txt
 - fixed an error in the parser
 1.4.3
 - fixed slow loading of editor (issue #18)
+1.5.0
+- improved code completion with parse result
+- parsing now sets correct types for stdWrap and config
+- help is now shown for some types in code completion
