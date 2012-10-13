@@ -39,3 +39,7 @@ ext_typoscript_constants.txt
 - improved code completion with parse result
 - parsing now sets correct types for stdWrap and config
 - help is now shown for some types in code completion
+1.5.1
+- fixed bug with documentation
+- further improved documentation, inherited properties are now shown
+- improved parsing, now sets correct type for IMAGE and TEXT inside GIFBUILDER, as well as for NO, RO etc.

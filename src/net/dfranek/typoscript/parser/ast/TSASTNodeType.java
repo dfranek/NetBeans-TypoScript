@@ -38,12 +38,18 @@
  */
 package net.dfranek.typoscript.parser.ast;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author Daniel Franek
  */
 public enum TSASTNodeType {
 	// Top Level Objects
+
 	PLUGIN,
 	CONFIG,
 	CONSTANTS,
@@ -54,11 +60,10 @@ public enum TSASTNodeType {
 	FRAME,
 	META,
 	CARRAY,
-	
 	// Graphic Functions
 	GIFBUILDER,
-	GIFBUILDER_TEXT,
-	GIFBUILDER_IMAGE,
+	GIFBUILDER_TEXT("TEXT"),
+	GIFBUILDER_IMAGE("IMAGE"),
 	SHADOW,
 	EMBOSS,
 	OUTLINE,
@@ -69,7 +74,6 @@ public enum TSASTNodeType {
 	SCALE,
 	ADJUST,
 	IMGMAP,
-	
 	// Menu Objects
 	GMENU,
 	GMENU_LAYERS,
@@ -81,7 +85,6 @@ public enum TSASTNodeType {
 	IMGMENUITEM,
 	JSMENU,
 	JSMENUITEM,
-	
 	// Content Objects
 	HTML,
 	TEXT,
@@ -114,7 +117,6 @@ public enum TSASTNodeType {
 	MULTIMEDIA,
 	EDITPANEL,
 	STDWRAP("stdWrap"),
-	
 	// Relevant for Parsing
 	UNKNOWN,
 	VALUE,
@@ -122,11 +124,12 @@ public enum TSASTNodeType {
 	COPIED_PROPERTY,
 	CLEARED_PROPERY,
 	CONDITION;
-	
-	TSASTNodeType(){
+
+	TSASTNodeType() {
 		typeName = this.name();
 	}
-	TSASTNodeType(String name){
+
+	TSASTNodeType(String name) {
 		typeName = name;
 	}
 
@@ -134,22 +137,57 @@ public enum TSASTNodeType {
 	public String toString() {
 		return typeName;
 	}
-	
 	protected String typeName;
-	
+
 	public static TSASTNodeType getNodeTypeForObject(String name) {
 		for (TSASTNodeType type : TSASTNodeType.values()) {
-			if(type.name().equals(name)){
+			if (type.name().equals(name)) {
 				return type;
 			}
-			if(name.equals("config")) {
+			if (name.equals("config")) {
 				return TSASTNodeType.CONFIG;
 			}
 			if (name.equals("stdWrap")) {
 				return TSASTNodeType.STDWRAP;
 			}
+			
+			List<String> t = Arrays.asList(new String[]{"ACT", "NO", "RO", "CUR", "USR", "SPC", "IFSUB", "ACTIFSUB", "CURIFSUB", "USERDEF1", "USERDEF2", "CURRO", "CURIFSUBRO", "ACTRO", "ACTIFSUBRO", "USERDEF1RO", "USERDEF2RO"});
+			if (t.contains(name)) {
+				return TMENUITEM;
+			}
+			
 		}
 		return TSASTNodeType.UNKNOWN;
 	}
-	
+
+	public static TSASTNodeType getNodeTypeForObject(String name, TSASTNode actNode) {
+		for (TSASTNodeType type : TSASTNodeType.values()) {
+			if (type.name().equals(name)) {
+				if (actNode.getType() == TSASTNodeType.GIFBUILDER && type.name().equals("IMAGE")) {
+					return GIFBUILDER_IMAGE;
+				}
+				if (actNode.getType() == TSASTNodeType.GIFBUILDER && type.name().equals("TEXT")) {
+					return GIFBUILDER_TEXT;
+				}
+				return type;
+			}
+			if (name.equals("config")) {
+				return TSASTNodeType.CONFIG;
+			}
+			if (name.equals("stdWrap")) {
+				return TSASTNodeType.STDWRAP;
+			}
+
+			List<String> t = Arrays.asList(new String[]{"ACT", "NO", "RO", "CUR", "USR", "SPC", "IFSUB", "ACTIFSUB", "CURIFSUB", "USERDEF1", "USERDEF2", "CURRO", "CURIFSUBRO", "ACTRO", "ACTIFSUBRO", "USERDEF1RO", "USERDEF2RO"});
+			if (t.contains(name)) {
+				return TMENUITEM;
+			}
+			
+		}
+		return TSASTNodeType.UNKNOWN;
+	}
+
+	public String getTypeString() {
+		return this.name();
+	}
 }

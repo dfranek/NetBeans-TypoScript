@@ -63,8 +63,19 @@ public class TSRef {
 		TSRefType t = null;
 		if (tsref.containsKey(type)) {
 			t = tsref.get(type);
+			t = addBaseType(t);
 		}
 		
+		return t;
+	}
+
+	private static TSRefType addBaseType(TSRefType t) {
+		if (!t.getExtends().isEmpty()) {
+			TSRefType baseType = tsref.get(t.getExtends());
+			t.addProperties(baseType.getProperties());
+			t.setExtends(baseType.getExtends());
+			t = addBaseType(t);
+		}
 		return t;
 	}
 }

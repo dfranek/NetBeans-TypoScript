@@ -170,7 +170,7 @@ public class TSTokenParser {
 				if (tVal.id().equals(TSTokenId.TS_OPERATOR) && tVal.text().toString().equals("=")) {
 					tVal = TSLexerUtils.findFwdNonSpace(sequence);
 					if (tVal.id().equals(TSTokenId.TS_OBJECT)) {
-						node.setType(TSASTNodeType.getNodeTypeForObject(tVal.text().toString()));
+						node.setType(TSASTNodeType.getNodeTypeForObject(tVal.text().toString(), actNode));
 					} else {
 						String tokenText = "";
 						sequence.movePrevious();

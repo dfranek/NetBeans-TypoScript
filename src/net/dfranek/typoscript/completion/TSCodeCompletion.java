@@ -122,7 +122,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 					}
 				}
 
-				TSRefType help = TSRef.getHelpForType(currTree.getType().toString());
+				TSRefType help = TSRef.getHelpForType(currTree.getType().getTypeString());
 
 				List<String> addedItems = new ArrayList<String>();
 
@@ -299,8 +299,10 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		TSElement tseh = (TSElement) eh;
 		
 		String documentation = tseh.getDocumentation();
-		if (!documentation.isEmpty()) {
+		if (documentation != null && !documentation.isEmpty()  ) {
 			documentation = "<h3>" + eh.getName() + "</h3>" + documentation;
+		} else{
+			documentation = null;
 		}
 		
 		return documentation;

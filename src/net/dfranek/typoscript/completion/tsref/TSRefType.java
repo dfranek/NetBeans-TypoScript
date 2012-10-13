@@ -39,6 +39,7 @@
 package net.dfranek.typoscript.completion.tsref;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -61,6 +62,10 @@ public class TSRefType {
 	public String getExtends() {
 		return extendsType;
 	}
+	
+	public void setExtends(String extendsStr) {
+		this.extendsType = extendsStr;
+	}
 
 	/**
 	 * @return the properties
@@ -68,4 +73,13 @@ public class TSRefType {
 	public HashMap<String, TSRefProperty> getProperties() {
 		return properties;
 	}
+	
+	public void addProperties(HashMap<String, TSRefProperty> properties) {
+		for (Map.Entry<String, TSRefProperty> entry : properties.entrySet()) {
+			String name = entry.getKey();
+			TSRefProperty tSRefProperty = entry.getValue();
+			this.properties.put(name, tSRefProperty);
+		}
+	}
+	
 }
