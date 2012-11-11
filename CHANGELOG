@@ -43,3 +43,5 @@ ext_typoscript_constants.txt
 - fixed bug with documentation
 - further improved documentation, inherited properties are now shown
 - improved parsing, now sets correct type for IMAGE and TEXT inside GIFBUILDER, as well as for NO, RO etc.
+1.5.2
+- added more and better icons (thanks to familie redlich)

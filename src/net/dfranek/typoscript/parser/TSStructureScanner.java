@@ -82,7 +82,52 @@ public class TSStructureScanner implements StructureScanner {
 
 			TSStructureItem sItem;
 			if (node.getType() != TSASTNodeType.VALUE && node.getType() != TSASTNodeType.UNKNOWN && node.getType() != TSASTNodeType.COPIED_PROPERTY && node.getType() != TSASTNodeType.CLEARED_PROPERY) {
-				sItem = new TSTypedStructureItem(node, itemsSub, "");
+				switch(node.getType()) {
+					case GMENU:
+					case GMENU_LAYERS:
+					case TMENU:
+					case TMENU_LAYERS:
+					case GMENU_FOLDOUT:
+					case TMENUITEM:
+					case IMGMENU:
+					case IMGMENUITEM:
+					case JSMENU:
+					case JSMENUITEM:
+						sItem = new TSMenuStructureItem(node, itemsSub, "");
+						break;
+					case CONFIG:
+					case CONSTANTS:
+						sItem = new TSConstantStructureItem(node, itemsSub, "");
+						break;
+					case PAGE:
+					case FE_DATA:
+					case FE_TABLE:
+					case FRAMESET:
+					case FRAME:
+					case META:
+					case CARRAY:
+						sItem = new TSTypedStructureItem(node, itemsSub, "");
+						break;
+					case GIFBUILDER:
+					case GIFBUILDER_TEXT:
+					case GIFBUILDER_IMAGE:
+					case SHADOW:
+					case EMBOSS:
+					case OUTLINE:
+					case BOX:
+					case EFFECT:
+					case WORKAREA:
+					case CROP:
+					case SCALE:
+					case ADJUST:
+					case IMGMAP:
+						sItem = new TSEffectStructureItem(node, itemsSub, "");
+						break;
+					default:
+						sItem = new TSContentStructureItem(node, itemsSub, "");
+						break;
+						
+				}
 			} else if (node.getType() == TSASTNodeType.CLEARED_PROPERY) {
 				sItem = new TSClearedStructureItem(node, itemsSub, "");
 			} else if (node.getType() == TSASTNodeType.COPIED_PROPERTY) {
@@ -292,6 +337,54 @@ public class TSStructureScanner implements StructureScanner {
 			hf.appendText(node.getType().toString());
 			hf.appendHtml(CLOSE_FONT);
 			return hf.getText();
+		}
+	}
+	
+	private class TSMenuStructureItem extends TSTypedStructureItem {
+		
+		public TSMenuStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+		
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/menus.png"));
+		}
+	}
+	
+	private class TSConstantStructureItem extends TSTypedStructureItem {
+		
+		public TSConstantStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+		
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/constants.png"));
+		}
+	}
+	
+	private class TSEffectStructureItem extends TSTypedStructureItem {
+		
+		public TSEffectStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+		
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/effects.png"));
+		}
+	}
+	
+	private class TSContentStructureItem extends TSTypedStructureItem {
+		
+		public TSContentStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+		
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/content.png"));
 		}
 	}
 

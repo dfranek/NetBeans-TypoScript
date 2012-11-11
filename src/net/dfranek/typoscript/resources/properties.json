@@ -87,7 +87,7 @@
 	"parseFunc":"reserved",
 	"replacement":"function",
 	"round":"function",
-	"select":"keyword",
+	"select":"function",
 	"split":"keyword",
 	"stdWrap":"keyword",
 	"tableStyle":"reserved",

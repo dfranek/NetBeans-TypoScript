@@ -69,7 +69,7 @@ public class TSTokenParserTest extends TestCase {
 		TSParserTestUtils.assertNodeEquals(tree.getChild("seite").getChild("headerData"), "headerData", TSASTNodeType.UNKNOWN, "", 1);
 		TSParserTestUtils.assertNodeEquals(tree.getChild("seite").getChild("headerData").getChild("10"), "10", TSASTNodeType.UNKNOWN, "", 1);
 		TSParserTestUtils.assertNodeEquals(tree.getChild("seite").getChild("headerData").getChild("10").getChild("value"), "value", TSASTNodeType.VALUE, "test", 0);
-		TSParserTestUtils.assertNodeEquals(tree.getChild("seite").getChild("config"), "config", TSASTNodeType.UNKNOWN, "", 1);
+		TSParserTestUtils.assertNodeEquals(tree.getChild("seite").getChild("config"), "config", TSASTNodeType.CONFIG, "", 1);
 		TSParserTestUtils.assertNodeEquals(tree.getChild("seite").getChild("config").getChild("test"), "test", TSASTNodeType.VALUE, "129", 0);
 		TSParserTestUtils.assertNodeEquals(tree.getChild("seite").getChild("test2"), "test2", TSASTNodeType.VALUE, "[10.w] + 16,19", 0);
 		TSParserTestUtils.assertNodeEquals(tree.getChild("seite").getChild("test3"), "test3", TSASTNodeType.UNKNOWN, "", 1);
