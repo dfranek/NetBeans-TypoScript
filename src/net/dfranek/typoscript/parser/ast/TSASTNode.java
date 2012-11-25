@@ -54,6 +54,7 @@ public class TSASTNode {
 	
 	private int length;
 	private int offset;
+	private String suffix = "";
 
 	public TSASTNode(String name, String value, TSASTNodeType type, int offset, int length) {
 		this.name = name;
@@ -61,6 +62,15 @@ public class TSASTNode {
 		this.type = type;
 		this.length = length;
 		this.offset = offset;
+	}
+
+	public TSASTNode(String name, String value, TSASTNodeType type, int offset, int length, String suffix) {
+		this.name = name;
+		this.value = value;
+		this.type = type;
+		this.length = length;
+		this.offset = offset;
+		this.suffix = suffix;
 	}
 
 	/**
@@ -72,7 +82,7 @@ public class TSASTNode {
 	
 	public void addChild(TSASTNode node) {
 		node.setParent(this);
-		children.put(node.getName(), node);
+		children.put(node.getNodeName(), node);
 	}
 	
 	public void removeChild(TSASTNode node) {
@@ -147,6 +157,14 @@ public class TSASTNode {
 
 	public TSASTNode getChild(String name) {
 		return children.get(name);
+	}
+
+	private String getNodeName() {
+		return name + suffix;
+	}
+	
+	public boolean isTypeSet() {
+		return !(getType() == TSASTNodeType.UNKNOWN);
 	}
 	
 }

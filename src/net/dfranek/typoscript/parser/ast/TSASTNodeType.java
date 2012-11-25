@@ -48,8 +48,8 @@ import java.util.List;
  * @author Daniel Franek
  */
 public enum TSASTNodeType {
+	
 	// Top Level Objects
-
 	PLUGIN,
 	CONFIG,
 	CONSTANTS,
@@ -60,6 +60,7 @@ public enum TSASTNodeType {
 	FRAME,
 	META,
 	CARRAY,
+	
 	// Graphic Functions
 	GIFBUILDER,
 	GIFBUILDER_TEXT("TEXT"),
@@ -74,6 +75,7 @@ public enum TSASTNodeType {
 	SCALE,
 	ADJUST,
 	IMGMAP,
+	
 	// Menu Objects
 	GMENU,
 	GMENU_LAYERS,
@@ -81,10 +83,12 @@ public enum TSASTNodeType {
 	TMENU_LAYERS,
 	GMENU_FOLDOUT,
 	TMENUITEM,
+	TMENUITEM_LOGIC("TMENUITEM"),
 	IMGMENU,
 	IMGMENUITEM,
 	JSMENU,
 	JSMENUITEM,
+	
 	// Content Objects
 	HTML,
 	TEXT,
@@ -117,13 +121,16 @@ public enum TSASTNodeType {
 	MULTIMEDIA,
 	EDITPANEL,
 	STDWRAP("stdWrap"),
+	
 	// Relevant for Parsing
 	UNKNOWN,
 	VALUE,
+	LOGIC_PROPERTY("if"),
 	ROOTLEVEL,
 	COPIED_PROPERTY,
 	CLEARED_PROPERY,
-	CONDITION;
+	CONDITION,
+	WRAP("");
 
 	TSASTNodeType() {
 		typeName = this.name();
@@ -140,22 +147,35 @@ public enum TSASTNodeType {
 	protected String typeName;
 
 	public static TSASTNodeType getNodeTypeForObject(String name) {
+		if (name.equals("config")) {
+			return CONFIG;
+		}
+		if (name.equals("stdWrap") || name.equals("stdWrap2") || name.equals("allStdWrap")) {
+			return STDWRAP;
+		}
+
+		List<String> t = Arrays.asList(new String[]{"allWrap", "beforeWrap", "commentWrap", "dontWrapInTable", "imageLinkWrap", "ATagBeforeWrap", "encapsLinesStdWrap", "tagStdWrap", "tableStdWrap", "fieldWrap", "labelStdWrap", "labelWrap", "linkWrap", "wrapNonWrappedLines", "nonTypoTagStdWrap", "nonWrappedTag", "plainTextStdWrap", "dataWrap", "innerWrap", "innerWrap2", "noTrimWrap", "outerWrap", "wrap", "wrap1", "wrap2", "wrap3", "wrapAfterTags", "wrapAlign", "wrapFieldName", "wrapItemAndSub", "wrapNonWrappedLines", "wraps", "wrapSplitChar", "radioWrap", "radioInputWrap", "accessibilityWrap", "noWrapAttr"});
+		if (t.contains(name)) {
+			return WRAP;
+		}
+
+		if (name.equals("if") || name.equals("ifBlank") || name.equals("ifEmpty")) {
+			return TSASTNodeType.LOGIC_PROPERTY;
+		}
+
+		t = Arrays.asList(new String[]{"ACT", "NO", "RO", "CUR", "USR", "SPC", "ACTRO", "USERDEF1RO", "USERDEF2RO", "USERDEF1", "USERDEF2","CURRO"});
+		if (t.contains(name)) {
+			return TMENUITEM;
+		}
+
+		t = Arrays.asList(new String[]{"IFSUB","IFSUBRO", "ACTIFSUB", "ACTIFSUBRO", "CURIFSUB", "CURIFSUBRO"});
+		if (t.contains(name)) {
+			return TMENUITEM_LOGIC;
+		}
 		for (TSASTNodeType type : TSASTNodeType.values()) {
 			if (type.name().equals(name)) {
 				return type;
 			}
-			if (name.equals("config")) {
-				return TSASTNodeType.CONFIG;
-			}
-			if (name.equals("stdWrap")) {
-				return TSASTNodeType.STDWRAP;
-			}
-			
-			List<String> t = Arrays.asList(new String[]{"ACT", "NO", "RO", "CUR", "USR", "SPC", "IFSUB", "ACTIFSUB", "CURIFSUB", "USERDEF1", "USERDEF2", "CURRO", "CURIFSUBRO", "ACTRO", "ACTIFSUBRO", "USERDEF1RO", "USERDEF2RO"});
-			if (t.contains(name)) {
-				return TMENUITEM;
-			}
-			
 		}
 		return TSASTNodeType.UNKNOWN;
 	}
@@ -171,20 +191,8 @@ public enum TSASTNodeType {
 				}
 				return type;
 			}
-			if (name.equals("config")) {
-				return TSASTNodeType.CONFIG;
-			}
-			if (name.equals("stdWrap")) {
-				return TSASTNodeType.STDWRAP;
-			}
-
-			List<String> t = Arrays.asList(new String[]{"ACT", "NO", "RO", "CUR", "USR", "SPC", "IFSUB", "ACTIFSUB", "CURIFSUB", "USERDEF1", "USERDEF2", "CURRO", "CURIFSUBRO", "ACTRO", "ACTIFSUBRO", "USERDEF1RO", "USERDEF2RO"});
-			if (t.contains(name)) {
-				return TMENUITEM;
-			}
-			
 		}
-		return TSASTNodeType.UNKNOWN;
+		return getNodeTypeForObject(name);
 	}
 
 	public String getTypeString() {

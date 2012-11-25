@@ -83,6 +83,7 @@ public class TSStructureScanner implements StructureScanner {
 			TSStructureItem sItem;
 			if (node.getType() != TSASTNodeType.VALUE && node.getType() != TSASTNodeType.UNKNOWN && node.getType() != TSASTNodeType.COPIED_PROPERTY && node.getType() != TSASTNodeType.CLEARED_PROPERY) {
 				switch(node.getType()) {
+					case HMENU:
 					case GMENU:
 					case GMENU_LAYERS:
 					case TMENU:
@@ -120,8 +121,18 @@ public class TSStructureScanner implements StructureScanner {
 					case CROP:
 					case SCALE:
 					case ADJUST:
-					case IMGMAP:
+					case IMGMAP:	
 						sItem = new TSEffectStructureItem(node, itemsSub, "");
+						break;
+					case CASE:
+					case TMENUITEM_LOGIC:
+					case LOGIC_PROPERTY:
+					case CONDITION:
+						sItem = new TSConditionStructureItem(node, itemsSub, "");
+						break;
+					case WRAP:
+					case STDWRAP:
+						sItem = new TSWrapStructureItem(node, itemsSub, "");
 						break;
 					default:
 						sItem = new TSContentStructureItem(node, itemsSub, "");
@@ -427,5 +438,30 @@ public class TSStructureScanner implements StructureScanner {
 			hf.appendHtml(CLOSE_FONT);
 			return hf.getText();
 		}
+	}
+	
+	private class TSConditionStructureItem extends TSTypedStructureItem {
+		
+		public TSConditionStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+		
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/logic.png"));
+		}
+	}
+	
+	private class TSWrapStructureItem extends TSValueStructureItem {
+		
+		public TSWrapStructureItem(TSASTNode node, List<? extends StructureItem> children, String sortPrefix) {
+			super(node, children, sortPrefix);
+		}
+		
+		@Override
+		public ImageIcon getCustomIcon() {
+			return new ImageIcon(ImageUtilities.loadImage("net/dfranek/typoscript/resources/wraps.png"));
+		}
+		
 	}
 }

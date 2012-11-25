@@ -46,7 +46,7 @@ import java.util.Map;
  * @author Daniel Franek
  */
 public class TSRefType {
-	private HashMap<String, TSRefProperty> properties;
+	private HashMap<String, TSRefProperty> properties = new  HashMap<String, TSRefProperty>();
 	private String extendsType;
 
 	/**

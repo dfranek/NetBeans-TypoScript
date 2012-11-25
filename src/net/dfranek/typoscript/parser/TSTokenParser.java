@@ -149,6 +149,7 @@ public class TSTokenParser {
 		Token<TSTokenId> t;
 		TSTokenId id;
 		TSASTNode actNode = tree;
+		TSASTNode activeCondition = null;
 
 		sequence.moveStart();
 		int curlyDepth = 0;
@@ -179,7 +180,9 @@ public class TSTokenParser {
 						}
 						sequence.movePrevious();
 						node.setValue(tokenText);
-						node.setType(TSASTNodeType.VALUE);
+						if(!node.isTypeSet()) {
+							node.setType(TSASTNodeType.VALUE);
+						}
 					}
 					newActNode = actNode;
 				} else if (tVal.id().equals(TSTokenId.TS_PARANTHESE)) {
@@ -216,8 +219,17 @@ public class TSTokenParser {
 			if (curlyDepth > 0 && id.equals(TSTokenId.TS_CURLY_CLOSE)) {
 				curlyDepth--;
 				actNode = curlyHierarchy.get(curlyDepth);
+			} else if(id.equals(TSTokenId.TS_CONDITION)) {
+				if (t.text().toString().equals("[global]")) {
+					actNode = tree;
+					curlyHierarchy.put(curlyDepth, tree);
+				} else {
+					node = new TSASTNode(t.text().toString(), "", TSASTNodeType.CONDITION, sequence.offset(), t.length(), String.valueOf(sequence.offset()));
+					tree.addChild(node);
+					curlyHierarchy.put(0, node);
+				}
 			}
-		}
+		} 
 
 		result.setTree(tree);
 		return tree;
