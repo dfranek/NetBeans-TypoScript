@@ -42,14 +42,10 @@ import java.io.File;
 import java.net.URISyntaxException;
 import junit.framework.TestCase;
 import net.dfranek.typoscript.lexer.TSLexerTestUtils;
-import net.dfranek.typoscript.lexer.TSScannerTest;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
 import net.dfranek.typoscript.parser.ast.TSASTNodeType;
-import org.junit.*;
-import static org.junit.Assert.*;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.junit.NbTestCase;
 
 /**
  *

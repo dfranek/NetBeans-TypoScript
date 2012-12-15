@@ -58,6 +58,7 @@ import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.TSParserResult;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
+import net.dfranek.typoscript.parser.ast.TSASTNodeType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -123,21 +124,22 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 				}
 
 				TSRefType help = TSRef.getHelpForType(currTree.getType().getTypeString());
-
 				List<String> addedItems = new ArrayList<String>();
 
 				for (Iterator<TSASTNode> it = currTree.getChildren().iterator(); it.hasNext();) {
 					TSASTNode node = it.next();
-					addedItems.add(node.getName());
-					if (help != null) {
-						TSRefProperty p = help.getProperty(node.getName());
-						String documentation = "";
-						if(p != null) {
-							documentation = p.getDescription();
+					if (node.getType() != TSASTNodeType.CONDITION) {
+						addedItems.add(node.getName());
+						if (help != null) {
+							TSRefProperty p = help.getProperty(node.getName());
+							String documentation = "";
+							if (p != null) {
+								documentation = p.getDescription();
+							}
+							completionResult.add(new TSCompletionItem(context.getCaretOffset(), node.getName(), ElementKind.PROPERTY, context.getPrefix(), true, currTree.getName(), documentation));
+						} else {
+							completionResult.add(new TSCompletionItem(context.getCaretOffset(), node.getName(), ElementKind.PROPERTY, context.getPrefix(), true, currTree.getName()));
 						}
-						completionResult.add(new TSCompletionItem(context.getCaretOffset(), node.getName(), ElementKind.PROPERTY, context.getPrefix(), true, currTree.getName(), documentation));
-					} else {
-						completionResult.add(new TSCompletionItem(context.getCaretOffset(), node.getName(), ElementKind.PROPERTY, context.getPrefix(), true, currTree.getName()));
 					}
 				}
 
@@ -146,7 +148,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 					for (Map.Entry<String, TSRefProperty> entry : properties.entrySet()) {
 						String name = entry.getKey();
 						TSRefProperty property = entry.getValue();
-						
+
 						if (!addedItems.contains(name)) {
 							completionResult.add(new TSCompletionItem(context.getCaretOffset(), name, ElementKind.PROPERTY, context.getPrefix(), false, currTree.getType().toString(), property.getDescription()));
 						}
@@ -176,6 +178,11 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		ts.moveNext();
 		ts.movePrevious();
 		Token<TSTokenId> t = ts.token();
+		// causes an error if care is at the end of a token -> move back
+		if (ts.offset() + t.length() == caretOffset && !t.id().equals(TSTokenId.TS_NL)) {
+			ts.movePrevious();
+			t = ts.token();
+		}
 		while (!TSLexerUtils.tokenIsKeyword(t.id()) && !t.id().equals(TSTokenId.TS_NL) && ts.movePrevious()) {
 			t = ts.token();
 		}
@@ -297,14 +304,14 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 	@Override
 	public String document(ParserResult pr, ElementHandle eh) {
 		TSElement tseh = (TSElement) eh;
-		
+
 		String documentation = tseh.getDocumentation();
-		if (documentation != null && !documentation.isEmpty()  ) {
+		if (documentation != null && !documentation.isEmpty()) {
 			documentation = "<h3>" + eh.getName() + "</h3>" + documentation;
-		} else{
+		} else {
 			documentation = null;
 		}
-		
+
 		return documentation;
 	}
 

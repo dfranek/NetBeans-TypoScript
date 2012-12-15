@@ -156,8 +156,8 @@
 				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateHTML5Multilingual.html"/>
 			</file>
 			<file name="TSTemplateRTE.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateRTE.ts">
-				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
+				<attr name="displayName" bundlevalue="net.dfranek.typoscript.resources.Bundle#Templates/TypoScript/TSTemplateRTE.ts"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 				<attr name="template" boolvalue="true"/>
 				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateRTE.html"/>
 			</file>

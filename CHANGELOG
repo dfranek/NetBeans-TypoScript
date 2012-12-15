@@ -45,3 +45,8 @@ ext_typoscript_constants.txt
 - improved parsing, now sets correct type for IMAGE and TEXT inside GIFBUILDER, as well as for NO, RO etc.
 1.5.2
 - added more and better icons (thanks to familie redlich)
+1.5.3
+- added more icons
+- conditions are now an own tree in the parser
+1.5.4
+- fixed small bugs in code completion
