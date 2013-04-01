@@ -50,3 +50,5 @@ ext_typoscript_constants.txt
 - conditions are now an own tree in the parser
 1.5.4
 - fixed small bugs in code completion
+1.6.0.
+- added "Go to Declaration" for copied properties

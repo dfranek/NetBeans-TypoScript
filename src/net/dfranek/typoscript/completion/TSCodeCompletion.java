@@ -57,6 +57,7 @@ import net.dfranek.typoscript.completion.tsref.TSRefType;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.TSParserResult;
+import net.dfranek.typoscript.parser.TSParserUtils;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
 import net.dfranek.typoscript.parser.ast.TSASTNodeType;
 import org.netbeans.api.lexer.Token;
@@ -113,7 +114,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 				TokenHierarchy<?> th = result.getSnapshot().getTokenHierarchy();
 				TokenSequence<TSTokenId> ts = th.tokenSequence(TSTokenId.getLanguage());
 
-				getCurrentHierarchy(findHierarchyStart(ts, caretOffset), doc, ts, tree, h);
+				TSParserUtils.getCurrentHierarchy(TSParserUtils.findHierarchyStart(ts, caretOffset), doc, ts, tree, h);
 				Collections.reverse(h);
 				TSASTNode currTree = tree;
 				for (Iterator<Token<TSTokenId>> it = h.iterator(); it.hasNext();) {
@@ -171,114 +172,6 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 			Exceptions.printStackTrace(ex);
 		}
 		return CodeCompletionResult.NONE;
-	}
-
-	protected int findHierarchyStart(TokenSequence<TSTokenId> ts, int caretOffset) {
-		ts.move(caretOffset);
-		ts.moveNext();
-		ts.movePrevious();
-		Token<TSTokenId> t = ts.token();
-		// causes an error if care is at the end of a token -> move back
-		if (ts.offset() + t.length() == caretOffset && !t.id().equals(TSTokenId.TS_NL)) {
-			ts.movePrevious();
-			t = ts.token();
-		}
-		while (!TSLexerUtils.tokenIsKeyword(t.id()) && !t.id().equals(TSTokenId.TS_NL) && ts.movePrevious()) {
-			t = ts.token();
-		}
-
-		if (t.id().equals(TSTokenId.TS_NL)) {
-			int balance = 0;
-			ts.movePrevious();
-
-			do {
-				if (balance > 0 && t.id().equals(TSTokenId.TS_CURLY_OPEN)) {
-					balance--;
-				}
-				t = ts.token();
-				if (t.id().equals(TSTokenId.TS_CURLY_CLOSE)) {
-					balance++;
-				}
-			} while (ts.movePrevious() && (!t.id().equals(TSTokenId.TS_CURLY_OPEN) || balance != 0));
-
-			t = ts.token();
-			while (t.id().equals(TSTokenId.WHITESPACE) && ts.movePrevious()) {
-				t = ts.token();
-			}
-		}
-		return ts.offset();
-	}
-
-	protected List<Token<TSTokenId>> getCurrentHierarchy(int caretOffset, BaseDocument doc, TokenSequence<TSTokenId> ts, TSASTNode tree, List<Token<TSTokenId>> h) throws BadLocationException {
-		if (caretOffset == 0) {
-			return h;
-		}
-		int lineStart = Utilities.getRowFirstNonWhite(doc, caretOffset);
-		ts.move(caretOffset);
-		ts.moveNext();
-		Token<TSTokenId> token = ts.token();
-		if (token == null) {
-			ts.movePrevious();
-			token = ts.token();
-		}
-
-		if (token.text().toString().equals(".")) {
-			ts.movePrevious();
-			token = ts.token();
-		}
-
-		if (TSLexerUtils.tokenIsKeyword(token.id())) {
-			h.add(token);
-		}
-		while (ts.offset() > lineStart) {
-			ts.movePrevious();
-			token = ts.token();
-			if (token.id().equals(TSTokenId.TS_OPERATOR) && token.text().toString().equals("<")) {
-				return h;
-			}
-			if (TSLexerUtils.tokenIsKeyword(token.id())) {
-				h.add(token);
-			}
-		}
-		if (tree.getChild(token.text().toString()) != null && getCurlyBalance(ts) == 0) {
-			return h;
-		} else {
-			ts.movePrevious();
-			do {
-				token = ts.token();
-			} while (!token.id().equals(TSTokenId.TS_CURLY_OPEN) && ts.movePrevious());
-			ts.movePrevious();
-			token = ts.token();
-			while (token.id().equals(TSTokenId.WHITESPACE) && ts.movePrevious()) {
-				token = ts.token();
-			}
-
-			if (tree.getChild(token.text().toString()) != null && getCurlyBalance(ts) == 0) {
-				h.add(token);
-				return h;
-			} else {
-				return getCurrentHierarchy(ts.offset(), doc, ts, tree, h);
-			}
-		}
-	}
-
-	private int getCurlyBalance(TokenSequence<TSTokenId> ts) {
-		int balance = 0;
-		int curOffset = ts.offset();
-		Token<TSTokenId> t;
-		while (ts.movePrevious()) {
-			t = ts.token();
-			if (t.id().equals(TSTokenId.TS_CURLY_OPEN)) {
-				balance--;
-			}
-			if (t.id().equals(TSTokenId.TS_CURLY_CLOSE)) {
-				balance++;
-			}
-		}
-		ts.move(curOffset);
-		ts.movePrevious();
-
-		return balance;
 	}
 
 	private void addKeywords(TSCompletionResult result, CodeCompletionContext context) {

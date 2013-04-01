@@ -192,6 +192,11 @@ public class TSLexerUtils {
 		while (ts.moveNext() && ts.token().id().equals(TSTokenId.WHITESPACE)) {}
 		return ts.token();
 	}
+	
+	public static Token<? extends TSTokenId> findBwdNonSpace(TokenSequence<? extends TSTokenId> ts) {
+		while (ts.movePrevious() && ts.token().id().equals(TSTokenId.WHITESPACE)) {}
+		return ts.token();
+	}
 
 	public static String getWordFromXML(String word) {
 		String propertyType = "";
