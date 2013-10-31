@@ -179,8 +179,10 @@ public class TSStructureScanner implements StructureScanner {
 						kind = FOLD_BLOCKS;
 					} else if (id == TSTokenId.TS_CURLY_OPEN) {
 						r = TSLexerUtils.findFwd(ts, TSTokenId.TS_CURLY_OPEN, '{', TSTokenId.TS_CURLY_CLOSE, '}');
-						r = new OffsetRange(offset, r.getEnd());
-						kind = FOLD_BLOCKS;
+						if (r.getEnd() > offset) {
+							r = new OffsetRange(offset, r.getEnd());
+							kind = FOLD_BLOCKS;
+						}
 					} else if (id == TSTokenId.TS_CURLY_CLOSE) {
 						r = TSLexerUtils.findBwd(ts, TSTokenId.TS_CURLY_OPEN, '{', TSTokenId.TS_CURLY_CLOSE, '}');
 						r = new OffsetRange(offset, r.getEnd());

@@ -130,4 +130,5 @@ public class TSLanguage extends DefaultLanguageConfig {
 	public DeclarationFinder getDeclarationFinder() {
 		return new TSDeclarationFinder();
 	}
+	
 }

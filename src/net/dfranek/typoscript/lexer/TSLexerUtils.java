@@ -39,9 +39,7 @@
 package net.dfranek.typoscript.lexer;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -231,4 +229,21 @@ public class TSLexerUtils {
 	public static boolean tokenIsKeyword(TSTokenId id) {
 		return id.equals(TSTokenId.TS_OBJECT) || id.equals(TSTokenId.TS_EXTENSION) || id.equals(TSTokenId.TS_PROPERTY) || id.equals(TSTokenId.TS_NUMBER) || id.equals(TSTokenId.TS_KEYWORD) || id.equals(TSTokenId.TS_KEYWORD2) || id.equals(TSTokenId.TS_KEYWORD3) || id.equals(TSTokenId.TS_RESERVED) || id.equals(TSTokenId.TS_FUNCTION);
 	}
+	
+	public static Token<?extends TSTokenId> findPrevious(TokenSequence<?extends TSTokenId> ts, List<TSTokenId> ignores) {
+        if (ignores.contains(ts.token().id())) {
+            while (ts.movePrevious() && ignores.contains(ts.token().id())) {
+            }
+        }
+        return ts.token();
+    }
+	
+	public static Token<?extends TSTokenId> findPreviousToken(TokenSequence<?extends TSTokenId> ts, List<TSTokenId> lookfor) {
+        if (!lookfor.contains(ts.token().id())) {
+            while (ts.movePrevious() && !lookfor.contains(ts.token().id())) {
+            }
+        }
+        return ts.token();
+    }
+	
 }
