@@ -41,6 +41,7 @@ package net.dfranek.typoscript.typinghooks;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.text.BadLocationException;
+import net.dfranek.typoscript.TSLanguage;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -208,7 +209,7 @@ public class TSTypedBreakInterceptor implements TypedBreakInterceptor {
 		// deliberatly empty
 	}
 	
-	@MimeRegistration(mimeType = "text/x-typoscript", service = TypedBreakInterceptor.Factory.class)
+	@MimeRegistration(mimeType = TSLanguage.TS_MIME_TYPE, service = TypedBreakInterceptor.Factory.class)
     public static class PhpFactory implements TypedBreakInterceptor.Factory {
 
         @Override

@@ -128,9 +128,9 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "value");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_PARANTHESE, "(");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_PARANTHESE_OPEN, "(");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "\n\tMulti\n\tLine\n\tValue\n");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_PARANTHESE, ")");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_PARANTHESE_CLOSE, ")");
 	}
 	
 	@Test

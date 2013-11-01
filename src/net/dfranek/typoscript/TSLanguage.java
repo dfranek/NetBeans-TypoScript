@@ -61,8 +61,8 @@ import org.openide.windows.TopComponent;
  * @author Daniel Franek
  */
 
-@LanguageRegistration(mimeType="text/x-typoscript", useMultiview = true)
-@PathRecognizerRegistration(mimeTypes = "text/x-typoscript", libraryPathIds = {}, binaryLibraryPathIds = {}) //NOI18N
+@LanguageRegistration(mimeType=TSLanguage.TS_MIME_TYPE, useMultiview = true)
+@PathRecognizerRegistration(mimeTypes = TSLanguage.TS_MIME_TYPE, libraryPathIds = {}, binaryLibraryPathIds = {}) //NOI18N
 public class TSLanguage extends DefaultLanguageConfig {
 
 	private static final String LINE_COMMENT_PREFIX = "#";//NOI18N
@@ -73,7 +73,7 @@ public class TSLanguage extends DefaultLanguageConfig {
         iconBase="net/dfranek/typoscript/resources/ts_file_16.png",
         persistenceType=TopComponent.PERSISTENCE_ONLY_OPENED,
         preferredID="ts.source",
-        mimeType="text/x-typoscript",
+        mimeType=TS_MIME_TYPE,
 		position=1
 	)
     public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
