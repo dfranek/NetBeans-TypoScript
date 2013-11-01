@@ -47,7 +47,6 @@ import org.netbeans.api.lexer.TokenId;
  * @author Daniel Franek
  */
 public enum TSTokenId implements TokenId {
-	TS_CURLY(null, "brace"),
 	TS_CURLY_OPEN(null, "brace"),
 	TS_CURLY_CLOSE(null, "brace"),
 	TS_COMMENT(null, "comment"),
@@ -61,14 +60,13 @@ public enum TSTokenId implements TokenId {
 	TS_REGEXP(null, "string"),
 	TS_OPERATOR(null, "operator"),
 	TS_KEYWORD(null,"keyword"),
-	TS_KEYWORD2(null,"keyword"),
-	TS_KEYWORD3(null,"keyword"),
 	TS_RESERVED(null,"reserved"),
 	TS_OBJECT(null, "keyword"),
 	TS_FUNCTION(null, "keyword"),
 	TS_EXTENSION(null,"extension"),
 	TS_NL(null, "whitespace"),
-	TS_PARANTHESE(null, "brace"),
+	TS_PARANTHESE_OPEN(null, "brace"),
+	TS_PARANTHESE_CLOSE(null, "brace"),
 	WHITESPACE(null, "whitespace"),
 	UNKNOWN_TOKEN(null, "error");
 	private final String primaryCategory;

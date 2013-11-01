@@ -112,14 +112,14 @@ public class TSScanner {
 		} else if (state != TSLexerState.IN_VALUE && ch == ')') {
 			char next = (char) input.read();
 			if (next == '\n') {
-				token = TSTokenId.TS_PARANTHESE;
+				token = TSTokenId.TS_PARANTHESE_CLOSE;
 				state = TSLexerState.DEFAULT;
 			} else {
 				token = TSTokenId.TS_VALUE;
 			}
 			input.backup(1);
 		} else if (state != TSLexerState.IN_VALUE && ch == '(') {
-			token = TSTokenId.TS_PARANTHESE;
+			token = TSTokenId.TS_PARANTHESE_OPEN;
 			state = TSLexerState.IN_PARANTHESE;
 		} else if (state != TSLexerState.IN_VALUE && Pattern.matches("[\\[\\]\\(\\),;\\:\\.\\<\\>\\=]", new Character(ch).toString())) {
 			token = TSTokenId.TS_OPERATOR;

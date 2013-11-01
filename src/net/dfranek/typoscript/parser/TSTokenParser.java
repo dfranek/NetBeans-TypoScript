@@ -56,15 +56,16 @@ import org.netbeans.modules.parsing.api.Snapshot;
  */
 public class TSTokenParser {
 
-	private TokenSequence<TSTokenId> sequence;
+	private final TokenSequence<TSTokenId> sequence;
 	private Snapshot snapshot;
 	private TSBracketNode last = new TSBracketNode("root", null);
-	private TSBracketNode root = last;
-	private TSASTNode tree;
-	private boolean conditionOpen = false;
-	private TSParserResult result;
+	private final TSBracketNode root = last;
+	private final TSASTNode tree;
+	private boolean conditionOpen;
+	private final TSParserResult result;
 
 	TSTokenParser(TokenSequence<TSTokenId> source, Snapshot snapshot) {
+		this.conditionOpen = false;
 		sequence = source;
 		this.snapshot = snapshot;
 		result = new TSParserResult(snapshot);
@@ -72,6 +73,7 @@ public class TSTokenParser {
 	}
 
 	TSTokenParser(TokenSequence<TSTokenId> source) {
+		this.conditionOpen = false;
 		sequence = source;
 		result = new TSParserResult(snapshot);
 		tree = new TSASTNode("", "", TSASTNodeType.ROOTLEVEL, 0, 1);
@@ -89,7 +91,7 @@ public class TSTokenParser {
 	private void checkBraces(TSTokenId id, Token<TSTokenId> t, TokenSequence<TSTokenId> ts) {
 		//Bracket Handling
 		// DF:  Conditions sind gesamt ein Token, hier sollte überprüft werden ob das letzte Zeichen ein ] ist.
-		if (id.equals(TSTokenId.TS_CURLY_OPEN) || id.equals(TSTokenId.TS_CURLY_CLOSE) || id.equals(TSTokenId.TS_PARANTHESE) || id.equals(TSTokenId.TS_CONDITION) || id.equals(TSTokenId.TS_VALUE) || id.equals(TSTokenId.TS_OPERATOR)) {
+		if (id.equals(TSTokenId.TS_CURLY_OPEN) || id.equals(TSTokenId.TS_CURLY_CLOSE) || id.equals(TSTokenId.TS_PARANTHESE_OPEN) || id.equals(TSTokenId.TS_PARANTHESE_CLOSE) || id.equals(TSTokenId.TS_CONDITION) || id.equals(TSTokenId.TS_VALUE) || id.equals(TSTokenId.TS_OPERATOR)) {
 			String tokenText = t.text().toString();
 			if (id == TSTokenId.TS_CURLY_OPEN) {
 				if (last == null) {
@@ -106,7 +108,7 @@ public class TSTokenParser {
 				} else {
 					result.addError(new TSError("No matching brace found for " + last.getValue(), snapshot.getSource().getFileObject(), id.getStart(), id.getEnd(), Severity.ERROR, new Object[]{this}));
 				}
-			} else if (tokenText.equals("(") && id == TSTokenId.TS_PARANTHESE) {
+			} else if (id == TSTokenId.TS_PARANTHESE_OPEN) {
 				if (last == null) {
 					last = new TSBracketNode("(", null, ts.offset());
 				} else {
@@ -114,7 +116,7 @@ public class TSTokenParser {
 					last = last.getNext();
 				}
 				result.addCodeBlock(new OffsetRange(last.getOffset(), ts.offset()));
-			} else if (tokenText.equals(")") && id == TSTokenId.TS_PARANTHESE) {
+			} else if (id == TSTokenId.TS_PARANTHESE_CLOSE) {
 				if (last.getValue().equals("(")) {
 					last = last.getPrev();
 					last.setNext(null);
@@ -149,11 +151,10 @@ public class TSTokenParser {
 		Token<TSTokenId> t;
 		TSTokenId id;
 		TSASTNode actNode = tree;
-		TSASTNode activeCondition = null;
 
 		sequence.moveStart();
 		int curlyDepth = 0;
-		Map<Integer, TSASTNode> curlyHierarchy = new HashMap<Integer, TSASTNode>();
+		Map<Integer, TSASTNode> curlyHierarchy = new HashMap<>();
 		curlyHierarchy.put(curlyDepth, tree);
 		while (sequence.moveNext()) {
 			//content of token
@@ -185,7 +186,7 @@ public class TSTokenParser {
 						}
 					}
 					newActNode = actNode;
-				} else if (tVal.id().equals(TSTokenId.TS_PARANTHESE)) {
+				} else if (tVal.id().equals(TSTokenId.TS_PARANTHESE_OPEN)||tVal.id().equals(TSTokenId.TS_PARANTHESE_CLOSE)) {
 					tVal = TSLexerUtils.findFwdNonSpace(sequence);
 					node.setValue(tVal.text().toString().trim());
 					node.setType(TSASTNodeType.VALUE);

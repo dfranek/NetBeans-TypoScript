@@ -133,10 +133,10 @@ public class TSBracesMatcher implements BracesMatcher {
                 
                 OffsetRange r;
                 if (TSLexerUtils.textEquals(token.text(), '(')) {
-                    r = TSLexerUtils.findFwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
+                    r = TSLexerUtils.findFwd(ts, TSTokenId.TS_PARANTHESE_OPEN, '(', TSTokenId.TS_PARANTHESE_CLOSE, ')');
                     return new int [] {r.getStart(), r.getEnd() };
                 } else if (TSLexerUtils.textEquals(token.text(), ')')) {
-                    r = TSLexerUtils.findBwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
+                    r = TSLexerUtils.findBwd(ts, TSTokenId.TS_PARANTHESE_OPEN, '(', TSTokenId.TS_PARANTHESE_CLOSE, ')');
                     return new int [] {r.getStart(), r.getEnd() };
                 } else if (id == TSTokenId.TS_CURLY_OPEN) {
                     r= TSLexerUtils.findFwd(ts, TSTokenId.TS_CURLY_OPEN ,'{', TSTokenId.TS_CURLY_CLOSE, '}');

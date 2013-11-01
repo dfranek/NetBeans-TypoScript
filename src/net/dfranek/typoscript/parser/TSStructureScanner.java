@@ -159,8 +159,7 @@ public class TSStructureScanner implements StructureScanner {
 		ts.moveStart();
 		if (ts != null) {
 			List<OffsetRange> blocks = tpr.getCodeBlocks();
-			for (Iterator<OffsetRange> it = blocks.iterator(); it.hasNext();) {
-				OffsetRange offsetRange = it.next();
+			for (OffsetRange offsetRange : blocks) {
 				ts.move(offsetRange.getStart());
 				if (ts.moveNext()) {
 					Token<? extends TSTokenId> token = ts.token();
@@ -169,12 +168,14 @@ public class TSStructureScanner implements StructureScanner {
 					OffsetRange r = null;
 					String kind = "";
 					int offset = ts.offset();
-					if (TSLexerUtils.textEquals(token.text(), '(')) {
-						r = TSLexerUtils.findFwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
-						r = new OffsetRange(offset, r.getEnd());
-						kind = FOLD_BLOCKS;
-					} else if (TSLexerUtils.textEquals(token.text(), ')')) {
-						r = TSLexerUtils.findBwd(ts, TSTokenId.TS_PARANTHESE, '(', TSTokenId.TS_PARANTHESE, ')');
+					if (id == TSTokenId.TS_PARANTHESE_OPEN) {
+						r = TSLexerUtils.findFwd(ts, TSTokenId.TS_PARANTHESE_OPEN, '(', TSTokenId.TS_PARANTHESE_CLOSE, ')');
+						if (r.getEnd() > offset) {
+							r = new OffsetRange(offset, r.getEnd());
+							kind = FOLD_BLOCKS;
+						}
+					} else if (id == TSTokenId.TS_PARANTHESE_CLOSE) {
+						r = TSLexerUtils.findBwd(ts, TSTokenId.TS_PARANTHESE_OPEN, '(', TSTokenId.TS_PARANTHESE_CLOSE, ')');
 						r = new OffsetRange(offset, r.getEnd());
 						kind = FOLD_BLOCKS;
 					} else if (id == TSTokenId.TS_CURLY_OPEN) {
@@ -204,12 +205,12 @@ public class TSStructureScanner implements StructureScanner {
 						}
 						kind = FOLD_COMMENTS;
 					}/*
-					 * else if(id == TSTokenId.TS_COMMENT &&
-					 * token.text().charAt(0) == '#') { offset = ts.offset(); r
-					 * = TSLexerUtils.findFwd(ts, TSTokenId.TS_COMMENT, '#',
-					 * TSTokenId.TS_COMMENT, '#'); r = new OffsetRange(offset,
-					 * r.getEnd()); kind = FOLD_COMMENTS; }
-					 */
+					* else if(id == TSTokenId.TS_COMMENT &&
+					* token.text().charAt(0) == '#') { offset = ts.offset(); r
+					* = TSLexerUtils.findFwd(ts, TSTokenId.TS_COMMENT, '#',
+					* TSTokenId.TS_COMMENT, '#'); r = new OffsetRange(offset,
+					* r.getEnd()); kind = FOLD_COMMENTS; }
+					*/
 					if (r != null) {
 						getRanges(folds, kind).add(r);
 					}

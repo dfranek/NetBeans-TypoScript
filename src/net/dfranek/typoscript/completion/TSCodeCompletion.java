@@ -294,7 +294,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		int diff = ts.move(offset);
 		if (diff > 0 && ts.moveNext() || ts.movePrevious()) {
 			t = ts.token();
-			if (t.id() == TSTokenId.TS_OPERATOR || t.id() == TSTokenId.TS_PROPERTY || t.id() == TSTokenId.TS_KEYWORD || t.id() == TSTokenId.TS_KEYWORD2 || t.id() == TSTokenId.TS_KEYWORD3 || t.id() == TSTokenId.TS_RESERVED) {
+			if (t.id() == TSTokenId.TS_OPERATOR || t.id() == TSTokenId.TS_PROPERTY || t.id() == TSTokenId.TS_KEYWORD || t.id() == TSTokenId.TS_RESERVED) {
 				return QueryType.COMPLETION;
 			}
 		}
