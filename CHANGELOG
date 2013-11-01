@@ -52,3 +52,5 @@ ext_typoscript_constants.txt
 - fixed small bugs in code completion
 1.6.0.
 - added "Go to Declaration" for copied properties
+1.7.0
+- added auto complete for square brackets and curly braces
