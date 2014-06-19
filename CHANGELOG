@@ -54,3 +54,5 @@ ext_typoscript_constants.txt
 - added "Go to Declaration" for copied properties
 1.7.0
 - added auto complete for square brackets and curly braces
+1.7.1
+- fixed bug with inserting of end parantheses in multiline values

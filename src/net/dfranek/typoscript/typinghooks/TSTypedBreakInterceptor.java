@@ -189,6 +189,7 @@ public class TSTypedBreakInterceptor implements TypedBreakInterceptor {
 			return curlyBalance > 0;
 		}
 		
+		ts.move(offset);
 		if (startTokenId == TSTokenId.TS_PARANTHESE_OPEN) {
 			OffsetRange r = TSLexerUtils.findFwd(ts, TSTokenId.TS_PARANTHESE_OPEN, '(', TSTokenId.TS_PARANTHESE_CLOSE, ')');
 			if (r == OffsetRange.NONE) {
