@@ -64,6 +64,7 @@ public class TSStructureScanner implements StructureScanner {
 	private static final String FONT_GRAY_COLOR = "<font color=\"#999999\">"; //NOI18N
 	private static final String CLOSE_FONT = "</font>";                   //NOI18N
 
+	@Override
 	public List<? extends StructureItem> scan(ParserResult pr) {
 		List<? extends StructureItem> items;
 		TSASTNode root = ((TSParserResult) pr).getTree();
@@ -72,9 +73,8 @@ public class TSStructureScanner implements StructureScanner {
 	}
 
 	protected List<? extends StructureItem> buildHierarchy(TSASTNode tree) {
-		final List<StructureItem> items = new ArrayList<StructureItem>();
-		for (Iterator<TSASTNode> it = tree.getChildren().iterator(); it.hasNext();) {
-			TSASTNode node = it.next();
+		final List<StructureItem> items = new ArrayList<>();
+		for (TSASTNode node : tree.getChildren()) {
 			List<? extends StructureItem> itemsSub = null;
 			if (node.hasChildren()) {
 				itemsSub = buildHierarchy(node);
@@ -152,8 +152,9 @@ public class TSStructureScanner implements StructureScanner {
 		return items;
 	}
 
+	@Override
 	public Map<String, List<OffsetRange>> folds(ParserResult pr) {
-		final Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
+		final Map<String, List<OffsetRange>> folds = new HashMap<>();
 		TSParserResult tpr = (TSParserResult) pr;
 		TokenSequence<? extends TSTokenId> ts = tpr.getSequence();
 		ts.moveStart();
@@ -233,12 +234,13 @@ public class TSStructureScanner implements StructureScanner {
 	private List<OffsetRange> getRanges(Map<String, List<OffsetRange>> folds, String kind) {
 		List<OffsetRange> ranges = folds.get(kind);
 		if (ranges == null) {
-			ranges = new ArrayList<OffsetRange>();
+			ranges = new ArrayList<>();
 			folds.put(kind, ranges);
 		}
 		return ranges;
 	}
 
+	@Override
 	public Configuration getConfiguration() {
 		return new Configuration(true, true);
 	}
@@ -259,42 +261,52 @@ public class TSStructureScanner implements StructureScanner {
 			}
 		}
 
+		@Override
 		public String getName() {
 			return node.getName();
 		}
 
+		@Override
 		public String getSortText() {
 			return sortPrefix + this.getName();
 		}
 
+		@Override
 		public ElementHandle getElementHandle() {
 			return null;
 		}
 
+		@Override
 		public ElementKind getKind() {
 			return ElementKind.PROPERTY;
 		}
 
+		@Override
 		public Set<Modifier> getModifiers() {
 			return null;
 		}
 
+		@Override
 		public boolean isLeaf() {
-			return (children.size() == 0);
+			return (children.isEmpty());
 		}
 
+		@Override
 		public List<? extends StructureItem> getNestedItems() {
 			return children;
 		}
 
+		@Override
 		public long getPosition() {
 			return node.getOffset();
 		}
 
+		@Override
 		public long getEndPosition() {
 			return node.getOffset() + node.getLength();
 		}
 
+		@Override
 		public abstract ImageIcon getCustomIcon();
 
 		@Override

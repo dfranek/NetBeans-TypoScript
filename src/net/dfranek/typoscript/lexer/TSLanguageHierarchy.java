@@ -40,6 +40,7 @@ package net.dfranek.typoscript.lexer;
 import java.util.*;
 import net.dfranek.typoscript.TSLanguage;
 import org.netbeans.api.lexer.InputAttributes;
+import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.*;
@@ -55,7 +56,7 @@ public class TSLanguageHierarchy extends LanguageHierarchy<TSTokenId> {
 	
 	private static void init () {
         tokens = EnumSet.allOf(TSTokenId.class);
-        idToToken = new HashMap<Integer, TSTokenId> ();
+        idToToken = new HashMap<> ();
         for (TSTokenId token : tokens)
             idToToken.put (token.ordinal (), token);
     }

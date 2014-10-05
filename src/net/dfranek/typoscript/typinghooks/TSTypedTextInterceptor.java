@@ -39,7 +39,6 @@
 package net.dfranek.typoscript.typinghooks;
 
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import net.dfranek.typoscript.TSLanguage;
 import net.dfranek.typoscript.lexer.TSLexerUtils;

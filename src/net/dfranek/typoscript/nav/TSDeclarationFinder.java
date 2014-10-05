@@ -38,26 +38,18 @@
  */
 package net.dfranek.typoscript.nav;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
 import net.dfranek.typoscript.parser.TSParserResult;
-import net.dfranek.typoscript.parser.TSParserUtils;
 import net.dfranek.typoscript.parser.ast.TSASTNode;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 
 /**
  *

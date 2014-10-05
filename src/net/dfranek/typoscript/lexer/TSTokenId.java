@@ -43,15 +43,17 @@ import org.netbeans.api.lexer.TokenId;
 
 /**
  * Enum with possible tokens for the TypoScript Language
- * 
+ *
  * @author Daniel Franek
  */
 public enum TSTokenId implements TokenId {
+
 	TS_CURLY_OPEN(null, "brace"),
 	TS_CURLY_CLOSE(null, "brace"),
 	TS_COMMENT(null, "comment"),
 	TS_MULTILINE_COMMENT(null, "comment"),
 	TS_VALUE(null, "value"),
+	TS_MULTILINE_VALUE(null, "value"),
 	TS_PROPERTY(null, "ts"),
 	TS_CONDITION(null, "condition"),
 	TS_CONSTANT(null, "constant"),
@@ -59,18 +61,20 @@ public enum TSTokenId implements TokenId {
 	TS_NUMBER(null, "number"),
 	TS_REGEXP(null, "string"),
 	TS_OPERATOR(null, "operator"),
-	TS_KEYWORD(null,"keyword"),
-	TS_RESERVED(null,"reserved"),
+	TS_KEYWORD(null, "keyword"),
+	TS_RESERVED(null, "reserved"),
 	TS_OBJECT(null, "keyword"),
 	TS_FUNCTION(null, "keyword"),
-	TS_EXTENSION(null,"extension"),
+	TS_EXTENSION(null, "extension"),
 	TS_NL(null, "whitespace"),
 	TS_PARANTHESE_OPEN(null, "brace"),
 	TS_PARANTHESE_CLOSE(null, "brace"),
 	WHITESPACE(null, "whitespace"),
 	UNKNOWN_TOKEN(null, "error");
+	
 	private final String primaryCategory;
 	private final String fixedText;
+	private static final Language<TSTokenId> language = new TSLanguageHierarchy().language();
 	private int start;
 	private int end;
 
@@ -78,7 +82,6 @@ public enum TSTokenId implements TokenId {
 		this.fixedText = fixedText;
 		this.primaryCategory = primaryCategory;
 	}
-	private static final Language<TSTokenId> language = new TSLanguageHierarchy().language();
 
 	public static Language<TSTokenId> getLanguage() {
 		return language;
@@ -116,4 +119,14 @@ public enum TSTokenId implements TokenId {
 	public void setEnd(int end) {
 		this.end = end;
 	}
+	
+	/** Gets a LanguageDescription describing a set of token ids
+     * that comprise the given language.
+     *
+     * @return non-null LanguageDescription
+     */
+    public static Language<TSTokenId> language() {
+        return language;
+    }
+	
 }

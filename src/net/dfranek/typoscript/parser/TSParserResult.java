@@ -20,7 +20,7 @@ import org.netbeans.modules.parsing.api.Snapshot;
  */
 public class TSParserResult extends ParserResult {
 
-	private List<Error> errors;
+	private final List<Error> errors;
 	private boolean valid = true;
 	private TSASTNode tree;
 	private TokenSequence<TSTokenId> sequence;
@@ -28,13 +28,13 @@ public class TSParserResult extends ParserResult {
 
 	public TSParserResult(Snapshot snapshot) {
 		super(snapshot);
-		this.errors = new ArrayList<Error>();
-		this.codeblocks = new ArrayList<OffsetRange>();
+		this.errors = new ArrayList<>();
+		this.codeblocks = new ArrayList<>();
 	}
 
 	private TSParserResult(Snapshot snapshot, TokenSequence<TSTokenId> source) {
 		super(snapshot);
-		this.errors = new ArrayList<Error>();
+		this.errors = new ArrayList<>();
 	}
 
 	@Override

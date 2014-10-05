@@ -38,9 +38,6 @@
  */
 package net.dfranek.typoscript.lexer;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.netbeans.spi.lexer.LexerInput;
@@ -48,7 +45,7 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
 
 public class TSScanner {
 
-	private LexerInput input;
+	private final LexerInput input;
 	private int readLength = 0;
 	private TSLexerState state;
 	private int position = 0;
@@ -78,7 +75,7 @@ public class TSScanner {
 	 * @exception java.io.IOException if any I/O-Error occurs
 	 */
 	public TSTokenId nextToken() throws java.io.IOException {
-		TSTokenId token = TSTokenId.UNKNOWN_TOKEN;
+		TSTokenId token;
 
 		//input.backup(1);
 		char ch = (char) input.read();
@@ -164,18 +161,25 @@ public class TSScanner {
 			}
 			
 			if (!propertyType.isEmpty()) {
-				if (propertyType.equals("object")) {
-					token = TSTokenId.TS_OBJECT;
-				} else if (propertyType.equals("keyword")) {
-					token = TSTokenId.TS_KEYWORD;
-				} else if (propertyType.equals("reserved")) {
-					token = TSTokenId.TS_RESERVED;
-				} else if (propertyType.equals("function")) {
-					token = TSTokenId.TS_FUNCTION;
-				} else if (propertyType.equals("condition")) {
-					token = TSTokenId.TS_CONDITION;
-				} else if (propertyType.equals("property")) {
-					token = TSTokenId.TS_PROPERTY;
+				switch (propertyType) {
+					case "object":
+						token = TSTokenId.TS_OBJECT;
+						break;
+					case "keyword":
+						token = TSTokenId.TS_KEYWORD;
+						break;
+					case "reserved":
+						token = TSTokenId.TS_RESERVED;
+						break;
+					case "function":
+						token = TSTokenId.TS_FUNCTION;
+						break;
+					case "condition":
+						token = TSTokenId.TS_CONDITION;
+						break;
+					case "property":
+						token = TSTokenId.TS_PROPERTY;
+						break;
 				}
 			} else {
 				if (isDigit(word)) {
@@ -190,9 +194,6 @@ public class TSScanner {
 					token = TSTokenId.TS_VALUE;
 				}
 			}
-
-
-
 		}
 
 		token = token == null ? TSTokenId.TS_VALUE : token;
@@ -312,7 +313,7 @@ public class TSScanner {
 		}
 		input.backup(1);
 
-		return TSTokenId.TS_VALUE;
+		return TSTokenId.TS_MULTILINE_VALUE;
 	}
 
 	protected TSTokenId readMultilineComment(char start) {

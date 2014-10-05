@@ -52,14 +52,14 @@ import org.openide.util.ImageUtilities;
  */
 public class TSCompletionItem implements CompletionProposal {
 
-	private int anchor;
-	private String name;
-	private ElementKind kind;
-	private String prefix;
+	private final int anchor;
+	private final String name;
+	private final ElementKind kind;
+	private final String prefix;
 	private static final Logger logger =  Logger.getLogger(TSCodeCompletion.class.getName());
 	private final boolean smart;
 	private String typeName;
-	private ElementHandle element;
+	private final ElementHandle element;
 
 	public TSCompletionItem(int anchor, String name, ElementKind kind, String prefix, boolean smart) {
 		logger.setLevel(Level.ALL);

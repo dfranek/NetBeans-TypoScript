@@ -54,8 +54,8 @@ import org.openide.filesystems.FileObject;
  */
 public class TSElement implements ElementHandle {
 	
-	private CharSequence name;
-	private String doc;
+	private final CharSequence name;
+	private final String doc;
 
 	public TSElement(CharSequence name) {
 		this.name = name;

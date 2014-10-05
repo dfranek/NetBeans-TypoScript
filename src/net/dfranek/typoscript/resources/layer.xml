@@ -5,12 +5,12 @@
 		<folder name="text">
 			<folder name="x-typoscript">
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
-				<folder name="FontsColors">
+                <folder name="FontsColors">
 					<folder name="NetBeans">
 						<folder name="Defaults">
 							<file name="FontAndColors.xml" url="FontAndColors.xml">
 								<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
-							</file>
+                            </file>
 						</folder>
 					</folder>
 				</folder>
@@ -22,10 +22,6 @@
 				<folder name="FoldManager">
 					<file name="org-netbeans-editor-CustomFoldManager$Factory.instance"/>
 				</folder>
-<!--				<file name="language.instance">
-					<attr name="instanceCreate" methodvalue="net.dfranek.typoscript.lexer.TSTokenId.getLanguage"/>
-					<attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
-                </file>-->
 			</folder>
 		</folder>
 	</folder>
@@ -39,77 +35,7 @@
 	<folder name="Loaders">
 		<folder name="text">
 			<folder name="x-typoscript">
-                
-                <!-- GSF -->
-				<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/dfranek/typoscript/resources/ts_file_16.png"/>
 				<attr name="iconBase" stringvalue="net/dfranek/typoscript/resources/ts_file_16.png"/>
-                <!-- eof GSF -->
-				<folder name="Actions">
-					<file name="org-openide-actions-CopyAction.shadow">
-						<attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
-						<attr name="position" intvalue="400"/>
-					</file>
-					<file name="org-openide-actions-CutAction.shadow">
-						<attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
-						<attr name="position" intvalue="300"/>
-					</file>
-					<file name="org-openide-actions-DeleteAction.shadow">
-						<attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
-						<attr name="position" intvalue="600"/>
-					</file>
-					<file name="org-openide-actions-FileSystemAction.shadow">
-						<attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
-						<attr name="position" intvalue="1100"/>
-					</file>
-					<file name="org-openide-actions-OpenAction.shadow">
-						<attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
-						<attr name="position" intvalue="100"/>
-					</file>
-					<file name="org-openide-actions-PropertiesAction.shadow">
-						<attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
-						<attr name="position" intvalue="1400"/>
-					</file>
-					<file name="org-openide-actions-RenameAction.shadow">
-						<attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
-						<attr name="position" intvalue="700"/>
-					</file>
-					<file name="org-openide-actions-SaveAsTemplateAction.shadow">
-						<attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
-						<attr name="position" intvalue="900"/>
-					</file>
-					<file name="org-openide-actions-ToolsAction.shadow">
-						<attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
-						<attr name="position" intvalue="1300"/>
-					</file>
-					<file name="sep-1.instance">
-						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-						<attr name="position" intvalue="200"/>
-					</file>
-					<file name="sep-2.instance">
-						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-						<attr name="position" intvalue="500"/>
-					</file>
-					<file name="sep-3.instance">
-						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-						<attr name="position" intvalue="800"/>
-					</file>
-					<file name="sep-4.instance">
-						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-						<attr name="position" intvalue="1000"/>
-					</file>
-					<file name="sep-5.instance">
-						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-						<attr name="position" intvalue="1200"/>
-					</file>
-				</folder>
-<!--				<folder name="Factories">
-					<file name="TSDataLoader.instance">
-						<attr name="dataObjectClass" stringvalue="net.dfranek.typoscript.TSDataObject"/>
-						<attr name="iconBase" stringvalue="net/dfranek/typoscript/resources/ts_file_16.png"/>
-                        <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
-						<attr name="mimeType" stringvalue="text/x-typoscript"/>
-					</file>
-				</folder>-->
 			</folder>
 		</folder>
 	</folder>
@@ -121,45 +47,6 @@
 				<attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
 				<attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
 				<attr name="url" bundlevalue="net.dfranek.typoscript.resources.Bundle#net_dfranek_typoscript_update_center"/>
-			</file>
-		</folder>
-		<folder name="MIMEResolver">
-			<file name="TSResolver.xml" url="TSResolver.xml">
-				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
-			</file>
-		</folder>
-	</folder>
-	<folder name="Templates">
-		<folder name="TypoScript">
-			<file name="TSTemplate.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplate.ts">
-				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
-				<attr name="template" boolvalue="true"/>
-				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplate.html"/>
-			</file>
-			<file name="TSTemplateComments.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateComments.ts">
-				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
-				<attr name="template" boolvalue="true"/>
-				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateComments.html"/>
-			</file>
-			<file name="TSTemplateHTML5Advanced.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateHTML5Advanced.ts">
-				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
-				<attr name="template" boolvalue="true"/>
-				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateHTML5Advanced.html"/>
-			</file>
-			<file name="TSTemplateHTML5Multilingual.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateHTML5Multilingual.ts">
-				<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.dfranek.typoscript.resources.Bundle"/>
-				<attr name="template" boolvalue="true"/>
-				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateHTML5Multilingual.html"/>
-			</file>
-			<file name="TSTemplateRTE.ts" url="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateRTE.ts">
-				<attr name="displayName" bundlevalue="net.dfranek.typoscript.resources.Bundle#Templates/TypoScript/TSTemplateRTE.ts"/>
-                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-				<attr name="template" boolvalue="true"/>
-				<attr name="templateWizardURL" urlvalue="nbresloc:/net/dfranek/typoscript/resources/templates/TSTemplateRTE.html"/>
 			</file>
 		</folder>
 	</folder>

@@ -43,7 +43,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,7 +82,7 @@ import org.openide.util.Exceptions;
  */
 public class TSCodeCompletion implements CodeCompletionHandler {
 
-	private final static Collection<Character> AUTOPOPUP_STOP_CHARS = new TreeSet<Character>(
+	private final static Collection<Character> AUTOPOPUP_STOP_CHARS = new TreeSet<>(
 			Arrays.asList('=', ';', '+', '-', '*', '/', '%', '(', ')', '[', ']', '{', '}', '?', '\n'));
 	private boolean caseSensitive;
 	private Kind nameKind;
@@ -94,7 +93,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		TSParserResult result = (TSParserResult) context.getParserResult();
 		TSASTNode tree = result.getTree();
 
-		List<Token<TSTokenId>> h = new ArrayList<Token<TSTokenId>>();
+		List<Token<TSTokenId>> h = new ArrayList<>();
 
 		try {
 			BaseDocument doc = (BaseDocument) result.getSnapshot().getSource().getDocument(false);
@@ -117,18 +116,16 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 				TSParserUtils.getCurrentHierarchy(TSParserUtils.findHierarchyStart(ts, caretOffset), doc, ts, tree, h);
 				Collections.reverse(h);
 				TSASTNode currTree = tree;
-				for (Iterator<Token<TSTokenId>> it = h.iterator(); it.hasNext();) {
-					Token<TSTokenId> token = it.next();
+				for (Token<TSTokenId> token : h) {
 					if (currTree.hasChild(token.text().toString())) {
 						currTree = currTree.getChild(token.text().toString());
 					}
 				}
 
 				TSRefType help = TSRef.getHelpForType(currTree.getType().getTypeString());
-				List<String> addedItems = new ArrayList<String>();
+				List<String> addedItems = new ArrayList<>();
 
-				for (Iterator<TSASTNode> it = currTree.getChildren().iterator(); it.hasNext();) {
-					TSASTNode node = it.next();
+				for (TSASTNode node : currTree.getChildren()) {
 					if (node.getType() != TSASTNodeType.CONDITION) {
 						addedItems.add(node.getName());
 						if (help != null) {
@@ -176,8 +173,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	private void addKeywords(TSCompletionResult result, CodeCompletionContext context) {
 		Collection<String> keywords = TSLexerUtils.getAllKeywordsOfType("keywords");
-		for (Iterator<String> it = keywords.iterator(); it.hasNext();) {
-			String word = it.next();
+		for (String word : keywords) {
 			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
 				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.KEYWORD, context.getPrefix(), false));
 			}
@@ -186,8 +182,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 
 	private void addReservedWords(TSCompletionResult result, CodeCompletionContext context) {
 		Collection<String> reservedWords = TSLexerUtils.getAllKeywordsOfType("reserved");
-		for (Iterator<String> it = reservedWords.iterator(); it.hasNext();) {
-			String word = it.next();
+		for (String word : reservedWords) {
 			if (word.toLowerCase().startsWith(context.getPrefix().toLowerCase())) {
 				result.add(new TSCompletionItem(context.getCaretOffset(), word, ElementKind.PROPERTY, context.getPrefix(), false));
 			}
@@ -279,7 +274,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 		}
 
 		char lastChar = typedText.charAt(typedText.length() - 1);
-		if (AUTOPOPUP_STOP_CHARS.contains(Character.valueOf(lastChar))) {
+		if (AUTOPOPUP_STOP_CHARS.contains(lastChar)) {
 			return QueryType.STOP;
 		}
 
@@ -303,6 +298,7 @@ public class TSCodeCompletion implements CodeCompletionHandler {
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public String resolveTemplateVariable(String string, ParserResult pr, int i, String string1, Map map) {
 		return null;
 	}

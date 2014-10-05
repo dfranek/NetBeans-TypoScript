@@ -68,6 +68,10 @@ public class TSLexerTestUtils extends TestCase{
      * Compare <code>TokenSequence.token()</code> to the given
      * token id, text and offset.
      *
+	 * @param message
+	 * @param ts
+	 * @param id
+	 * @param text
      * @param offset expected offset. It may be -1 to prevent offset testing.
      */
     public static void assertTokenEquals(String message, TokenSequence<?> ts, TokenId id, String text, int offset) {
@@ -110,7 +114,7 @@ public class TSLexerTestUtils extends TestCase{
      * translating the special characters (and '\') into escape sequences.
      *
      * @param text non-null text to be debugged.
-     * @return non-null string containing the debug text or "<null>".
+     * @return non-null string containing the debug text or "null".
      */
     public static String debugTextOrNull(CharSequence text) {
         return (text != null) ? debugText(text) : "<null>";
@@ -136,6 +140,9 @@ public class TSLexerTestUtils extends TestCase{
 	
 	/**
      * Compare whether the two character sequences represent the same text.
+	 * @param text1
+	 * @param text2
+	 * @return 
      */
     public static boolean textEquals(CharSequence text1, CharSequence text2) {
         return TokenUtilities.equals(text1, text2);
@@ -157,16 +164,16 @@ public class TSLexerTestUtils extends TestCase{
     }
 	
 	public static String getFileContent (File file) throws Exception{
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String lineSep = "\n";//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-        String line = br.readLine();
-        while (line != null) {
-            sb.append(line);
-            sb.append(lineSep);
-            line = br.readLine();
-        }
-        br.close();
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
+			String line = br.readLine();
+			while (line != null) {
+				sb.append(line);
+				sb.append(lineSep);
+				line = br.readLine();
+			}
+		}
         return sb.toString();
     }
 	

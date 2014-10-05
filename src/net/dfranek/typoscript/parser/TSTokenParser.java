@@ -38,7 +38,9 @@
  */
 package net.dfranek.typoscript.parser;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.dfranek.typoscript.lexer.TSLexerUtils;
 import net.dfranek.typoscript.lexer.TSTokenId;
@@ -89,9 +91,19 @@ public class TSTokenParser {
 	}
 
 	private void checkBraces(TSTokenId id, Token<TSTokenId> t, TokenSequence<TSTokenId> ts) {
+		List<TSTokenId> tokensToCheck = Arrays.asList(
+			TSTokenId.TS_CURLY_OPEN, 
+			TSTokenId.TS_CURLY_CLOSE, 
+			TSTokenId.TS_PARANTHESE_OPEN, 
+			TSTokenId.TS_PARANTHESE_CLOSE, 
+			TSTokenId.TS_CONDITION, 
+			TSTokenId.TS_VALUE, 
+			TSTokenId.TS_MULTILINE_VALUE,
+			TSTokenId.TS_OPERATOR
+		);
+		
 		//Bracket Handling
-		// DF:  Conditions sind gesamt ein Token, hier sollte überprüft werden ob das letzte Zeichen ein ] ist.
-		if (id.equals(TSTokenId.TS_CURLY_OPEN) || id.equals(TSTokenId.TS_CURLY_CLOSE) || id.equals(TSTokenId.TS_PARANTHESE_OPEN) || id.equals(TSTokenId.TS_PARANTHESE_CLOSE) || id.equals(TSTokenId.TS_CONDITION) || id.equals(TSTokenId.TS_VALUE) || id.equals(TSTokenId.TS_OPERATOR)) {
+		if(tokensToCheck.contains(id)) {
 			String tokenText = t.text().toString();
 			if (id == TSTokenId.TS_CURLY_OPEN) {
 				if (last == null) {

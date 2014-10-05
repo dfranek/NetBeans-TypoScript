@@ -53,7 +53,7 @@ import org.openide.util.Exceptions;
  */
 class TSCompletionResult extends DefaultCompletionResult {
 	
-	private CodeCompletionContext context;
+	private final CodeCompletionContext context;
 
 	public TSCompletionResult(CodeCompletionContext completionContext) {
 		super(new ArrayList<CompletionProposal>(), false);

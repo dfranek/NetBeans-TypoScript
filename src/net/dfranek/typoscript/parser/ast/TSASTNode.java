@@ -46,14 +46,14 @@ import java.util.HashMap;
  * @author Daniel Franek
  */
 public class TSASTNode {
-	private String name;
+	private final String name;
 	private String value;
 	private TSASTNodeType type;
-	private HashMap<String, TSASTNode> children = new HashMap<String, TSASTNode>();
+	private final HashMap<String, TSASTNode> children = new HashMap<>();
 	private TSASTNode parent;
 	
-	private int length;
-	private int offset;
+	private final int length;
+	private final int offset;
 	private String suffix = "";
 
 	public TSASTNode(String name, String value, TSASTNodeType type, int offset, int length) {

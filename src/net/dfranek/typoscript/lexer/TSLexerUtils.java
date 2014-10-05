@@ -58,26 +58,28 @@ import org.netbeans.modules.csl.api.OffsetRange;
  */
 public class TSLexerUtils {
 
-	protected static HashMap<String, Collection<String>> completionList = new HashMap<String, Collection<String>>();
+	protected static HashMap<String, Collection<String>> completionList = new HashMap<>();
 	protected static HashMap<String, String> keywords;
 
+	
+	@SuppressWarnings("unchecked")
 	public static TokenSequence<TSTokenId> getTSTokenSequence(TokenHierarchy<?> th, int offset) {
 		TokenSequence<TSTokenId> ts = th == null ? null : th.tokenSequence(TSTokenId.getLanguage());
 		if (ts == null) {
 			// Possibly an embedding scenario such as an RHTML file
 			// First try with backward bias true
 			List<TokenSequence<?>> list = th.embeddedTokenSequences(offset, true);
-			for (TokenSequence t : list) {
+			for (TokenSequence<?> t : list) {
 				if (t.language() == TSTokenId.getLanguage()) {
-					ts = t;
+					ts = (TokenSequence<TSTokenId>) t;
 					break;
 				}
 			}
 			if (ts == null) {
 				list = th.embeddedTokenSequences(offset, false);
-				for (TokenSequence t : list) {
+				for (TokenSequence<?> t : list) {
 					if (t.language() == TSTokenId.getLanguage()) {
-						ts = t;
+						ts = (TokenSequence<TSTokenId>) t;
 						break;
 					}
 				}
@@ -209,7 +211,7 @@ public class TSLexerUtils {
 		if(completionList.containsKey(type)) {
 			return completionList.get(type);
 		}
-		Collection<String> properties = new ArrayList<String>();
+		Collection<String> properties = new ArrayList<>();
 		for (Map.Entry<String, String> entry : keywords.entrySet()) {
 			String property = entry.getKey();
 			if (entry.getValue().equals(type)) {
@@ -221,6 +223,7 @@ public class TSLexerUtils {
 		return properties;
 	}
 
+	@SuppressWarnings("unchecked")
 	static void initKeywords() {
 		Gson gson = new Gson();
 		keywords = gson.fromJson(new InputStreamReader(TSLexerUtils.class.getResourceAsStream("/net/dfranek/typoscript/resources/properties.json")), HashMap.class);		

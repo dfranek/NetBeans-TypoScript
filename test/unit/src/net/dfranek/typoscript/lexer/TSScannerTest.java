@@ -38,10 +38,10 @@
  */
 package net.dfranek.typoscript.lexer;
 
-import java.io.File;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.netbeans.api.lexer.TokenSequence;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -83,7 +83,7 @@ public class TSScannerTest extends TestCase {
 	
 	@Test
 	public void testExampleFile() throws Exception {
-		TokenSequence<?> ts = TSLexerTestUtils.seqForText(TSLexerTestUtils.getFileContent(new File(TSScannerTest.class.getResource("/net/dfranek/typoscript/lexer/TSExample").toURI())), TSTokenId.getLanguage());
+		TokenSequence<?> ts = TSLexerTestUtils.seqForText(TSLexerTestUtils.getFileContent(Utilities.toFile(TSScannerTest.class.getResource("/net/dfranek/typoscript/lexer/TSExample").toURI())), TSTokenId.getLanguage());
 		TSLexerTestUtils.next(ts, TSTokenId.TS_PROPERTY, "headerimg");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_OPERATOR, ".");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "file");
@@ -129,7 +129,7 @@ public class TSScannerTest extends TestCase {
 		TSLexerTestUtils.next(ts, TSTokenId.TS_RESERVED, "value");
 		TSLexerTestUtils.next(ts, TSTokenId.WHITESPACE, " ");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_PARANTHESE_OPEN, "(");
-		TSLexerTestUtils.next(ts, TSTokenId.TS_VALUE, "\n\tMulti\n\tLine\n\tValue\n");
+		TSLexerTestUtils.next(ts, TSTokenId.TS_MULTILINE_VALUE, "\n\tMulti\n\tLine\n\tValue\n");
 		TSLexerTestUtils.next(ts, TSTokenId.TS_PARANTHESE_CLOSE, ")");
 	}
 	

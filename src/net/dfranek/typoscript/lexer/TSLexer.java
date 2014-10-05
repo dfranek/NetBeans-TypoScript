@@ -38,6 +38,7 @@
  */
 package net.dfranek.typoscript.lexer;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.lexer.Token;
@@ -51,8 +52,8 @@ import org.netbeans.spi.lexer.TokenFactory;
  */
 public class TSLexer implements Lexer<TSTokenId> {
 
-    private LexerRestartInfo<TSTokenId> info;
-    private TokenFactory<TSTokenId> tokenFactory;
+    private final LexerRestartInfo<TSTokenId> info;
+    private final TokenFactory<TSTokenId> tokenFactory;
     private final TSScanner scanner;
 
     TSLexer(LexerRestartInfo<TSTokenId> info) {
@@ -80,7 +81,7 @@ public class TSLexer implements Lexer<TSTokenId> {
                 token = tokenFactory.createToken(tokenId);
             }
             return token;
-        } catch (Exception ex) {
+        } catch (IOException ex) {
            Logger.getLogger(TSLexer.class.getName()).log(Level.SEVERE, null, ex);
         }
 

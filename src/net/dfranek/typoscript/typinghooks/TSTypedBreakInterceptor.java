@@ -130,7 +130,9 @@ public class TSTypedBreakInterceptor implements TypedBreakInterceptor {
 
 		// at fist there should be find a bracket  '{' or column ':'
 		Token<? extends TSTokenId> bracketColumnToken = TSLexerUtils.findPrevious(ts,
-				Arrays.asList(TSTokenId.TS_COMMENT, TSTokenId.WHITESPACE, TSTokenId.TS_NL, TSTokenId.TS_VALUE));
+			Arrays.asList(TSTokenId.TS_COMMENT, TSTokenId.WHITESPACE, TSTokenId.TS_NL, TSTokenId.TS_VALUE, TSTokenId.TS_MULTILINE_VALUE)
+		);
+		
 		if (bracketColumnToken != null
 				&& (bracketColumnToken.id() == TSTokenId.TS_CURLY_OPEN ||
 					bracketColumnToken.id() == TSTokenId.TS_PARANTHESE_OPEN
