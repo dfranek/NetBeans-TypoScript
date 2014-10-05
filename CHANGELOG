@@ -56,3 +56,5 @@ ext_typoscript_constants.txt
 - added auto complete for square brackets and curly braces
 1.7.1
 - fixed bug with inserting of end parantheses in multiline values
+1.7.2
+- some cleanup, reduced layer.xml, more annotations
