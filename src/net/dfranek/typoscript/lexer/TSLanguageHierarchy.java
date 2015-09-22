@@ -86,6 +86,12 @@ public class TSLanguageHierarchy extends LanguageHierarchy<TSTokenId> {
 
 	@Override
 	protected LanguageEmbedding<?> embedding(Token<TSTokenId> token, LanguagePath languagePath, InputAttributes inputAttributes) {
+		if(token.id() == TSTokenId.TS_MULTILINE_VALUE) {
+			Language language = Language.find("text/html");
+			if(language != null) {
+				return LanguageEmbedding.create(language, 0, 0);
+			}
+		}
 		return null;
 	}
 	
